@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>핵심기술 - CreditConnect</title>
+    <link rel="stylesheet" href="../../assets/css/reset.css?v=9">
+    <link rel="stylesheet" href="../../assets/css/style.css?v=9">
+    <link rel="stylesheet" href="../../assets/css/subpage.css?v=1"> 
+</head>
+<body>
+
+    <header class="uw-header" id="uwHeader">
+        <div class="uw-container">
+            <a href="../../index.html" class="uw-logo">
+                <img src="../../assets/images/logo.png" alt="Logo">
+            </a>
+            <nav class="uw-gnb">
+                <ul class="uw-gnb-list">
+                    <li class="uw-gnb-item" data-target="sub-about">
+                        <a href="../about/ceo.html" class="uw-gnb-link">About Us</a>
+                    </li>
+                    <li class="uw-gnb-item" data-target="sub-business">
+                        <a href="../business/tech.html" class="uw-gnb-link">Business</a>
+                    </li>
+                    <li class="uw-gnb-item" data-target="sub-product">
+                        <a href="../product/index.html" class="uw-gnb-link">Product</a>
+                    </li>
+                    <li class="uw-gnb-item" data-target="sub-support">
+                        <a href="../support/notice.html" class="uw-gnb-link">Support</a>
+                    </li>
+                    <li class="uw-gnb-item" data-target="sub-contact">
+                        <a href="../contact/request.html" class="uw-gnb-link">Contact</a>
+                    </li>
+                </ul>
+            </nav>
+            <div class="uw-util">
+                <button class="uw-btn-menu" id="uwBtnMenu">
+                    <div class="uw-icon-grid">
+                        <span></span><span></span><span></span>
+                        <span></span><span></span><span></span>
+                        <span></span><span></span><span></span>
+                    </div>
+                </button>
+            </div>
+        </div>
+
+        <!-- Full Width Dropdown Panel -->
+        <div class="uw-gnb-dropdown" id="uwDropdown">
+            <div class="uw-sub-container">
+                <!-- About Us Sub -->
+                <ul class="uw-sub-list" id="sub-about">
+                    <li class="uw-sub-item"><a href="../about/ceo.html">CEO 인사말</a></li>
+                    <li class="uw-sub-item"><a href="../about/history.html">연혁</a></li>
+                    <li class="uw-sub-item"><a href="../about/vision.html">비전</a></li>
+                    <li class="uw-sub-item"><a href="../about/location.html">오시는길</a></li>
+                </ul>
+                <!-- Business Sub -->
+                <ul class="uw-sub-list" id="sub-business">
+                    <li class="uw-sub-item"><a href="../business/tech.html">핵심기술</a></li>
+                    <li class="uw-sub-item"><a href="../business/areas.html">사업분야</a></li>
+                    <li class="uw-sub-item"><a href="../business/cert.html">특허&인증</a></li>
+                </ul>
+                <!-- Product Sub -->
+                <ul class="uw-sub-list" id="sub-product">
+                    <li class="uw-sub-item"><a href="../product/index.html">제품소개</a></li>
+                </ul>
+                <!-- Support Sub -->
+                <ul class="uw-sub-list" id="sub-support">
+                    <li class="uw-sub-item"><a href="../support/notice.html">공지사항</a></li>
+                    <li class="uw-sub-item"><a href="../support/news.html">뉴스</a></li>
+                </ul>
+                <!-- Contact Sub -->
+                <ul class="uw-sub-list" id="sub-contact">
+                    <li class="uw-sub-item"><a href="../contact/request.html">상담 문의</a></li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <!-- 전체 메뉴 오버레이 (모바일/전체보기) -->
+    <div class="uw-overlay-menu" id="uwOverlayMenu">
+        <button class="uw-btn-close" id="uwBtnClose" aria-label="메뉴 닫기"></button>
+        
+        <div class="uw-overlay-left">
+            <img src="../../assets/images/overlay_visual_v2.jpg" alt="Visual">
+        </div>
+
+        <div class="uw-overlay-right">
+            <ul class="uw-full-gnb">
+                <li class="uw-full-item">
+                    <a href="../about/ceo.html" class="uw-full-link">About Us</a>
+                    <div class="uw-full-sub">
+                        <a href="../about/ceo.html">CEO 인사말</a>
+                        <a href="../about/history.html">연혁</a>
+                        <a href="../about/vision.html">비전</a>
+                        <a href="../about/location.html">오시는길</a>
+                    </div>
+                </li>
+                <li class="uw-full-item">
+                    <a href="../business/tech.html" class="uw-full-link">Business</a>
+                    <div class="uw-full-sub">
+                        <a href="../business/tech.html">핵심기술</a>
+                        <a href="../business/areas.html">사업분야</a>
+                        <a href="../business/cert.html">특허&인증</a>
+                    </div>
+                </li>
+                <li class="uw-full-item">
+                    <a href="../product/index.html" class="uw-full-link">Product</a>
+                    <div class="uw-full-sub">
+                        <a href="../product/index.html">제품소개</a>
+                    </div>
+                </li>
+                <li class="uw-full-item">
+                    <a href="../support/notice.html" class="uw-full-link">Support</a>
+                    <div class="uw-full-sub">
+                        <a href="../support/notice.html">공지사항</a>
+                        <a href="../support/news.html">뉴스</a>
+                    </div>
+                </li>
+                <li class="uw-full-item">
+                    <a href="../contact/request.html" class="uw-full-link">Contact</a>
+                    <div class="uw-full-sub">
+                        <a href="../contact/request.html">상담 문의</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <section class="sub-visual business">
+        <div class="sub-visual-bg"></div>
+        <div class="sub-visual-content">
+            <h1 class="sub-page-title">핵심기술</h1>
+        </div>
+        
+        <div class="sub-lnb">
+            <div class="uw-container">
+                <ul class="sub-lnb-list">
+                    <li class="sub-lnb-item active"><a href="../business/tech.html">핵심기술</a></li>
+                    <li class="sub-lnb-item"><a href="../business/areas.html">사업분야</a></li>
+                    <li class="sub-lnb-item"><a href="../business/cert.html">특허&인증</a></li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section class="sub-page tech">
+        <div class="uw-section-header scroll-trigger">
+    <h2 class="uw-sub-page-title">핵심기술</h2>
+    <p class="uw-sub-page-desc">
+        스마트 틴팅 기술(PNLC 타입)은 전기 ON/OFF 신호에 따라 유리의 투명도를 자유롭게 조절할 수 있는 첨단 솔루션으로 공간의 프라이버시와 채광을 동시에 제어할 수 있습니다.
+    </p>
+</div>
+        <div class="uw-tech-container">
+            <!-- Row 1: PNLC -->
+            <div class="tech-row">
+                <div class="tech-info">
+                    <div style="color: var(--uw-primary); font-weight:700; margin-bottom:12px; font-size: 18px;">01</div>
+                    <h2 class="tech-title-main">PNLC 타입</h2>
+                    <p class="tech-desc-sub">
+                        전기가 흐를 때 어두워지는<br>
+                        역방향(Reverse) 차광 기술입니다.<br>
+                        채광 조절이 필요한 로비에 적합합니다.
+                    </p>
+                </div>
+
+                <div class="tech-card-wrapper">
+                    <div class="tech-card" data-type="pnlc" data-power="off">
+                        <div class="window-bg" style="background-image: url('https://images.unsplash.com/photo-1497366216548-37526070297c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1600&q=80');"></div>
+                        
+                        <div class="smart-film-layer">
+                            <div class="privacy-icon">⚡ 전원 ON : 차광 모드</div>
+                        </div>
+
+                        <div class="control-panel">
+                            <div class="panel-text">
+                                <h4>PNLC Control</h4>
+                                <p>스위치를 눌러 차광 효과를 확인하세요</p>
+                            </div>
+                            <div class="switch-group">
+                                <span class="switch-txt active">OFF (투명)</span>
+                                <div class="custom-toggle" onclick="toggleCard(this)"></div>
+                                <span class="switch-txt">ON (차광)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Row 2: PDLC -->
+            <div class="tech-row">
+                <div class="tech-info">
+                    <div style="color: var(--uw-primary); font-weight:700; margin-bottom:12px; font-size: 18px;">02</div>
+                    <h2 class="tech-title-main">PDLC 타입</h2>
+                    <p class="tech-desc-sub">
+                        평상시 시선을 차단하고,<br>
+                        전기가 흐르면 투명해집니다.<br>
+                        프라이빗한 회의실에 추천합니다.
+                    </p>
+                </div>
+
+                <div class="tech-card-wrapper">
+                    <div class="tech-card" data-type="pdlc" data-power="off">
+                        <div class="window-bg" style="background-image: url('https://images.unsplash.com/photo-1604328698692-f76ea9498e76?ixlib=rb-1.2.1&auto=format&fit=crop&w=1600&q=80');"></div>
+                        
+                        <div class="smart-film-layer">
+                            <div class="privacy-icon">🔒 전원 OFF : 프라이버시</div>
+                        </div>
+
+                        <div class="control-panel">
+                            <div class="panel-text">
+                                <h4>PDLC Control</h4>
+                                <p>스위치를 눌러 투명도를 확인하세요</p>
+                            </div>
+                            <div class="switch-group">
+                                <span class="switch-txt active">OFF (차광)</span>
+                                <div class="custom-toggle" onclick="toggleCard(this)"></div>
+                                <span class="switch-txt">ON (투명)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 푸터 시작 -->
+    <footer class="uw-footer">
+        <div class="uw-container">
+            <div class="uw-footer-middle">
+                <a href="../../index.html" class="uw-footer-logo">
+                    <img src="../../assets/images/logo.png" alt="에스티웍스 Logo">
+                </a>
+                <div class="uw-footer-contact">
+                    <span class="uw-footer-phone">044-715-7050</span>
+                    <div class="uw-footer-contact-detail">
+                        <div class="uw-footer-contact-row">
+                            <span class="uw-footer-contact-label">Fax.</span>
+                            <span>044-715-7051</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="uw-footer-info">
+                <div class="uw-footer-info-row">
+                    <span>세종특별자치시 집현중앙2로 7, 305호 (집현동, 코스모스빌딩)</span>
+                    <span>상호 : (주)에스티웍스</span>
+                </div>
+                <div class="uw-footer-info-row">
+                    <span>대표 : 황훈</span>
+                    <span>법인등록번호 : 164711-0015421</span>
+                    <span>사업자등록번호 : 347-87-03440</span>
+                </div>
+            </div>
+            <div class="uw-footer-bottom">
+                <p class="uw-footer-copyright">© 2025 CreditConnect Corp. ALL RIGHTS RESERVED.</p>
+            </div>
+        </div>
+    </footer>
+    <!-- 푸터 끝 -->
+
+    <script src="../../assets/js/common.js?v=9"></script>
+    <script src="../../assets/js/tech.js?v=1"></script>
+</body>
+</html>
