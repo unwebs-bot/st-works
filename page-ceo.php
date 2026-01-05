@@ -1,6 +1,6 @@
 <?php
 /*
-Template Name: CEO Greeting
+Template Name: CEO 인사말
 */
 get_header(); ?>
 

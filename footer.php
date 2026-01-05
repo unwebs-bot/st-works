@@ -28,16 +28,16 @@
     </div>
     <div class="uw-footer-info">
       <div class="uw-footer-info-row">
-        <?php if ($address) { ?>
-          <span><?php echo $address; ?></span>
+        <?php if ($ceo) { ?>
+          <span><?php echo $ceo; ?></span>
         <?php } ?>
         <?php if ($company_name) { ?>
           <span><?php echo $company_name; ?></span>
         <?php } ?>
       </div>
       <div class="uw-footer-info-row">
-        <?php if ($ceo) { ?>
-          <span><?php echo $ceo; ?></span>
+        <?php if ($address) { ?>
+          <span><?php echo $address; ?></span>
         <?php } ?>
         <?php if ($business_registration_number) { ?>
           <span><?php echo $business_registration_number; ?></span>

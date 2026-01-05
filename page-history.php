@@ -25,7 +25,7 @@ get_header(); ?>
 
 <section class="sub-page history">
   <div class="uw-section-header scroll-trigger">
-    <h2 class="uw-sub-page-title">에스티웍스가<br>걸어온 길입니다.</h2>
+    <h2 class="uw-sub-page-title">에스티웍스가 걸어온 길입니다.</h2>
     <p class="uw-sub-page-desc">끊임없는 도전과 혁신으로 성장해온 에스티웍스의 발자취를 소개합니다.</p>
   </div>
 
@@ -119,7 +119,7 @@ get_header(); ?>
             <div class="uw-history-year-number">2023. 05</div>
             <ul class="uw-history-events">
               <li class="uw-history-event">
-                <p class="uw-history-desc">법인 설립 ((주)에스티웍스)</p>
+                <p class="uw-history-desc">법인 설립 (주)에스티웍스</p>
               </li>
             </ul>
           </div>

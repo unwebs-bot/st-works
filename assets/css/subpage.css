@@ -324,7 +324,7 @@
 .uw-history-timeline::before {
   content: '';
   position: absolute;
-  left: 45%;
+  left: 39.1%;
   top: 0;
   bottom: 0;
   width: 1px;
@@ -354,7 +354,7 @@
   display: flex;
   flex-direction: column;
   gap: 150px;
-  width: 55%;
+  width: 70%;
 }
 
 .uw-history-year-group {
@@ -362,15 +362,15 @@
   display: flex;
   align-items: center;
   gap: 50px;
-  padding-left: 100px;
+  padding-left: 50px;
 }
 
 .uw-history-year-number {
-  font-size: 56px;
+  font-size: 44px;
   font-weight: 800;
   color: var(--uw-text);
-  min-width: 140px;
-  width: 140px;
+  min-width: 200px;
+  width: 200px;
   text-align: left;
   line-height: 1;
   flex-shrink: 0;
@@ -477,10 +477,6 @@
 }
 
 /* 2.3 비전 (Vision) */
-.vision .uw-sub-page-title {
-  margin-bottom: 80px;
-  text-align: center;
-}
 
 .uw-vision-intro {
   margin-bottom: 80px;
