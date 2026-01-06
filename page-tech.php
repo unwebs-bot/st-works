@@ -1,25 +1,10 @@
 <?php
 /*
-Template Name: 핵심기술
+Template Name: Business Tech
 */
 get_header(); ?>
 
-<section class="sub-visual business">
-  <div class="sub-visual-bg"></div>
-  <div class="sub-visual-content">
-    <h1 class="sub-page-title">핵심기술</h1>
-  </div>
-
-  <div class="sub-lnb">
-    <div class="uw-container">
-      <ul class="sub-lnb-list">
-        <li class="sub-lnb-item active"><a href="<?php echo home_url('/business/tech/'); ?>">핵심기술</a></li>
-        <li class="sub-lnb-item"><a href="<?php echo home_url('/business/areas/'); ?>">사업분야</a></li>
-        <li class="sub-lnb-item"><a href="<?php echo home_url('/business/cert/'); ?>">특허&인증</a></li>
-      </ul>
-    </div>
-  </div>
-</section>
+<?php get_template_part('template-parts/sub-visual'); ?>
 
 <section class="sub-page tech">
   <div class="uw-section-header scroll-trigger">

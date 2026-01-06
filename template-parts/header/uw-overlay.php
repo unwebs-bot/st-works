@@ -26,9 +26,9 @@
         </div>
       </li>
       <li class="uw-full-item">
-        <a href="<?php echo home_url('/product/index/'); ?>" class="uw-full-link">Product</a>
+        <a href="<?php echo home_url('/product'); ?>" class="uw-full-link">Product</a>
         <div class="uw-full-sub">
-          <a href="<?php echo home_url('/product/index/'); ?>">제품소개</a>
+          <a href="<?php echo home_url('/product/product/'); ?>">제품소개</a>
         </div>
       </li>
       <li class="uw-full-item">

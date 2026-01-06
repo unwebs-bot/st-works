@@ -4,24 +4,7 @@ Template Name: Company History
 */
 get_header(); ?>
 
-<section class="sub-visual about">
-  <div class="sub-visual-bg"
-    style="background-image: url('<?php echo get_theme_file_uri('/assets/images/company_building.png'); ?>');"></div>
-  <div class="sub-visual-content">
-    <h1 class="sub-page-title">연혁</h1>
-  </div>
-
-  <div class="sub-lnb">
-    <div class="uw-container">
-      <ul class="sub-lnb-list">
-        <li class="sub-lnb-item"><a href="<?php echo home_url('/about/ceo/'); ?>">CEO 인사말</a></li>
-        <li class="sub-lnb-item active"><a href="<?php echo home_url('/about/history/'); ?>">연혁</a></li>
-        <li class="sub-lnb-item"><a href="<?php echo home_url('/about/vision/'); ?>">비전</a></li>
-        <li class="sub-lnb-item"><a href="<?php echo home_url('/about/location/'); ?>">오시는길</a></li>
-      </ul>
-    </div>
-  </div>
-</section>
+<?php get_template_part('template-parts/sub-visual'); ?>
 
 <section class="sub-page history">
   <div class="uw-section-header scroll-trigger">

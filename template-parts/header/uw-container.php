@@ -17,13 +17,13 @@
         <a href="<?php echo home_url('/business/tech/'); ?>" class="uw-gnb-link">Business</a>
       </li>
       <li class="uw-gnb-item" data-target="sub-product">
-        <a href="<?php echo home_url('/product/index/'); ?>" class="uw-gnb-link">Product</a>
+        <a href="<?php echo home_url('/product/product/'); ?>" class="uw-gnb-link">Product</a>
       </li>
       <li class="uw-gnb-item" data-target="sub-support">
         <a href="<?php echo home_url('/support/notice/'); ?>" class="uw-gnb-link">Support</a>
       </li>
       <li class="uw-gnb-item" data-target="sub-contact">
-        <a href="<?php echo home_url('/contact/request/'); ?>" class="uw-gnb-link">Contact</a>
+        <a href="<?php echo home_url('/contact/contact/'); ?>" class="uw-gnb-link">Contact</a>
       </li>
     </ul>
   </nav>

@@ -23,7 +23,7 @@
     </ul>
     <!-- Product Sub -->
     <ul class="uw-sub-list" id="sub-product">
-      <li class="uw-sub-item"><a href="<?php echo home_url('/product/index/'); ?>">제품소개</a>
+      <li class="uw-sub-item"><a href="<?php echo home_url('/product/product'); ?>">제품소개</a>
       </li>
     </ul>
     <!-- Support Sub -->

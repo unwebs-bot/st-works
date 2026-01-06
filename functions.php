@@ -12,6 +12,7 @@ add_action('wp_enqueue_scripts', 'myfourthwp_files');
 function myfourthwp_files()
 {
   // css
+  wp_enqueue_style('google-play-font', '//fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap');
   wp_enqueue_style('reset-style', get_template_directory_uri() . '/assets/css/reset.css', array(), '9.0');
   wp_enqueue_style('fa-style', '//cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css');
   wp_enqueue_style('theme-style', get_stylesheet_uri(), array('reset-style'), '1.0'); // Root style.css (Metadata)
