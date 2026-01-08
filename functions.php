@@ -27,3 +27,12 @@ function myfourthwp_files()
   wp_enqueue_script('app-script', get_theme_file_uri('/assets/js/app.js'), array('common-script'), '1.0', true);
   wp_enqueue_script('main-script', get_theme_file_uri('/assets/js/main.js'), array('common-script'), '1.0', true);
 }
+
+/**
+ * ===========================================================================
+ * UW Board Engine
+ * ===========================================================================
+ */
+require_once get_template_directory() . '/inc/uw-board/class-uw-board-cpt.php';
+require_once get_template_directory() . '/inc/uw-board/class-uw-board-admin.php';
+require_once get_template_directory() . '/inc/uw-board/class-uw-board-shortcode.php';

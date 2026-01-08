@@ -1,0 +1,460 @@
+/**
+ * UW Board Admin Styles
+ * 
+ * @package St-works
+ */
+
+/* ==========================================================================
+   1. 공통 스타일
+   ========================================================================== */
+
+.uw-board-admin h1 {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.uw-board-admin .uw-total-count {
+  font-size: 14px;
+  font-weight: 400;
+  color: #666;
+}
+
+/* ==========================================================================
+   2. 대시보드
+   ========================================================================== */
+.uw-board-dashboard {
+  background: #fff;
+  padding: 20px;
+  border: 1px solid #ccd0d4;
+  border-radius: 4px;
+}
+
+.uw-board-empty {
+  text-align: center;
+  padding: 60px 20px;
+  color: #666;
+}
+
+.uw-board-empty p {
+  margin-bottom: 20px;
+  font-size: 16px;
+}
+
+/* ==========================================================================
+   3. 테이블
+   ========================================================================== */
+.uw-board-admin table code {
+  background: #f0f0f0;
+  padding: 4px 8px;
+  border-radius: 3px;
+  font-size: 12px;
+}
+
+.uw-board-table .uw-pinned-row {
+  background: #fffbe6 !important;
+}
+
+.uw-notice-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  background: #1d8795;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: 3px;
+}
+
+.uw-new-badge {
+  display: inline-block;
+  padding: 1px 5px;
+  background: var(--uw-primary, #1d8795);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  border-radius: 2px;
+  margin-left: 5px;
+}
+
+.uw-has-thumbnail {
+  margin-left: 5px;
+  opacity: 0.7;
+}
+
+.uw-no-posts {
+  text-align: center;
+  padding: 40px !important;
+  color: #999;
+}
+
+/* ==========================================================================
+   4. 폼 스타일
+   ========================================================================== */
+.uw-board-form {
+  background: #fff;
+  padding: 20px;
+  border: 1px solid #ccd0d4;
+  border-radius: 4px;
+}
+
+.uw-board-form .form-table th {
+  width: 150px;
+  padding: 20px 10px 20px 0;
+}
+
+.uw-board-form .description {
+  color: #666;
+  font-style: italic;
+}
+
+/* ==========================================================================
+   5. 게시판 매니저
+   ========================================================================== */
+.uw-board-manager {
+  padding-bottom: 20px;
+}
+
+.uw-board-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #ddd;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.uw-search-form {
+  display: flex;
+  gap: 5px;
+}
+
+.uw-search-form select,
+.uw-search-form input[type="text"] {
+  height: 32px;
+  padding: 0 8px;
+}
+
+.uw-search-form input[type="text"] {
+  width: 200px;
+}
+
+.uw-pagination {
+  display: flex;
+  gap: 3px;
+}
+
+.uw-write-btn {
+  margin-left: auto;
+}
+
+/* ==========================================================================
+   6. 에디터 스타일
+   ========================================================================== */
+.uw-board-editor {
+  background: #fff;
+  padding: 25px;
+  border: 1px solid #ccd0d4;
+  border-radius: 4px;
+}
+
+.uw-editor-field {
+  margin-bottom: 20px;
+}
+
+.uw-editor-field>label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #333;
+}
+
+.uw-editor-field input[type="text"] {
+  width: 100%;
+  max-width: 600px;
+  padding: 8px 12px;
+  font-size: 16px;
+}
+
+.uw-checkbox-inline {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-left: 15px;
+  font-weight: 400;
+  color: #666;
+}
+
+.uw-checkbox-inline input {
+  margin: 0;
+}
+
+/* Summernote 컨테이너 */
+.uw-editor-field .note-editor {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+/* 썸네일 & 첨부파일 */
+.uw-thumbnail-upload,
+.uw-attachments-upload {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.uw-attachment-slot {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.uw-file-name {
+  color: #666;
+  font-size: 13px;
+}
+
+/* 에디터 액션 버튼 */
+.uw-editor-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #ddd;
+}
+
+.uw-editor-actions .uw-delete-post {
+  margin-left: auto;
+  color: #a00;
+  border-color: #a00;
+}
+
+.uw-editor-actions .uw-delete-post:hover {
+  background: #a00;
+  color: #fff;
+}
+
+/* ==========================================================================
+   7. 싱글 뷰 스타일 (KBoard 스타일)
+   ========================================================================== */
+.uw-board-single-view {
+  background: #fff;
+  border: 1px solid #ddd;
+  max-width: 1000px;
+}
+
+/* 제목 영역 */
+.uw-single-header {
+  border-bottom: 1px solid #ddd;
+  padding: 20px 25px;
+}
+
+.uw-single-title {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0 0 15px 0;
+  color: #333;
+  line-height: 1.4;
+}
+
+.uw-single-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  font-size: 13px;
+  color: #666;
+}
+
+.uw-single-meta .meta-item strong {
+  color: #333;
+  margin-right: 6px;
+}
+
+/* 본문 영역 */
+.uw-single-content {
+  padding: 30px 25px;
+  min-height: 200px;
+  line-height: 1.8;
+  color: #333;
+  border-bottom: 1px solid #eee;
+}
+
+.uw-single-content img {
+  max-width: 100%;
+  height: auto;
+}
+
+.uw-single-content p {
+  margin-bottom: 15px;
+}
+
+/* 인쇄 버튼 */
+.uw-single-print {
+  padding: 15px 25px;
+  text-align: right;
+  border-bottom: 1px solid #eee;
+}
+
+.uw-print-btn .dashicons {
+  margin-right: 3px;
+}
+
+/* 첨부파일 섹션 */
+.uw-single-attachments {
+  padding: 20px 25px;
+  border-bottom: 1px solid #ddd;
+  background: #fafafa;
+}
+
+.uw-single-attachments h3 {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0 0 10px 0;
+  color: #333;
+}
+
+.uw-single-attachments .attachment-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.uw-single-attachments .attachment-list li {
+  margin-bottom: 8px;
+}
+
+.uw-single-attachments .attachment-list a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #0073aa;
+  text-decoration: none;
+}
+
+.uw-single-attachments .attachment-list a:hover {
+  text-decoration: underline;
+}
+
+/* 이전/다음 글 네비게이션 */
+.uw-single-navigation {
+  border-bottom: 1px solid #ddd;
+}
+
+.uw-single-navigation .nav-next,
+.uw-single-navigation .nav-prev {
+  display: flex;
+  align-items: center;
+  padding: 12px 25px;
+  border-bottom: 1px solid #eee;
+}
+
+.uw-single-navigation .nav-prev {
+  border-bottom: none;
+}
+
+.uw-single-navigation .nav-label {
+  display: inline-block;
+  width: 60px;
+  font-size: 12px;
+  color: #666;
+  font-weight: 600;
+}
+
+.uw-single-navigation a {
+  color: #0073aa;
+  text-decoration: none;
+}
+
+.uw-single-navigation a:hover {
+  text-decoration: underline;
+}
+
+.uw-single-navigation .no-post {
+  color: #999;
+  font-size: 13px;
+}
+
+/* 액션 버튼 */
+.uw-single-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 25px;
+  background: #f5f5f5;
+}
+
+.uw-single-actions .actions-left,
+.uw-single-actions .actions-right {
+  display: flex;
+  gap: 8px;
+}
+
+.uw-single-actions .uw-delete-post {
+  color: #a00;
+  border-color: #a00;
+}
+
+.uw-single-actions .uw-delete-post:hover {
+  background: #a00;
+  color: #fff;
+}
+
+/* ==========================================================================
+   8. 반응형
+   ========================================================================== */
+@media (max-width: 782px) {
+  .uw-board-footer {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .uw-search-form {
+    flex-wrap: wrap;
+  }
+
+  .uw-search-form input[type="text"] {
+    width: 100%;
+  }
+
+  .uw-pagination {
+    justify-content: center;
+  }
+
+  .uw-write-btn {
+    margin-left: 0;
+    text-align: center;
+  }
+
+  /* 싱글 뷰 반응형 */
+  .uw-single-meta {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .uw-single-actions {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .uw-single-actions .actions-left,
+  .uw-single-actions .actions-right {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* Print 스타일 */
+@media print {
+
+  .uw-single-print,
+  .uw-single-navigation,
+  .uw-single-actions {
+    display: none !important;
+  }
+
+  .uw-board-single-view {
+    border: none;
+  }
+}
