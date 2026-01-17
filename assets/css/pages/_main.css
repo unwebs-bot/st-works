@@ -1054,6 +1054,21 @@
     letter-spacing: 5px;
   }
 
+  /* 모바일 섹션 패딩 통일 */
+  .uw-business,
+  .uw-product,
+  .uw-community {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .uw-business-header,
+  .uw-product-header,
+  .uw-community-header {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
   /* Business */
   .uw-business-item {
     height: 250px;
@@ -1073,8 +1088,6 @@
   }
 
   .uw-business-desc {
-    display: none;
-    /* Hide description on mobile to save space if needed, or keep it. User said 'not showing up', so maybe keep it? Let's hide it for mobile if it's too much, but show title. Actually, let's show it but maybe smaller? Or if user complained it's NOT showing up, I should SHOW it. But layout might be tight. Let's try showing it. */
     display: block;
     font-size: 14px;
     margin-bottom: 10px;

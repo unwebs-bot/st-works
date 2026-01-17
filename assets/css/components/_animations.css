@@ -73,3 +73,31 @@
 .delay-1000 {
   transition-delay: 1.0s;
 }
+
+/* ==========================================================================
+   Mobile: 애니메이션 비활성화 - 요소 즉시 노출
+   ========================================================================== */
+@media (max-width: 768px) {
+  [data-animate="fade-up"] {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  [data-animate="reveal"]::before {
+    display: none;
+  }
+
+  /* 모바일에서 딜레이 제거 */
+  .delay-100,
+  .delay-200,
+  .delay-300,
+  .delay-400,
+  .delay-500,
+  .delay-600,
+  .delay-700,
+  .delay-800,
+  .delay-900,
+  .delay-1000 {
+    transition-delay: 0s;
+  }
+}

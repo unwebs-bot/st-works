@@ -68,6 +68,17 @@
   .uw-ceo-right {
     width: 100%;
   }
+
+  /* CEO 페이지 텍스트 br 숨김 - 자연스러운 줄바꿈 */
+  .uw-ceo-desc br,
+  .sub-page.ceo .uw-sub-page-title br {
+    display: none;
+  }
+
+  .uw-ceo-desc {
+    font-size: 16px;
+    line-height: 1.7;
+  }
 }
 
 /* 2.2 연혁 (History) */
@@ -449,7 +460,9 @@
   .uw-location-info-item {
     padding: 20px;
   }
-}/* 2. Vision Card */
+}
+
+/* 2. Vision Card */
 .uw-vision-cards {
   display: flex;
   justify-content: center;
@@ -608,4 +621,3 @@
     margin: 0 auto;
   }
 }
-
