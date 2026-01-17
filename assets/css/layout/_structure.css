@@ -6,7 +6,7 @@
 .uw-container {
   max-width: var(--uw-max-width);
   margin: 0 auto;
-  height: 100%;
+  padding: 0 20px;
   position: relative;
   display: flex;
   align-items: center;
@@ -244,10 +244,17 @@
 
   .uw-sub-page-title {
     font-size: 24px;
-    margin-bottom: 40px;
+    margin-bottom: 10px;
   }
 
   .uw-sub-page-desc {
     font-size: 15px;
+  }
+
+  /* 모바일 컨테이너 레이아웃 수정 */
+  .uw-container {
+    height: auto;
+    flex-direction: column;
+    align-items: stretch;
   }
 }

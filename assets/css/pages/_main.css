@@ -1070,8 +1070,17 @@
   }
 
   /* Business */
+  .uw-business-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+  }
+
   .uw-business-item {
+    flex: none;
     height: 250px;
+    width: 100%;
   }
 
   .uw-business-content {
@@ -1125,8 +1134,17 @@
   }
 
   /* Product */
+  .uw-main-product-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+  }
+
   .uw-product-item {
+    flex: none;
     height: 300px;
+    width: 100%;
   }
 
   .uw-product-name {

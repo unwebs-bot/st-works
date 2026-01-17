@@ -8,7 +8,6 @@ get_header(); ?>
 
 <section class="sub-page cert">
   <div class="uw-section-header scroll-trigger">
-    <span class="uw-title-en">Technologies & Certifications</span>
     <h2 class="uw-sub-page-title">특허 & 인증</h2>
     <p class="uw-sub-page-desc">
       건축부터 자동차까지 10건의 등록 특허로 증명된 독자 기술력, 우리는 기술로 새로운 가능성을 만듭니다.
