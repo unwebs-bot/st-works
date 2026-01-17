@@ -70,7 +70,7 @@
       <ul class="uw-business-list">
         <!-- Item 1 -->
         <li class="uw-business-item delay-200" data-animate="fade-up">
-          <a href="<?php echo get_theme_file_uri('/business/areas.html'); ?>" class="uw-business-link">
+          <a href="<?php echo site_url('/business/areas/'); ?>" class="uw-business-link">
             <div class="uw-business-bg"
               style="background-image: url('<?php echo get_theme_file_uri('/assets/images/business_01.png'); ?>')">
             </div>
@@ -88,7 +88,7 @@
         </li>
         <!-- Item 2 -->
         <li class="uw-business-item delay-400" data-animate="fade-up">
-          <a href="<?php echo get_theme_file_uri('/business/areas.html'); ?>" class="uw-business-link">
+          <a href="<?php echo site_url('/business/areas/'); ?>" class="uw-business-link">
             <div class="uw-business-bg"
               style="background-image: url('<?php echo get_theme_file_uri('/assets/images/business_02.png'); ?>')">
             </div>
@@ -106,7 +106,7 @@
         </li>
         <!-- Item 3 -->
         <li class="uw-business-item delay-600" data-animate="fade-up">
-          <a href="<?php echo get_theme_file_uri('/business/areas.html'); ?>" class="uw-business-link">
+          <a href="<?php echo site_url('/business/areas/'); ?>" class="uw-business-link">
             <div class="uw-business-bg"
               style="background-image: url('<?php echo get_theme_file_uri('/assets/images/business_03.png'); ?>')">
             </div>
@@ -157,7 +157,7 @@
       <ul class="uw-main-product-list">
         <!-- Item 1: General Type -->
         <li class="uw-product-item delay-200" data-animate="fade-up">
-          <a href="<?php echo get_theme_file_uri('/product/index.html'); ?>" class="uw-product-link">
+          <a href="<?php echo site_url('/product/'); ?>" class="uw-product-link">
             <div class="uw-main-product-bg"
               style="background-image: url('<?php echo get_theme_file_uri('/assets/images/product-1.png'); ?>')"></div>
             <div class="uw-main-product-content">
@@ -170,7 +170,7 @@
         </li>
         <!-- Item 2: High Efficiency Type -->
         <li class="uw-product-item delay-400" data-animate="fade-up">
-          <a href="<?php echo get_theme_file_uri('/product/index.html'); ?>" class="uw-product-link">
+          <a href="<?php echo site_url('/product/'); ?>" class="uw-product-link">
             <div class="uw-main-product-bg"
               style="background-image: url('<?php echo get_theme_file_uri('/assets/images/product-2.png'); ?>')"></div>
             <div class="uw-main-product-content">
@@ -240,7 +240,7 @@
 
       <!-- WP: 동적 콘텐츠 시작 (커뮤니티 최신글) -->
       <?php echo do_shortcode('[latest_posts id="notice" url="/support/notice/" limit="3"]'); ?>
-      <!-- WP: 동적 콘텐츠 끝 -->
+
     </div>
   </section>
   <!-- 커뮤니티 섹션 끝 -->
@@ -257,16 +257,15 @@
       </div>
       <div class="uw-contact-right">
         <!-- Notice Card -->
-        <a href="<?php echo get_theme_file_uri('/support/notice.html'); ?>" class="uw-contact-card delay-200"
-          data-animate="fade-up">
+        <a href="<?php echo site_url('/support/notice/'); ?>" class="uw-contact-card delay-200" data-animate="fade-up">
           <span class="uw-contact-card-icon notice"></span>
           <span class="uw-contact-card-title">공지사항</span>
           <span class="uw-contact-card-desc">에스티웍스의 새로운 소식과<br>공지사항을 확인하세요.</span>
           <span class="uw-contact-card-link">More view</span>
         </a>
         <!-- Inquiry Card -->
-        <a href="<?php echo get_theme_file_uri('/contact/request.html'); ?>" class="uw-contact-card"
-          data-animate="fade-up" class="delay-1000">
+        <a href="<?php echo site_url('/contact/'); ?>" class="uw-contact-card" data-animate="fade-up"
+          class="delay-1000">
           <span class="uw-contact-card-icon inquiry"></span>
           <span class="uw-contact-card-title">온라인 문의</span>
           <span class="uw-contact-card-desc">회사의 제품정보, 채용정보 등 궁금한 사항을 문의주시면<br>성실히 답변드리겠습니다.</span>

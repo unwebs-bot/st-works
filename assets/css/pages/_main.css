@@ -260,7 +260,11 @@
 }
 
 .uw-business-desc {
-  display: none;
+  display: block;
+  font-size: 16px;
+  line-height: 1.5;
+  margin-bottom: 20px;
+  color: rgba(255, 255, 255, 0.9);
 }
 
 .uw-business-arrow {
@@ -1053,6 +1057,37 @@
   /* Business */
   .uw-business-item {
     height: 250px;
+  }
+
+  .uw-business-content {
+    background: rgba(0, 0, 0, 0.4);
+  }
+
+  .uw-business-text-wrapper {
+    transform: translateY(0);
+  }
+
+  .uw-business-hover {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .uw-business-desc {
+    display: none;
+    /* Hide description on mobile to save space if needed, or keep it. User said 'not showing up', so maybe keep it? Let's hide it for mobile if it's too much, but show title. Actually, let's show it but maybe smaller? Or if user complained it's NOT showing up, I should SHOW it. But layout might be tight. Let's try showing it. */
+    display: block;
+    font-size: 14px;
+    margin-bottom: 10px;
+  }
+
+  .uw-business-arrow {
+    width: 40px;
+    height: 40px;
+  }
+
+  .uw-business-arrow::after {
+    width: 10px;
+    height: 10px;
   }
 
   .uw-business-num {
