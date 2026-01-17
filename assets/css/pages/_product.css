@@ -1,0 +1,245 @@
+@charset "utf-8";
+
+/* ==========================================================================
+   제품소개 (Product)
+   ========================================================================== */
+
+/* 1. Product Section Layout */
+.sub-page.product {
+  padding-bottom: 120px;
+}
+
+.uw-product-container {
+  width: 100%;
+  max-width: var(--uw-max-width);
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* 2. Product Grid */
+.uw-product-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 120px;
+  margin-top: 50px;
+}
+
+.uw-product-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 60px;
+}
+
+/* Reverse layout for even items if needed, though PHP template looks uniform */
+.uw-product-card:nth-child(even) {
+  flex-direction: row-reverse;
+}
+
+/* Image Area */
+.uw-product-image-wrap {
+  flex: 0 0 50%;
+  height: 480px;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+.uw-product-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s ease;
+}
+
+.uw-product-card:hover .uw-product-img {
+  transform: scale(1.05);
+}
+
+/* Content Area */
+.uw-product-content {
+  flex: 1;
+  padding-top: 20px;
+}
+
+.uw-product-title {
+  font-size: 36px;
+  font-weight: 800;
+  margin-bottom: 20px;
+  color: var(--uw-text);
+  line-height: 1.2;
+}
+
+.uw-product-badge {
+  display: inline-block;
+  font-size: 14px;
+  background-color: var(--uw-primary);
+  color: #fff;
+  padding: 4px 10px;
+  border-radius: 4px;
+  vertical-align: middle;
+  margin-left: 10px;
+  transform: translateY(-3px);
+}
+
+.uw-product-card-desc {
+  font-size: 18px;
+  color: #555;
+  line-height: 1.6;
+  margin-bottom: 40px;
+}
+
+.uw-text-primary {
+  color: var(--uw-primary);
+  font-weight: 700;
+}
+
+/* Specs List inside Card */
+.uw-specs-list {
+  background: #f8f9fa;
+  padding: 30px;
+  border-radius: 12px;
+}
+
+.uw-specs-list li {
+  display: flex;
+  justify-content: space-between;
+  padding: 15px 0;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.uw-specs-list li:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.uw-specs-list li:first-child {
+  padding-top: 0;
+}
+
+.uw-spec-label {
+  font-weight: 700;
+  color: #333;
+}
+
+.uw-spec-value {
+  color: #666;
+}
+
+/* 3. Specs Table Section */
+.uw-table-section {
+  padding: 100px 0;
+  background-color: #f9f9f9;
+  margin-top: 100px;
+}
+
+.uw-mobile-hint {
+  display: none;
+  text-align: center;
+  font-size: 13px;
+  color: #999;
+  margin-bottom: 10px;
+}
+
+.uw-table-wrapper {
+  background: #fff;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+}
+
+.uw-full-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.uw-main-th {
+  background-color: var(--uw-primary);
+  color: #fff;
+  padding: 20px;
+  font-size: 16px;
+  font-weight: 700;
+  text-align: center;
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.uw-full-table thead th {
+  background-color: #156b76;
+  /* Darker shade */
+  color: #fff;
+  padding: 15px;
+  font-size: 14px;
+  font-weight: 500;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.uw-full-table .uw-main-th {
+  background-color: var(--uw-primary);
+}
+
+.uw-col-item {
+  background-color: #fafafa;
+  font-weight: 700;
+  color: #333;
+  text-align: center;
+}
+
+.uw-col-unit {
+  text-align: center;
+  color: #888;
+  font-size: 14px;
+  background-color: #fcfcfc;
+}
+
+.uw-val {
+  text-align: center;
+  padding: 15px;
+  color: #555;
+  font-weight: 500;
+}
+
+.uw-full-table td {
+  padding: 16px 10px;
+  border-bottom: 1px solid #eee;
+  border-right: 1px solid #eee;
+}
+
+/* Hover Effect */
+.uw-full-table tbody tr:hover td {
+  background-color: #f0f8ff;
+}
+
+/* Responsive */
+@media (max-width: 991px) {
+
+  .uw-product-card,
+  .uw-product-card:nth-child(even) {
+    flex-direction: column;
+    gap: 30px;
+  }
+
+  .uw-product-image-wrap {
+    width: 100%;
+    height: 350px;
+  }
+
+  .uw-product-title {
+    font-size: 28px;
+  }
+}
+
+@media (max-width: 768px) {
+  .uw-table-wrapper {
+    overflow-x: auto;
+  }
+
+  .uw-full-table {
+    min-width: 700px;
+  }
+
+  .uw-mobile-hint {
+    display: block;
+  }
+}

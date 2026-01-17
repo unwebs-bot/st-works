@@ -41,6 +41,8 @@ class UW_Board_Admin
         add_action('wp_ajax_uw_board_upload_image', array($this, 'ajax_upload_image'));
         add_action('wp_ajax_uw_board_bulk_empty_posts', array($this, 'ajax_bulk_empty_posts'));
         add_action('wp_ajax_uw_board_bulk_delete_boards', array($this, 'ajax_bulk_delete_boards'));
+        add_action('wp_ajax_uw_board_export_csv', array($this, 'ajax_export_csv'));
+        add_action('wp_ajax_uw_board_import_csv', array($this, 'ajax_import_csv'));
     }
 
     /**
@@ -91,6 +93,38 @@ class UW_Board_Admin
                 array($this, 'render_board_manager_page')
             );
         }
+
+        // 관리자 메뉴 하이라이트 수정 (게시판 수정 시 '게시판 생성' 대신 '게시판 관리' 활성화)
+        add_filter('parent_file', array($this, 'fix_admin_menu_highlight'));
+        add_filter('submenu_file', array($this, 'fix_admin_submenu_highlight'));
+    }
+
+    /**
+     * 게시판 수정 시 부모 메뉴 하이라이트 수정
+     */
+    public function fix_admin_menu_highlight($parent_file)
+    {
+        global $pagenow;
+
+        if ($pagenow === 'admin.php' && isset($_GET['page']) && $_GET['page'] === 'uw-board-settings' && isset($_GET['edit'])) {
+            return 'uw-board';
+        }
+
+        return $parent_file;
+    }
+
+    /**
+     * 게시판 수정 시 서브메뉴 하이라이트 수정
+     */
+    public function fix_admin_submenu_highlight($submenu_file)
+    {
+        global $pagenow;
+
+        if ($pagenow === 'admin.php' && isset($_GET['page']) && $_GET['page'] === 'uw-board-settings' && isset($_GET['edit'])) {
+            return 'uw-board'; // 게시판 관리 메뉴 활성화
+        }
+
+        return $submenu_file;
     }
 
     /**
@@ -105,15 +139,13 @@ class UW_Board_Admin
         // WordPress Media Uploader
         wp_enqueue_media();
 
-        // Xeicon (아이콘 폰트) - GitHub 기반 jsDelivr CDN
-        wp_enqueue_style('xeicon', 'https://cdn.jsdelivr.net/gh/xpressengine/XEIcon@2.3.3/xeicon.min.css');
 
         // Summernote for editor
         wp_enqueue_style('summernote', 'https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css');
         wp_enqueue_script('summernote', 'https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js', array('jquery'), '0.8.18', true);
 
         // Custom admin styles
-        wp_enqueue_style('uw-board-admin', get_theme_file_uri('/assets/css/uw-board-admin.css'), array(), '1.0.2');
+        wp_enqueue_style('uw-board-admin', get_theme_file_uri('/assets/css/board/uw-board-admin.css'), array(), '1.0.2');
         wp_enqueue_script('uw-board-admin', get_theme_file_uri('/assets/js/uw-board-admin.js'), array('jquery', 'summernote', 'media-upload'), '1.0.1', true);
 
         wp_localize_script('uw-board-admin', 'uwBoardAdmin', array(
@@ -255,133 +287,273 @@ class UW_Board_Admin
         <div class="wrap uw-board-admin">
             <h1><?php echo $is_edit ? '게시판 수정' : '새 게시판 만들기'; ?></h1>
 
-            <form id="uw-board-settings-form" class="uw-board-form">
-                <input type="hidden" name="original_slug" value="<?php echo esc_attr($edit_slug); ?>">
+            <?php if ($is_edit): ?>
+                <!-- 탭 네비게이션 -->
+                <nav class="uw-settings-tabs">
+                    <a href="#" class="uw-tab-link active" data-tab="basic">기본 수정</a>
+                    <a href="#" class="uw-tab-link" data-tab="bulk">대량관리</a>
+                </nav>
+            <?php endif; ?>
 
-                <table class="form-table">
-                    <tr>
-                        <th><label for="board_name">게시판 이름 *</label></th>
-                        <td>
-                            <input type="text" id="board_name" name="name" class="regular-text"
-                                value="<?php echo esc_attr($board['name'] ?? ''); ?>" required>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th><label for="board_slug">슬러그 (영문) *</label></th>
-                        <td>
-                            <input type="text" id="board_slug" name="slug" class="regular-text"
-                                value="<?php echo esc_attr($edit_slug); ?>" pattern="[a-z0-9_-]+" <?php echo $is_edit ? 'readonly' : ''; ?> required>
-                            <p class="description">영문 소문자, 숫자, 밑줄, 하이픈만 사용 가능</p>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th><label for="per_page">페이지당 글 수</label></th>
-                        <td>
-                            <select id="per_page" name="per_page">
-                                <?php foreach (array(5, 10, 15, 20, 30) as $num): ?>
-                                    <option value="<?php echo $num; ?>" <?php selected(($board['per_page'] ?? 10), $num); ?>>
-                                        <?php echo $num; ?>개
+            <!-- 기본 수정 탭 -->
+            <div class="uw-tab-panel active" id="tab-basic">
+                <form id="uw-board-settings-form" class="uw-board-form">
+                    <input type="hidden" name="original_slug" value="<?php echo esc_attr($edit_slug); ?>">
+
+                    <table class="form-table">
+                        <tr>
+                            <th><label for="board_name">게시판 이름 *</label></th>
+                            <td>
+                                <input type="text" id="board_name" name="name" class="regular-text"
+                                    value="<?php echo esc_attr($board['name'] ?? ''); ?>" required>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><label for="board_slug">슬러그 (영문) *</label></th>
+                            <td>
+                                <input type="text" id="board_slug" name="slug" class="regular-text"
+                                    value="<?php echo esc_attr($edit_slug); ?>" pattern="[a-z0-9_-]+" <?php echo $is_edit ? 'readonly' : ''; ?> required>
+                                <p class="description">영문 소문자, 숫자, 밑줄, 하이픈만 사용 가능</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><label for="per_page">페이지당 글 수</label></th>
+                            <td>
+                                <select id="per_page" name="per_page">
+                                    <?php foreach (array(5, 10, 15, 20, 30) as $num): ?>
+                                        <option value="<?php echo $num; ?>" <?php selected(($board['per_page'] ?? 10), $num); ?>>
+                                            <?php echo $num; ?>개
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><label for="read_permission">읽기 권한</label></th>
+                            <td>
+                                <select id="read_permission" name="read_permission">
+                                    <option value="all" <?php selected(($board['read_permission'] ?? 'all'), 'all'); ?>>
+                                        제한 없음
                                     </option>
-                                <?php endforeach; ?>
-                            </select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th><label for="read_permission">읽기 권한</label></th>
-                        <td>
-                            <select id="read_permission" name="read_permission">
-                                <option value="all" <?php selected(($board['read_permission'] ?? 'all'), 'all'); ?>>
-                                    제한 없음
-                                </option>
-                                <option value="logged_in" <?php selected(($board['read_permission'] ?? ''), 'logged_in'); ?>>
-                                    로그인 사용자만
-                                </option>
-                            </select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th><label for="write_permission">쓰기 권한</label></th>
-                        <td>
-                            <select id="write_permission" name="write_permission">
-                                <option value="all" <?php selected(($board['write_permission'] ?? 'all'), 'all'); ?>>
-                                    제한 없음 (비회원 포함)
-                                </option>
-                                <option value="logged_in" <?php selected(($board['write_permission'] ?? ''), 'logged_in'); ?>>
-                                    로그인 사용자만
-                                </option>
-                            </select>
-                            <p class="description">비회원 쓰기 허용 시 비밀번호 입력이 필수가 됩니다.</p>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>개인정보 동의</th>
-                        <td>
-                            <label>
-                                <input type="checkbox" name="require_privacy" value="1" <?php checked($board['require_privacy'] ?? true); ?>>
-                                글쓰기 시 개인정보 수집 동의 필수
-                            </label>
-                        </td>
-                    </tr>
-                </table>
+                                    <option value="logged_in" <?php selected(($board['read_permission'] ?? ''), 'logged_in'); ?>>
+                                        로그인 사용자만
+                                    </option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><label for="write_permission">쓰기 권한</label></th>
+                            <td>
+                                <select id="write_permission" name="write_permission">
+                                    <option value="all" <?php selected(($board['write_permission'] ?? 'all'), 'all'); ?>>
+                                        제한 없음 (비회원 포함)
+                                    </option>
+                                    <option value="logged_in" <?php selected(($board['write_permission'] ?? ''), 'logged_in'); ?>>
+                                        로그인 사용자만
+                                    </option>
+                                </select>
+                                <p class="description">비회원 쓰기 허용 시 비밀번호 입력이 필수가 됩니다.</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>개인정보 동의</th>
+                            <td>
+                                <label>
+                                    <input type="checkbox" name="require_privacy" value="1" <?php checked($board['require_privacy'] ?? true); ?>>
+                                    글쓰기 시 개인정보 수집 동의 필수
+                                </label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><label for="skin">스킨</label></th>
+                            <td>
+                                <select id="skin" name="skin">
+                                    <option value="style01" <?php selected(($board['skin'] ?? 'style01'), 'style01'); ?>>Style 1
+                                        (리스트형)</option>
+                                    <option value="style02" <?php selected(($board['skin'] ?? ''), 'style02'); ?>>Style 2 (카드형)
+                                    </option>
+                                    <option value="style03" <?php selected(($board['skin'] ?? ''), 'style03'); ?>>Style 3 (섬네일형)
+                                    </option>
+                                </select>
+                            </td>
+                        </tr>
+                    </table>
 
-                <?php if ($is_edit): ?>
-                <h2>최신글 숏코드(Shortcode)</h2>
-                <table class="form-table">
-                    <tr>
-                        <th>숏코드 미리보기</th>
-                        <td>
-                            <input type="text" id="latest-shortcode-preview" 
-                                value='[latest_posts id="<?php echo esc_attr($slug); ?>" url="" limit="5"]' 
-                                readonly class="regular-text code" style="width: 100%; max-width: 500px; background: #f0f0f1;">
-                            <p class="description">최신글 리스트를 생성합니다. <strong>url</strong> 부분에 게시판이 설치된 페이지의 전체 URL을 입력하고 이 숏코드를 메인페이지 또는 사이드바에 입력하세요.</p>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>이동 페이지 URL</th>
-                        <td>
-                            <input type="text" id="latest-shortcode-url" 
-                                placeholder="/support/notice/" 
-                                class="regular-text" style="max-width: 300px;">
-                            <p class="description">게시글 클릭 시 이동할 페이지 경로 (예: /support/notice/)</p>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>출력 개수</th>
-                        <td>
-                            <input type="number" id="latest-shortcode-limit" 
-                                value="5" min="1" max="20" 
-                                style="width: 80px;">
-                            <p class="description">메인페이지 등에 보여줄 최신글 개수</p>
-                        </td>
-                    </tr>
-                </table>
+                    <?php if (!$is_edit): ?>
+                        <h2>최신글 설정</h2>
+                        <table class="form-table">
+                            <tr>
+                                <th><label for="latest_page">최신글 이동 페이지</label></th>
+                                <td>
+                                    <select id="latest_page" name="latest_page">
+                                        <option value="">선택하세요</option>
+                                        <?php
+                                        $pages = get_pages();
+                                        foreach ($pages as $page) {
+                                            echo '<option value="' . esc_url(get_permalink($page)) . '">'
+                                                . esc_html($page->post_title) . '</option>';
+                                        }
+                                        ?>
+                                    </select>
+                                    <p class="description">최신글을 클릭하면 선택된 페이지로 이동합니다.<br>
+                                        최신글 숏코드를 사용하면 메인페이지 또는 사이드바에 새로 등록된 게시글을 표시할 수 있습니다.</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th><label for="latest_limit">출력 개수</label></th>
+                                <td>
+                                    <input type="number" id="latest_limit" name="latest_limit" value="5" min="1" max="20"
+                                        style="width: 80px;">
+                                    <p class="description">메인페이지 등에 보여줄 최신글 개수</p>
+                                </td>
+                            </tr>
+                        </table>
+                    <?php endif; ?>
 
-                <script>
-                (function() {
-                    var boardSlug = '<?php echo esc_js($slug); ?>';
-                    var urlInput = document.getElementById('latest-shortcode-url');
-                    var limitInput = document.getElementById('latest-shortcode-limit');
-                    var preview = document.getElementById('latest-shortcode-preview');
+                    <?php if ($is_edit): ?>
+                        <h2>최신글 숏코드(Shortcode)</h2>
+                        <table class="form-table">
+                            <tr>
+                                <th>숏코드 미리보기</th>
+                                <td>
+                                    <?php
+                                    $saved_url = $board['latest_page'] ?? '';
+                                    $saved_limit = $board['latest_limit'] ?? 5;
+                                    ?>
+                                    <input type="text" id="latest-shortcode-preview"
+                                        value='[latest_posts id="<?php echo esc_attr($edit_slug); ?>" url="<?php echo esc_attr($saved_url); ?>" limit="<?php echo esc_attr($saved_limit); ?>"]'
+                                        readonly class="regular-text code"
+                                        style="width: 100%; max-width: 500px; background: #f0f0f1;">
+                                    <p class="description">최신글 리스트를 생성합니다. 위 숏코드를 메인페이지 또는 사이드바에 입력하세요.</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th><label for="latest_page">최신글 이동 페이지</label></th>
+                                <td>
+                                    <select id="latest_page" name="latest_page">
+                                        <option value="">선택하세요</option>
+                                        <?php
+                                        $pages = get_pages();
+                                        foreach ($pages as $page) {
+                                            $page_url = get_permalink($page);
+                                            $selected = ($saved_url === $page_url) ? 'selected' : '';
+                                            echo '<option value="' . esc_url($page_url) . '" ' . $selected . '>'
+                                                . esc_html($page->post_title) . '</option>';
+                                        }
+                                        ?>
+                                    </select>
+                                    <p class="description">최신글을 클릭하면 선택된 페이지로 이동합니다.</p>
+                                </td>
+                            </tr>
+                        </table>
 
-                    function updatePreview() {
-                        var url = urlInput.value || '';
-                        var limit = limitInput.value || '5';
-                        preview.value = '[latest_posts id="' + boardSlug + '" url="' + url + '" limit="' + limit + '"]';
-                    }
+                        <script>
+                            (function () {
+                                var boardSlug = '<?php echo esc_js($edit_slug); ?>';
+                                var savedLimit = '<?php echo esc_js($saved_limit); ?>';
+                                var pageSelect = document.getElementById('latest_page');
+                                var preview = document.getElementById('latest-shortcode-preview');
 
-                    urlInput.addEventListener('input', updatePreview);
-                    limitInput.addEventListener('input', updatePreview);
-                })();
-                </script>
-                <?php endif; ?>
+                                function updatePreview() {
+                                    var url = pageSelect.value || '';
+                                    preview.value = '[latest_posts id="' + boardSlug + '" url="' + url + '" limit="' + savedLimit + '"]';
+                                }
 
-                <p class="submit">
-                    <button type="submit" class="button button-primary">
-                        <?php echo $is_edit ? '저장하기' : '게시판 생성'; ?>
-                    </button>
-                    <a href="<?php echo admin_url('admin.php?page=uw-board'); ?>" class="button">취소</a>
-                </p>
-            </form>
+                                pageSelect.addEventListener('change', updatePreview);
+                            })();
+                        </script>
+                    <?php endif; ?>
+
+                    <p class="submit">
+                        <button type="submit" class="button button-primary">
+                            <?php echo $is_edit ? '저장하기' : '게시판 생성'; ?>
+                        </button>
+                        <a href="<?php echo admin_url('admin.php?page=uw-board'); ?>" class="button">취소</a>
+                    </p>
+                </form>
+            </div><!-- /.uw-tab-panel #tab-basic -->
+
+            <?php if ($is_edit):
+                // 게시글 수 가져오기
+                $post_count = wp_count_posts('uw_board');
+                $total_posts = 0;
+                $args = array(
+                    'post_type' => 'uw_board',
+                    'post_status' => array('publish', 'draft', 'trash'),
+                    'tax_query' => array(
+                        array(
+                            'taxonomy' => 'uw_board_type',
+                            'field' => 'slug',
+                            'terms' => $edit_slug,
+                        ),
+                    ),
+                    'posts_per_page' => -1,
+                    'fields' => 'ids',
+                );
+                $count_query = new WP_Query($args);
+                $total_posts = $count_query->found_posts;
+                wp_reset_postdata();
+                ?>
+                <!-- 대량관리 탭 -->
+                <div class="uw-tab-panel" id="tab-bulk">
+                    <div class="uw-csv-section">
+                        <h2>CSV 파일 다운로드</h2>
+                        <table class="form-table">
+                            <tr>
+                                <th>CSV 파일 다운로드</th>
+                                <td>
+                                    <button type="button" id="uw-export-csv" class="button button-primary"
+                                        data-slug="<?php echo esc_attr($edit_slug); ?>">
+                                        다운로드
+                                    </button>
+                                    <p class="description">
+                                        대략 <strong><?php echo number_format($total_posts); ?></strong>개의 게시글 정보를 다운로드합니다. (휴지통에 있는
+                                        게시글이 포함됩니다.)<br>
+                                        게시글 양이 많다면 웹호스팅의 트래픽 사용량이 높아지니 주의해주세요.
+                                    </p>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="uw-csv-section">
+                        <h2>CSV 파일 업로드</h2>
+                        <table class="form-table">
+                            <tr>
+                                <th>CSV 파일 업로드</th>
+                                <td>
+                                    <select id="uw-import-mode" style="min-width: 250px;">
+                                        <option value="add">기존 게시글을 유지하고 추가 등록</option>
+                                        <option value="replace">모든 게시글 삭제 후 새로 등록</option>
+                                    </select>
+                                    <div style="margin-top: 10px;">
+                                        <input type="file" id="uw-csv-file" accept=".csv">
+                                        <span class="uw-file-name">선택된 파일 없음</span>
+                                    </div>
+                                    <button type="button" id="uw-import-csv" class="button button-primary" style="margin-top: 10px;"
+                                        data-slug="<?php echo esc_attr($edit_slug); ?>">
+                                        업로드
+                                    </button>
+                                    <p class="description" style="margin-top: 10px;">
+                                        CSV 파일의 인코딩을 UTF-8로 변경해서 시도해보세요.<br>
+                                        너무 많은 데이터를 한 번에 업로드하게 되면 에러가 발생될 수 있으니 가급적 나눠서 여러 번 업로드해주세요.<br>
+                                        댓글과 첨부파일은 등록되지 않습니다.
+                                    </p>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div id="uw-csv-progress" style="display: none; margin-top: 20px;">
+                        <div class="uw-progress-bar">
+                            <div class="uw-progress-fill" style="width: 0%;"></div>
+                        </div>
+                        <p class="uw-progress-text">처리 중...</p>
+                    </div>
+
+                    <div id="uw-csv-result" style="display: none; margin-top: 20px;"></div>
+                </div><!-- /.uw-tab-panel #tab-bulk -->
+            <?php endif; ?>
         </div>
         <?php
     }
@@ -805,18 +977,18 @@ class UW_Board_Admin
             <div class="uw-editor-field">
                 <label>대표 이미지</label>
                 <div class="uw-thumbnail-upload">
-                    <input type="hidden" name="thumbnail_id" id="thumbnail_id"
-                        value="<?php echo get_post_thumbnail_id($post_id); ?>">
-                    <button type="button" class="button uw-select-thumbnail">이미지 선택</button>
-                    <span class="uw-thumbnail-name">
-                        <?php
-                        if (has_post_thumbnail($post_id)) {
-                            echo get_the_post_thumbnail_url($post_id, 'thumbnail') ? '이미지 선택됨' : '선택된 파일 없음';
-                        } else {
-                            echo '선택된 파일 없음';
-                        }
-                        ?>
-                    </span>
+                    <?php
+                    $thumb_id = get_post_thumbnail_id($post_id);
+                    $thumb_url = $thumb_id ? get_the_post_thumbnail_url($post_id, 'medium') : '';
+                    ?>
+                    <input type="hidden" name="thumbnail_id" id="thumbnail_id" value="<?php echo esc_attr($thumb_id); ?>">
+                    <div class="uw-thumbnail-preview" id="uw-thumbnail-preview"
+                        style="<?php echo $thumb_url ? '' : 'display:none;'; ?>">
+                        <img src="<?php echo esc_url($thumb_url); ?>" alt="대표 이미지 미리보기" id="uw-thumbnail-img">
+                        <button type="button" class="uw-remove-thumbnail" title="이미지 삭제">&times;</button>
+                    </div>
+                    <button type="button" class="button uw-select-thumbnail"
+                        style="<?php echo $thumb_url ? 'display:none;' : ''; ?>">이미지 선택</button>
                 </div>
             </div>
 
@@ -893,6 +1065,9 @@ class UW_Board_Admin
             'read_permission' => sanitize_key($_POST['read_permission']),
             'write_permission' => sanitize_key($_POST['write_permission']),
             'require_privacy' => !empty($_POST['require_privacy']),
+            'skin' => sanitize_key($_POST['skin']),
+            'latest_page' => esc_url_raw($_POST['latest_page'] ?? ''),
+            'latest_limit' => absint($_POST['latest_limit'] ?? 5),
         );
 
         $this->save_board_settings($slug, $settings);
@@ -1197,10 +1372,208 @@ class UW_Board_Admin
             }
         }
 
-        update_option('uw_boards', $boards);
+        update_option(self::OPTION_KEY, $boards);
 
         wp_send_json_success(array(
             'message' => count($board_slugs) . '개의 게시판이 삭제되었습니다.',
+        ));
+    }
+
+    /**
+     * CSV 내보내기 AJAX 핸들러
+     */
+    public function ajax_export_csv()
+    {
+        check_ajax_referer('uw_board_admin_nonce', 'nonce');
+
+        if (!current_user_can('manage_options')) {
+            wp_send_json_error('권한이 없습니다.');
+        }
+
+        $board_slug = isset($_POST['board_slug']) ? sanitize_key($_POST['board_slug']) : '';
+
+        if (empty($board_slug)) {
+            wp_send_json_error('게시판 정보가 없습니다.');
+        }
+
+        // 게시글 조회
+        $args = array(
+            'post_type' => 'uw_board',
+            'post_status' => array('publish', 'draft', 'trash'),
+            'posts_per_page' => -1,
+            'tax_query' => array(
+                array(
+                    'taxonomy' => 'uw_board_type',
+                    'field' => 'slug',
+                    'terms' => $board_slug,
+                ),
+            ),
+            'orderby' => 'date',
+            'order' => 'DESC',
+        );
+
+        $query = new WP_Query($args);
+        $csv_data = array();
+
+        // 헤더 행
+        $csv_data[] = array('ID', '제목', '내용', '작성자', '작성일', '조회수', '상단고정');
+
+        if ($query->have_posts()) {
+            while ($query->have_posts()) {
+                $query->the_post();
+                $post_id = get_the_ID();
+
+                // 작성자 정보
+                $guest_author = get_post_meta($post_id, '_uw_board_guest_author', true);
+                $author_id = get_the_author_meta('ID');
+                if ($guest_author) {
+                    $author_name = $guest_author;
+                } else {
+                    $user = get_userdata($author_id);
+                    $author_name = $user ? $user->display_name : get_the_author();
+                }
+
+                $csv_data[] = array(
+                    $post_id,
+                    get_the_title(),
+                    get_the_content(),
+                    $author_name,
+                    get_the_date('Y-m-d H:i:s'),
+                    get_post_meta($post_id, '_uw_board_views', true) ?: 0,
+                    get_post_meta($post_id, '_uw_board_pinned', true) ? 1 : 0,
+                );
+            }
+            wp_reset_postdata();
+        }
+
+        wp_send_json_success(array(
+            'filename' => $board_slug . '_' . date('Y-m-d') . '.csv',
+            'data' => $csv_data,
+        ));
+    }
+
+    /**
+     * CSV 가져오기 AJAX 핸들러
+     */
+    public function ajax_import_csv()
+    {
+        check_ajax_referer('uw_board_admin_nonce', 'nonce');
+
+        if (!current_user_can('manage_options')) {
+            wp_send_json_error('권한이 없습니다.');
+        }
+
+        $board_slug = isset($_POST['board_slug']) ? sanitize_key($_POST['board_slug']) : '';
+        $mode = isset($_POST['mode']) ? sanitize_key($_POST['mode']) : 'add';
+
+        if (empty($board_slug)) {
+            wp_send_json_error('게시판 정보가 없습니다.');
+        }
+
+        if (!isset($_FILES['csv_file']) || $_FILES['csv_file']['error'] !== UPLOAD_ERR_OK) {
+            wp_send_json_error('파일 업로드에 실패했습니다.');
+        }
+
+        $file = $_FILES['csv_file'];
+
+        // CSV 파일 확인
+        if (pathinfo($file['name'], PATHINFO_EXTENSION) !== 'csv') {
+            wp_send_json_error('CSV 파일만 업로드 가능합니다.');
+        }
+
+        // 기존 게시글 삭제 모드
+        if ($mode === 'replace') {
+            $existing_posts = get_posts(array(
+                'post_type' => 'uw_board',
+                'post_status' => array('publish', 'draft', 'trash'),
+                'posts_per_page' => -1,
+                'tax_query' => array(
+                    array(
+                        'taxonomy' => 'uw_board_type',
+                        'field' => 'slug',
+                        'terms' => $board_slug,
+                    ),
+                ),
+                'fields' => 'ids',
+            ));
+
+            foreach ($existing_posts as $post_id) {
+                wp_delete_post($post_id, true);
+            }
+        }
+
+        // CSV 파일 파싱
+        $handle = fopen($file['tmp_name'], 'r');
+        if ($handle === false) {
+            wp_send_json_error('파일을 읽을 수 없습니다.');
+        }
+
+        // BOM 제거
+        $bom = fread($handle, 3);
+        if ($bom !== "\xef\xbb\xbf") {
+            rewind($handle);
+        }
+
+        $header = fgetcsv($handle);
+        if ($header === false) {
+            fclose($handle);
+            wp_send_json_error('CSV 파일 형식이 올바르지 않습니다.');
+        }
+
+        $imported = 0;
+        $errors = 0;
+
+        while (($row = fgetcsv($handle)) !== false) {
+            if (count($row) < 4) {
+                $errors++;
+                continue;
+            }
+
+            // 필드 매핑
+            $title = isset($row[1]) ? sanitize_text_field($row[1]) : '';
+            $content = isset($row[2]) ? wp_kses_post($row[2]) : '';
+            $author = isset($row[3]) ? sanitize_text_field($row[3]) : '관리자';
+            $date = isset($row[4]) ? sanitize_text_field($row[4]) : current_time('mysql');
+            $views = isset($row[5]) ? absint($row[5]) : 0;
+            $pinned = isset($row[6]) ? absint($row[6]) : 0;
+
+            if (empty($title)) {
+                $errors++;
+                continue;
+            }
+
+            // 게시글 생성
+            $post_data = array(
+                'post_title' => $title,
+                'post_content' => $content,
+                'post_status' => 'publish',
+                'post_type' => 'uw_board',
+                'post_date' => $date,
+            );
+
+            $post_id = wp_insert_post($post_data);
+
+            if ($post_id && !is_wp_error($post_id)) {
+                // 택소노미 설정
+                wp_set_object_terms($post_id, $board_slug, 'uw_board_type');
+
+                // 메타 데이터 설정
+                update_post_meta($post_id, '_uw_board_views', $views);
+                update_post_meta($post_id, '_uw_board_pinned', $pinned ? true : false);
+                update_post_meta($post_id, '_uw_board_guest_author', $author);
+
+                $imported++;
+            } else {
+                $errors++;
+            }
+        }
+
+        fclose($handle);
+
+        wp_send_json_success(array(
+            'message' => sprintf('%d개의 게시글이 등록되었습니다.', $imported),
+            'imported' => $imported,
+            'errors' => $errors,
         ));
     }
 }

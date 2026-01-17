@@ -239,47 +239,7 @@
     <div class="uw-container">
 
       <!-- WP: 동적 콘텐츠 시작 (커뮤니티 최신글) -->
-      <ul class="uw-community-list">
-        <!-- Item 1 -->
-        <li class="uw-community-item delay-200" data-animate="fade-up">
-          <a href="<?php echo get_theme_file_uri('/support/notice_view.html?id=1'); ?>" class="uw-community-link">
-            <div class="uw-community-card">
-              <span class="uw-community-cat">공지사항</span>
-              <h3 class="uw-community-tit">현장 개선 아이디어 공모 참여 협조 전 (요청)</h3>
-              <p class="uw-community-desc">반갑습니다. 경영지원팀 입니다. 상기 제목과 같이 현장 개선 아이디어 공모 참여 부탁드립니다. 공문 및 첨부파일을 참고하시어 현장 개선
-                아이디어 공모에 적극...</p>
-              <span class="uw-community-date">2024-03-13</span>
-              <span class="uw-community-arrow"></span>
-            </div>
-          </a>
-        </li>
-        <!-- Item 2 -->
-        <li class="uw-community-item delay-400" data-animate="fade-up">
-          <a href="<?php echo get_theme_file_uri('/support/notice_view.html?id=2'); ?>" class="uw-community-link">
-            <div class="uw-community-card">
-              <span class="uw-community-cat">공지사항</span>
-              <h3 class="uw-community-tit">2024년도 신입사원 공개채용 안내</h3>
-              <p class="uw-community-desc">2024년도 신입사원 공개채용을 진행합니다. 열정적이고 창의적인 인재 여러분의 많은 지원 바랍니다. 자세한 내용은 채용 공고를 확인해
-                주시기 바랍니다.</p>
-              <span class="uw-community-date">2024-02-20</span>
-              <span class="uw-community-arrow"></span>
-            </div>
-          </a>
-        </li>
-        <!-- Item 3 -->
-        <li class="uw-community-item delay-600" data-animate="fade-up">
-          <a href="<?php echo get_theme_file_uri('/support/notice_view.html?id=3'); ?>" class="uw-community-link">
-            <div class="uw-community-card">
-              <span class="uw-community-cat">뉴스</span>
-              <h3 class="uw-community-tit">스마트 틴팅 필름 신제품 출시 기념 행사</h3>
-              <p class="uw-community-desc">스마트 틴팅 필름 신제품 출시를 기념하여 런칭 행사를 개최합니다. 혁신적인 기술을 직접 체험해 보실 수 있는 자리에 여러분을 초대합니다.
-              </p>
-              <span class="uw-community-date">2024-01-15</span>
-              <span class="uw-community-arrow"></span>
-            </div>
-          </a>
-        </li>
-      </ul>
+      <?php echo do_shortcode('[latest_posts id="notice" url="/support/notice/" limit="3"]'); ?>
       <!-- WP: 동적 콘텐츠 끝 -->
     </div>
   </section>

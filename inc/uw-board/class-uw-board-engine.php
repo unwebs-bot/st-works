@@ -1,9 +1,6 @@
 <?php
 /**
- * UW Board Shortcode Handler
- * 
- * 프론트엔드 숏코드 처리
- * [uw_board name="게시판슬러그"]
+ * UW Board Engine
  * 
  * @package St-works
  * @since 1.0.0
@@ -13,7 +10,7 @@ if (!defined('ABSPATH')) {
   exit;
 }
 
-class UW_Board_Shortcode
+class UW_Board_Engine
 {
 
   private static $instance = null;
@@ -57,15 +54,13 @@ class UW_Board_Shortcode
     }
     $assets_loaded = true;
 
-    // Xeicon (아이콘 폰트) - GitHub 기반 jsDelivr CDN
-    wp_enqueue_style('xeicon', 'https://cdn.jsdelivr.net/gh/xpressengine/XEIcon@2.3.3/xeicon.min.css');
+    // XEIcon, cm-bbs.css, board.css는 functions.php에서 전역 로드됨
 
     // Summernote (글쓰기 시)
     wp_enqueue_style('summernote', 'https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css');
     wp_enqueue_script('summernote', 'https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js', array('jquery'), '0.8.18', true);
 
-    // Custom styles - 캐시 버스팅
-    wp_enqueue_style('uw-board', get_theme_file_uri('/assets/css/uw-board.css'), array(), '1.0.7');
+    // Custom JS - 캐시 버스팅
     wp_enqueue_script('uw-board', get_theme_file_uri('/assets/js/uw-board.js'), array('jquery'), '1.0.1', true);
 
     wp_localize_script('uw-board', 'uwBoard', array(
@@ -84,6 +79,7 @@ class UW_Board_Shortcode
 
     $atts = shortcode_atts(array(
       'name' => '',
+      'skin' => '',
     ), $atts);
 
     $slug = sanitize_key($atts['name']);
@@ -127,6 +123,11 @@ class UW_Board_Shortcode
             $this->render_write_form($slug, $board, $post_id);
             break;
           default:
+            // 스킨 설정 (숏코드 > DB > 기본값)
+            $skin = !empty($atts['skin']) ? $atts['skin'] : (isset($board['skin']) ? $board['skin'] : 'style01');
+            // $skin 파라미터를 render_list에 전달해야 하지만, render_list는 $board만 받음.
+            // 임시로 $board 배열에 skin을 덮어씌워서 전달.
+            $board['skin'] = $skin;
             $this->render_list($slug, $board);
             break;
         }
@@ -273,45 +274,70 @@ class UW_Board_Shortcode
           </form>
         </div>
 
-        <table class="uw-board-table">
-          <thead>
-            <tr>
-              <th class="col-num">번호</th>
-              <th class="col-title">제목</th>
-              <th class="col-author">작성자</th>
-              <th class="col-date">등록일</th>
-              <th class="col-views">조회</th>
-            </tr>
-          </thead>
-          <tbody>
-            <?php
-            // 상단 고정글
-            if ($pinned_query && $pinned_query->have_posts()) {
-              while ($pinned_query->have_posts()):
-                $pinned_query->the_post();
-                $this->render_list_row($slug, true);
+        <?php
+        // 스킨 설정 (기본값: style01)
+        $skin = isset($board['skin']) ? $board['skin'] : 'style01';
+
+        // Style 01: Table
+        if ($skin === 'style01'):
+          ?>
+          <table class="uw-board-style01">
+            <thead>
+              <tr>
+                <th class="col-num">번호</th>
+                <th class="col-title">제목</th>
+                <th class="col-author">작성자</th>
+                <th class="col-date">등록일</th>
+                <th class="col-views">조회</th>
+              </tr>
+            </thead>
+            <tbody>
+              <?php
+              // 상단 고정글
+              if ($pinned_query && $pinned_query->have_posts()) {
+                while ($pinned_query->have_posts()):
+                  $pinned_query->the_post();
+                  get_template_part('template-parts/uw-board/list', $skin, array('slug' => $slug, 'is_pinned' => true, 'board' => $board));
+                endwhile;
+                wp_reset_postdata();
+              }
+
+              // 일반글
+              $num = $total - (($paged - 1) * $per_page);
+              while ($query->have_posts()):
+                $query->the_post();
+                get_template_part('template-parts/uw-board/list', $skin, array('slug' => $slug, 'is_pinned' => false, 'num' => $num--, 'board' => $board));
               endwhile;
               wp_reset_postdata();
-            }
+              ?>
 
-            // 일반글
-            $num = $total - (($paged - 1) * $per_page);
-            while ($query->have_posts()):
-              $query->the_post();
-              $this->render_list_row($slug, false, $num--);
-            endwhile;
-            wp_reset_postdata();
-            ?>
+              <?php
+              $has_posts = ($pinned_query && $pinned_query->have_posts()) || $query->have_posts();
+              if (!$has_posts): ?>
+                <tr>
+                  <td colspan="5" class="uw-no-posts">등록된 글이 없습니다.</td>
+                </tr>
+              <?php endif; ?>
+            </tbody>
+          </table>
 
+          <?php
+          // Style 02: Minimal Card or Style 03: Thumbnail Card
+        elseif ($skin === 'style02' || $skin === 'style03'):
+          ?>
+          <ul class="uw-board-<?php echo esc_attr($skin); ?>">
             <?php
-            $has_posts = ($pinned_query && $pinned_query->have_posts()) || $query->have_posts();
-            if (!$has_posts): ?>
-              <tr>
-                <td colspan="5" class="uw-no-posts">등록된 글이 없습니다.</td>
-              </tr>
+            if ($query->have_posts()):
+              while ($query->have_posts()):
+                $query->the_post();
+                get_template_part('template-parts/uw-board/list', $skin, array('slug' => $slug, 'board' => $board));
+              endwhile;
+              wp_reset_postdata();
+            else: ?>
+              <li class="uw-no-posts" style="width:100%;">등록된 글이 없습니다.</li>
             <?php endif; ?>
-          </tbody>
-        </table>
+          </ul>
+        <?php endif; ?>
 
         <div class="uw-board-footer">
           <div class="uw-pagination">
@@ -348,57 +374,6 @@ class UW_Board_Shortcode
           <?php endif; ?>
         </div>
 
-        <?php
-  }
-
-  /**
-   * 목록 행 렌더링
-   */
-  private function render_list_row($slug, $is_pinned = false, $num = 0)
-  {
-    $post_id = get_the_ID();
-    $views = get_post_meta($post_id, '_uw_views', true) ?: 0;
-    $is_new = (time() - get_the_time('U')) < 86400;
-    $attachments = get_post_meta($post_id, '_uw_attachments', true);
-    $has_attachment = !empty($attachments); // 실제 첨부파일만 체크 (썸네일 제외)
-
-    global $wp;
-    $single_url = add_query_arg(array('view' => 'single', 'id' => $post_id), home_url($wp->request));
-    ?>
-        <tr class="<?php echo $is_pinned ? 'uw-pinned' : ''; ?>">
-          <td class="col-num">
-            <?php echo $is_pinned ? '<span class="uw-notice-badge">공지</span>' : $num; ?>
-          </td>
-          <td class="col-title">
-            <a href="<?php echo esc_url($single_url); ?>">
-              <?php the_title(); ?>
-              <?php if ($is_new): ?>
-                <span class="uw-new-badge">N</span>
-              <?php endif; ?>
-              <?php if ($has_attachment): ?>
-                <i class="xi-attachment uw-file-icon" title="첨부파일"></i>
-              <?php endif; ?>
-            </a>
-          </td>
-          <td class="col-author">
-            <?php
-            $guest_name = get_post_meta($post_id, '_uw_guest_name', true);
-            if ($guest_name) {
-              echo esc_html($guest_name);
-            } else {
-              $author_id = get_the_author_meta('ID');
-              $user = get_userdata($author_id);
-              echo ($user && in_array('administrator', $user->roles)) ? '관리자' : get_the_author();
-            }
-            ?>
-          </td>
-          <td class="col-date">
-            <?php echo get_the_date('Y.m.d'); ?>
-          </td>
-          <td class="col-views">
-            <?php echo number_format($views); ?>
-          </td>
-        </tr>
         <?php
   }
 
@@ -725,7 +700,7 @@ class UW_Board_Shortcode
       wp_send_json_error('제목을 입력해주세요.');
     }
 
-    if (empty(strip_tags($content))) {
+    if (empty(strip_tags($content)) && strpos($content, '<img') === false) {
       wp_send_json_error('내용을 입력해주세요.');
     }
 
@@ -980,19 +955,23 @@ class UW_Board_Shortcode
    * 최신글 숏코드 렌더링
    * [latest_posts id="게시판슬러그" limit="5" url="/notice/"]
    */
+  /**
+   * 최신글 숏코드 렌더링
+   * [latest_posts id="게시판슬러그,게시판슬러그2" limit="3" url="이동할페이지URL"]
+   */
   public function render_latest_posts($atts)
   {
     $atts = shortcode_atts(array(
-      'id' => '',       // 게시판 슬러그 (필수)
-      'limit' => 5,     // 출력 개수
-      'url' => '',      // 더보기/클릭 이동 URL
+      'id' => '',       // 게시판 슬러그 (콤마로 구분 가능)
+      'limit' => 3,     // 기본값 3
+      'url' => '',      // 클릭 시 이동할 URL (목록 페이지)
     ), $atts, 'latest_posts');
 
-    $board_slug = sanitize_key($atts['id']);
-    $limit = absint($atts['limit']) > 0 ? absint($atts['limit']) : 5;
-    $url = esc_url($atts['url']);
+    $board_slugs = array_map('trim', explode(',', $atts['id']));
+    $limit = absint($atts['limit']) > 0 ? absint($atts['limit']) : 3;
+    $url = esc_url($atts['url']); // 제공되면 이 URL을 base로 사용
 
-    if (empty($board_slug)) {
+    if (empty($atts['id'])) {
       return '<p class="uw-latest-error">게시판 ID를 지정해주세요.</p>';
     }
 
@@ -1007,7 +986,7 @@ class UW_Board_Shortcode
         array(
           'taxonomy' => 'uw_board_type',
           'field' => 'slug',
-          'terms' => $board_slug,
+          'terms' => $board_slugs,
         ),
       ),
     );
@@ -1016,24 +995,51 @@ class UW_Board_Shortcode
 
     ob_start();
     ?>
-        <ul class="uw-latest-posts">
-          <?php if ($query->have_posts()): ?>
-              <?php while ($query->have_posts()):
-                $query->the_post(); ?>
-                  <?php
-                  $post_id = get_the_ID();
-                  $post_url = !empty($url) ? add_query_arg('view', $post_id, $url) : '#';
-                  ?>
-                  <li>
-                    <a href="<?php echo esc_url($post_url); ?>">
-                      <span class="title"><?php the_title(); ?></span>
-                      <span class="date"><?php echo get_the_date('Y.m.d'); ?></span>
-                    </a>
-                  </li>
-              <?php endwhile; ?>
-              <?php wp_reset_postdata(); ?>
+        <ul class="uw-community-list">
+          <?php if ($query->have_posts()):
+            $i = 0;
+            while ($query->have_posts()):
+              $query->the_post();
+              $i++;
+              $delay = 1000 + ($i * 100); // 1100, 1200, 1300...
+      
+              $post_id = get_the_ID();
+              // 현재 글의 게시판 타입 가져오기
+              $terms = get_the_terms($post_id, 'uw_board_type');
+              $term_slug = ($terms && !is_wp_error($terms)) ? $terms[0]->slug : '';
+              // 동적으로 게시판 이름 가져오기
+              $term_board = $this->get_board_settings($term_slug);
+              $term_label = $term_board ? $term_board['name'] : ucfirst($term_slug);
+
+              // URL 생성: 숏코드에 url이 있으면 사용, 없으면 메인으로 갈 수밖에 없음 (개별 처리 필요 시 로직 추가)
+              // 여기서는 사용자가 제공한 url을 우선하되, 게시판별로 다르면 ?view=single&id=xx 로 통합 처리됨을 가정
+              $post_url = !empty($url) ? add_query_arg(array('view' => 'single', 'id' => $post_id), $url) : add_query_arg(array('page_id' => $post_id), home_url('/'));
+
+              // 요약문 생성
+              $excerpt = get_the_excerpt();
+              if (empty($excerpt)) {
+                $content = strip_tags(get_the_content());
+                $excerpt = mb_substr($content, 0, 100) . '...';
+              }
+              ?>
+              <li class="uw-community-item delay-<?php echo $delay; ?>" data-animate="fade-up">
+                <a href="<?php echo esc_url($post_url); ?>" class="uw-community-link">
+                  <div class="uw-community-card">
+                    <span class="uw-community-cat"><?php echo esc_html($term_label); ?></span>
+                    <h3 class="uw-community-tit"><?php the_title(); ?></h3>
+                    <p class="uw-community-desc"><?php echo esc_html($excerpt); ?></p>
+                    <span class="uw-community-date"><?php echo get_the_date('Y-m-d'); ?></span>
+                    <span class="uw-community-arrow"></span>
+                  </div>
+                </a>
+              </li>
+            <?php endwhile; ?>
+            <?php wp_reset_postdata(); ?>
           <?php else: ?>
-              <li class="no-posts">등록된 게시글이 없습니다.</li>
+            <li class="uw-community-item"
+              style="width:100%; text-align:center; padding:50px; background:#fff; border:1px solid #e5e5e5;">
+              <p style="color:#666;">등록된 게시글이 없습니다.</p>
+            </li>
           <?php endif; ?>
         </ul>
         <?php
@@ -1042,5 +1048,5 @@ class UW_Board_Shortcode
 }
 
 // Initialize
-UW_Board_Shortcode::get_instance();
+UW_Board_Engine::get_instance();
 

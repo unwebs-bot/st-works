@@ -1,0 +1,25 @@
+@charset "utf-8";
+
+/* ==========================================================================
+   게시판 (Board)
+   
+   [Cleaned]
+   - Generic Board Styles are now handled by:
+     1. assets/css/cm-bbs.css
+     2. assets/css/board.css (Skins)
+   - News Grid moved to:
+     - assets/css/pages/_news.css
+   
+   This file is kept for specific page overrides if needed.
+   ========================================================================== */
+
+/* 
+   .uw-sp-board-container was here.
+   If layout issues arise, use .board structure or re-add container styles here.
+*/
+.uw-sp-board-container {
+  width: 100%;
+  max-width: var(--uw-max-width, 1200px);
+  margin: 0 auto;
+  padding: 0 0 120px 0;
+}

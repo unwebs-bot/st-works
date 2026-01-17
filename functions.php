@@ -13,13 +13,17 @@ function myfourthwp_files()
 {
   // css
   wp_enqueue_style('google-play-font', '//fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap');
-  wp_enqueue_style('reset-style', get_template_directory_uri() . '/assets/css/reset.css', array(), '9.0');
+  wp_enqueue_style('google-play-font', '//fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap');
   wp_enqueue_style('fa-style', '//cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css');
-  wp_enqueue_style('theme-style', get_stylesheet_uri(), array('reset-style'), '1.0'); // Root style.css (Metadata)
+  wp_enqueue_style('theme-style', get_stylesheet_uri(), array(), '1.0'); // Root style.css (Metadata)
   wp_enqueue_style('main-style', get_theme_file_uri('/assets/css/style.css'), array('theme-style'), '9.5'); // Real Main Styles
-  wp_enqueue_style('components-style', get_theme_file_uri('/assets/css/components.css'), array('main-style'), '1.0');
-  wp_enqueue_style('app-style', get_theme_file_uri('/assets/css/app.css'), array('components-style'));
-  wp_enqueue_style('subpage-style', get_theme_file_uri('/assets/css/subpage.css'), array('app-style'));
+  wp_enqueue_style('app-style', get_theme_file_uri('/assets/css/app.css'), array('main-style'));
+
+
+  // Board engine assets (Global)
+  wp_enqueue_style('xeicon', 'https://cdn.jsdelivr.net/gh/xpressengine/XEIcon@2.3.3/xeicon.min.css');
+  wp_enqueue_style('cm-bbs', get_theme_file_uri('/assets/css/board/cm-bbs.css'), array(), '1.1.0');
+  wp_enqueue_style('uw-board-skin', get_theme_file_uri('/assets/css/board/board.css'), array('cm-bbs'), '1.1.0');
 
   // js
   wp_enqueue_script('bs-script', '//cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js', NULL, '5.1.1', true);
@@ -35,4 +39,13 @@ function myfourthwp_files()
  */
 require_once get_template_directory() . '/inc/uw-board/class-uw-board-cpt.php';
 require_once get_template_directory() . '/inc/uw-board/class-uw-board-admin.php';
-require_once get_template_directory() . '/inc/uw-board/class-uw-board-shortcode.php';
+require_once get_template_directory() . '/inc/uw-board/class-uw-board-engine.php';
+
+/**
+ * ===========================================================================
+ * UW Inquiry Engine (입력폼 시스템)
+ * ===========================================================================
+ */
+require_once get_template_directory() . '/inc/uw-inquiry/class-uw-inquiry-cpt.php';
+require_once get_template_directory() . '/inc/uw-inquiry/class-uw-inquiry-admin.php';
+require_once get_template_directory() . '/inc/uw-inquiry/class-uw-inquiry-handler.php';

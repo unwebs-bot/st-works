@@ -1,0 +1,253 @@
+@charset "utf-8";
+
+/* ==========================================================================
+   기본 레이아웃 (Layout)
+   ========================================================================== */
+.uw-container {
+  max-width: var(--uw-max-width);
+  margin: 0 auto;
+  height: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+
+/* ==========================================================================
+   서브페이지 공통 (Common)
+   ========================================================================== */
+
+
+.sub-visual {
+  position: relative;
+  width: 100%;
+  height: 450px;
+  overflow: hidden;
+  background-color: #000;
+}
+
+.sub-visual-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  transform: scale(1.1);
+  animation: zoomOut 2.0s ease-out forwards;
+}
+
+.sub-visual.about .sub-visual-bg {
+  background-image: url('../../images/company_building.png');
+  filter: brightness(0.7);
+}
+
+.sub-visual.business .sub-visual-bg {
+  background-image: url('../../images/business_01.png');
+  filter: brightness(0.6);
+}
+
+.sub-visual.product .sub-visual-bg {
+  background-image: url('../../images/product_bg.jpg');
+  filter: brightness(0.6);
+}
+
+.sub-visual.support .sub-visual-bg {
+  background-image: url('../../images/support_bg.jpg');
+  filter: brightness(0.6);
+}
+
+.sub-visual.contact .sub-visual-bg {
+  background-image: url('../../images/contact_bg.png');
+  filter: brightness(0.6);
+}
+
+.sub-visual-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  z-index: 10;
+  width: 100%;
+  padding: 0 20px;
+}
+
+.sub-page-title {
+  font-size: 56px;
+  font-weight: 700;
+  color: #fff;
+  margin: 0;
+  opacity: 0;
+  transform: translateY(30px);
+  animation: fadeUp 0.8s cubic-bezier(0.25, 1, 0.5, 1) 0.3s forwards;
+  text-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.sub-lnb {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 60px;
+  background: rgba(0, 0, 0, 0.3);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  z-index: 20;
+  backdrop-filter: blur(5px);
+}
+
+.sub-lnb-list {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: 0;
+}
+
+.sub-lnb-item {
+  position: relative;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  flex: 1;
+  text-align: center;
+}
+
+.sub-lnb-item a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 400;
+  transition: all 0.3s ease;
+  position: relative;
+  white-space: nowrap;
+}
+
+.sub-lnb-item a:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.sub-lnb-item.active a {
+  color: #fff;
+  font-weight: 700;
+  background: var(--uw-primary);
+}
+
+.sub-page {
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: 120px 20px;
+}
+
+.sub-page .uw-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.uw-section-header {
+  width: 100%;
+  margin-bottom: 60px;
+  text-align: left;
+}
+
+.uw-sub-page-title {
+  font-size: 36px;
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -1px;
+  color: var(--uw-text, #111);
+  margin: 0 0 20px 0;
+}
+
+.uw-sub-page-desc {
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.6;
+  color: var(--uw-text-gray, #999);
+  margin: 0;
+  word-break: keep-all;
+}
+
+.uw-text-blue {
+  color: var(--uw-primary);
+}
+
+@keyframes zoomOut {
+  from {
+    transform: scale(1.1);
+  }
+
+  to {
+    transform: scale(1.0);
+  }
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Response: Common */
+@media (max-width: 768px) {
+  .sub-visual {
+    height: 300px;
+  }
+
+  .sub-page-title {
+    font-size: 30px;
+  }
+
+  .sub-page {
+    padding: 80px 20px;
+  }
+
+  .sub-lnb {
+    height: 50px;
+    overflow-x: auto;
+    width: 100%;
+  }
+
+  .sub-lnb-list {
+    justify-content: flex-start;
+  }
+
+  .sub-lnb-item {
+    flex: 1 1 0;
+    min-width: 80px;
+  }
+
+  .sub-lnb-item a {
+    padding: 0 15px;
+    font-size: 14px;
+  }
+
+  .uw-section-header {
+    margin-bottom: 40px;
+  }
+
+  .uw-sub-page-title {
+    font-size: 24px;
+    margin-bottom: 40px;
+  }
+
+  .uw-sub-page-desc {
+    font-size: 15px;
+  }
+}

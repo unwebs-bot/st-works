@@ -205,6 +205,55 @@
   gap: 10px;
 }
 
+/* 썸네일 미리보기 */
+.uw-thumbnail-preview {
+  position: relative;
+  display: inline-block;
+  max-width: 200px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.uw-thumbnail-preview img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+.uw-remove-thumbnail {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 24px;
+  height: 24px;
+  background: rgba(255, 0, 0, 0.8);
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.uw-remove-thumbnail:hover {
+  background: #c00;
+}
+
+.uw-thumb-placeholder {
+  width: 100%;
+  height: 100%;
+  min-height: 120px;
+  background: #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ccc;
+}
+
 .uw-attachment-slot {
   display: flex;
   align-items: center;
@@ -457,4 +506,86 @@
   .uw-board-single-view {
     border: none;
   }
+}
+
+/* ==========================================================================
+   9. 설정 탭 및 CSV 대량관리
+   ========================================================================== */
+.uw-settings-tabs {
+  margin: 20px 0 0;
+  border-bottom: 1px solid #ccc;
+}
+
+.uw-tab-link {
+  display: inline-block;
+  padding: 10px 20px;
+  text-decoration: none;
+  background: #e5e5e5;
+  color: #555;
+  border: 1px solid #ccc;
+  border-bottom: none;
+  margin-right: 5px;
+  border-radius: 4px 4px 0 0;
+  font-weight: 600;
+}
+
+.uw-tab-link:hover {
+  background: #fff;
+  color: #000;
+}
+
+.uw-tab-link.active {
+  background: #fff;
+  color: #000;
+  border-bottom: 1px solid #fff;
+  margin-bottom: -1px;
+}
+
+.uw-tab-panel {
+  display: none;
+  background: #fff;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-top: none;
+}
+
+.uw-tab-panel.active {
+  display: block;
+}
+
+.uw-csv-section {
+  border: 1px solid #ddd;
+  background: #fff;
+  padding: 10px 20px 20px;
+  margin-bottom: 20px;
+}
+
+.uw-csv-section h2 {
+  font-size: 16px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 10px;
+  margin-bottom: 15px;
+}
+
+.uw-progress-bar {
+  height: 20px;
+  background: #f0f0f0;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 5px;
+  border: 1px solid #ddd;
+}
+
+.uw-progress-fill {
+  height: 100%;
+  background: #2271b1;
+  width: 0%;
+  transition: width 0.3s ease;
+}
+
+.uw-progress-text {
+  text-align: center;
+  font-size: 12px;
+  color: #666;
+  margin: 0;
 }
