@@ -13,6 +13,7 @@
   const UWGalleryAdmin = {
     itemIndex: 0,
     draggedItem: null,
+    customThumbFrame: null,
 
     init: function () {
       const itemsList = document.getElementById('uw-gallery-items');
@@ -54,6 +55,18 @@
       const editItemCancelBtn = document.getElementById('uw-edit-item-cancel');
       if (editItemCancelBtn) {
         editItemCancelBtn.addEventListener('click', this.closeItemEditModal.bind(this));
+      }
+
+      // 커스텀 썸네일 업로드
+      const uploadCustomThumbBtn = document.getElementById('uw-upload-custom-thumb');
+      if (uploadCustomThumbBtn) {
+        uploadCustomThumbBtn.addEventListener('click', this.uploadCustomThumbnail.bind(this));
+      }
+
+      // 커스텀 썸네일 제거
+      const removeCustomThumbBtn = document.getElementById('uw-remove-custom-thumb');
+      if (removeCustomThumbBtn) {
+        removeCustomThumbBtn.addEventListener('click', this.removeCustomThumbnail.bind(this));
       }
 
       // 이벤트 위임 (아이템 제거, 편집)
@@ -247,12 +260,13 @@
       li.innerHTML = `
         <input type="hidden" name="items[${index}][id]" value="${attachment.id}">
         <input type="hidden" name="items[${index}][thumb_id]" value="${attachment.id}">
+        <input type="hidden" name="items[${index}][custom_thumb_id]" value="0" class="uw-item-custom-thumb-input">
         <input type="hidden" name="items[${index}][type]" value="image">
         <input type="hidden" name="items[${index}][video_url]" value="">
         <input type="hidden" name="items[${index}][title]" value="" class="uw-item-title-input">
         <input type="hidden" name="items[${index}][description]" value="" class="uw-item-desc-input">
         <input type="hidden" name="items[${index}][categories]" value="" class="uw-item-cats-input">
-        
+
         <div class="uw-item-thumb">
           <img src="${thumbUrl}" alt="">
         </div>
@@ -310,12 +324,13 @@
       li.innerHTML = `
         <input type="hidden" name="items[${index}][id]" value="0">
         <input type="hidden" name="items[${index}][thumb_id]" value="0">
+        <input type="hidden" name="items[${index}][custom_thumb_id]" value="0" class="uw-item-custom-thumb-input">
         <input type="hidden" name="items[${index}][type]" value="video">
         <input type="hidden" name="items[${index}][video_url]" value="${url}">
         <input type="hidden" name="items[${index}][title]" value="" class="uw-item-title-input">
         <input type="hidden" name="items[${index}][description]" value="" class="uw-item-desc-input">
         <input type="hidden" name="items[${index}][categories]" value="" class="uw-item-cats-input">
-        
+
         <div class="uw-item-thumb">
           ${thumbUrl ? `<img src="${thumbUrl}" alt="">` : ''}
           <span class="uw-video-badge">▶</span>
@@ -343,11 +358,30 @@
       const titleInput = item.querySelector('.uw-item-title-input');
       const descInput = item.querySelector('.uw-item-desc-input');
       const catsInput = item.querySelector('.uw-item-cats-input');
+      const customThumbInput = item.querySelector('.uw-item-custom-thumb-input');
+      const typeInput = item.querySelector('input[name*="[type]"]');
+      const itemType = typeInput ? typeInput.value : 'image';
 
       document.getElementById('uw-edit-item-index').value = index;
+      document.getElementById('uw-edit-item-type').value = itemType;
       document.getElementById('uw-edit-item-title').value = titleInput ? titleInput.value : '';
       document.getElementById('uw-edit-item-description').value = descInput ? descInput.value : '';
       document.getElementById('uw-edit-item-categories').value = catsInput ? catsInput.value : '';
+
+      // 커스텀 썸네일 섹션 표시 (비디오만)
+      const videoOnlySection = document.querySelector('.uw-video-only');
+      if (videoOnlySection) {
+        if (itemType === 'video') {
+          videoOnlySection.style.display = 'block';
+          const customThumbId = customThumbInput ? customThumbInput.value : '0';
+          document.getElementById('uw-edit-item-custom-thumb-id').value = customThumbId;
+
+          // 커스텀 썸네일 미리보기 업데이트
+          this.updateCustomThumbPreview();
+        } else {
+          videoOnlySection.style.display = 'none';
+        }
+      }
 
       document.getElementById('uw-item-edit-modal').style.display = 'flex';
     },
@@ -357,16 +391,19 @@
       const title = document.getElementById('uw-edit-item-title').value;
       const description = document.getElementById('uw-edit-item-description').value;
       const categories = document.getElementById('uw-edit-item-categories').value;
+      const customThumbId = document.getElementById('uw-edit-item-custom-thumb-id').value;
 
       const item = document.querySelector(`.uw-gallery-item[data-index="${index}"]`);
       if (item) {
         const titleInput = item.querySelector('.uw-item-title-input');
         const descInput = item.querySelector('.uw-item-desc-input');
         const catsInput = item.querySelector('.uw-item-cats-input');
+        const customThumbInput = item.querySelector('.uw-item-custom-thumb-input');
 
         if (titleInput) titleInput.value = title;
         if (descInput) descInput.value = description;
         if (catsInput) catsInput.value = categories;
+        if (customThumbInput) customThumbInput.value = customThumbId;
       }
 
       this.closeItemEditModal();
@@ -519,6 +556,71 @@
           btn.textContent = originalText;
         }, 1500);
       });
+    },
+
+    // === 커스텀 썸네일 업로드 ===
+    uploadCustomThumbnail: function (e) {
+      e.preventDefault();
+      const self = this;
+
+      if (!this.customThumbFrame) {
+        this.customThumbFrame = wp.media({
+          title: '커스텀 썸네일 선택',
+          button: { text: '썸네일로 사용' },
+          multiple: false,
+          library: { type: 'image' }
+        });
+
+        this.customThumbFrame.on('select', function () {
+          const attachment = self.customThumbFrame.state().get('selection').first().toJSON();
+          document.getElementById('uw-edit-item-custom-thumb-id').value = attachment.id;
+          self.updateCustomThumbPreview();
+        });
+      }
+
+      this.customThumbFrame.open();
+    },
+
+    // === 커스텀 썸네일 미리보기 업데이트 ===
+    updateCustomThumbPreview: function () {
+      const customThumbId = document.getElementById('uw-edit-item-custom-thumb-id').value;
+      const previewImg = document.getElementById('uw-custom-thumb-preview-img');
+      const placeholder = document.getElementById('uw-custom-thumb-placeholder');
+      const removeBtn = document.getElementById('uw-remove-custom-thumb');
+
+      if (customThumbId && customThumbId !== '0') {
+        // 워드프레스 REST API로 이미지 URL 가져오기
+        fetch(`/wp-json/wp/v2/media/${customThumbId}`)
+          .then(response => response.json())
+          .then(data => {
+            if (data.media_details && data.media_details.sizes && data.media_details.sizes.thumbnail) {
+              previewImg.src = data.media_details.sizes.thumbnail.source_url;
+            } else if (data.source_url) {
+              previewImg.src = data.source_url;
+            }
+            previewImg.style.display = 'block';
+            placeholder.style.display = 'none';
+            removeBtn.style.display = 'inline-block';
+          })
+          .catch(() => {
+            // API 실패 시 기본 상태로
+            previewImg.style.display = 'none';
+            placeholder.style.display = 'block';
+            removeBtn.style.display = 'none';
+          });
+      } else {
+        previewImg.style.display = 'none';
+        previewImg.src = '';
+        placeholder.style.display = 'block';
+        removeBtn.style.display = 'none';
+      }
+    },
+
+    // === 커스텀 썸네일 제거 ===
+    removeCustomThumbnail: function (e) {
+      e.preventDefault();
+      document.getElementById('uw-edit-item-custom-thumb-id').value = '0';
+      this.updateCustomThumbPreview();
     }
   };
 

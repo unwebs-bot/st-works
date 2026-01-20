@@ -126,12 +126,33 @@
       caption.textContent = title;
     },
 
-    // === 카테고리 필터 ===
+    // === 카테고리 필터 (탭 + 드롭다운) ===
     initCategoryFilter: function () {
       document.querySelectorAll('.uw-gallery-filter').forEach(filter => {
         const gallery = filter.closest('.uw-gallery');
         const items = gallery.querySelectorAll('.uw-gallery-item');
+        const select = filter.querySelector('.uw-gallery-filter-select');
 
+        // 필터 로직 (공통)
+        const applyFilter = (filterValue) => {
+          items.forEach(item => {
+            if (filterValue === '*') {
+              item.style.display = '';
+              item.classList.remove('is-hidden');
+            } else {
+              const cats = item.dataset.categories ? item.dataset.categories.split(',') : [];
+              if (cats.includes(filterValue)) {
+                item.style.display = '';
+                item.classList.remove('is-hidden');
+              } else {
+                item.style.display = 'none';
+                item.classList.add('is-hidden');
+              }
+            }
+          });
+        };
+
+        // 탭 버튼 클릭 (데스크톱)
         filter.querySelectorAll('.uw-filter-btn').forEach(btn => {
           btn.addEventListener('click', () => {
             // 버튼 활성화
@@ -139,24 +160,30 @@
             btn.classList.add('is-active');
 
             const filterValue = btn.dataset.filter;
+            applyFilter(filterValue);
 
-            items.forEach(item => {
-              if (filterValue === '*') {
-                item.style.display = '';
-                item.classList.remove('is-hidden');
-              } else {
-                const cats = item.dataset.categories ? item.dataset.categories.split(',') : [];
-                if (cats.includes(filterValue)) {
-                  item.style.display = '';
-                  item.classList.remove('is-hidden');
-                } else {
-                  item.style.display = 'none';
-                  item.classList.add('is-hidden');
-                }
+            // 드롭다운 동기화
+            if (select) {
+              select.value = filterValue;
+            }
+          });
+        });
+
+        // 드롭다운 변경 (모바일)
+        if (select) {
+          select.addEventListener('change', (e) => {
+            const filterValue = e.target.value;
+            applyFilter(filterValue);
+
+            // 탭 버튼 동기화
+            filter.querySelectorAll('.uw-filter-btn').forEach(btn => {
+              if (btn.dataset.filter === filterValue) {
+                filter.querySelectorAll('.uw-filter-btn').forEach(b => b.classList.remove('is-active'));
+                btn.classList.add('is-active');
               }
             });
           });
-        });
+        }
       });
     },
 

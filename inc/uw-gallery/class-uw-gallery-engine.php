@@ -100,14 +100,50 @@ class UW_Gallery_Engine
     }
 
     $layout = $settings['_uw_gallery_layout'] ?: 'grid';
-    $columns = $settings['_uw_gallery_columns'] ?: 4;
-    $mobile_cols = $settings['_uw_gallery_mobile_cols'] ?: 2;
+
+    // 공통 옵션
+    $gutter = $settings['_uw_gallery_gutter'] ?? 15;
+    $border_width = $settings['_uw_gallery_border_width'] ?? 0;
+    $border_radius = $settings['_uw_gallery_border_radius'] ?? 8;
+    $hover_effect = $settings['_uw_gallery_hover_effect'] ?? 'zoom';
+    $lightbox_theme = $settings['_uw_gallery_lightbox_theme'] ?? 'dark';
+    $lazy_load = $settings['_uw_gallery_lazy_load'] ?? true;
+
+    // 텍스트 옵션
     $text_position = $settings['_uw_gallery_text_position'] ?? 'bottom';
+    $text_align = $settings['_uw_gallery_text_align'] ?? 'left';
+    $overlay_opacity = $settings['_uw_gallery_overlay_opacity'] ?? 70;
     $show_title = $settings['_uw_gallery_show_title'] ?? true;
     $show_description = $settings['_uw_gallery_show_description'] ?? false;
     $show_filter = $settings['_uw_gallery_show_filter'] ?? false;
     $use_lightbox = $settings['_uw_gallery_lightbox'] ?? true;
     $custom_css = $settings['_uw_gallery_custom_css'] ?? '';
+
+    // 레이아웃별 옵션
+    $grid_columns_pc = $settings['_uw_gallery_grid_columns_pc'] ?? 4;
+    $grid_columns_tablet = $settings['_uw_gallery_grid_columns_tablet'] ?? 3;
+    $grid_columns_mobile = $settings['_uw_gallery_grid_columns_mobile'] ?? 2;
+    $grid_ratio = $settings['_uw_gallery_grid_ratio'] ?? '1:1';
+
+    $masonry_columns = $settings['_uw_gallery_masonry_columns'] ?? 4;
+
+    $justified_row_height_min = $settings['_uw_gallery_justified_row_height_min'] ?? 200;
+    $justified_row_height_max = $settings['_uw_gallery_justified_row_height_max'] ?? 300;
+    $justified_last_row = $settings['_uw_gallery_justified_last_row'] ?? 'left';
+
+    $thumbnail_main_ratio = $settings['_uw_gallery_thumbnail_main_ratio'] ?? '16:9';
+    $thumbnail_position = $settings['_uw_gallery_thumbnail_position'] ?? 'bottom';
+    $thumbnail_transition = $settings['_uw_gallery_thumbnail_transition'] ?? 'click';
+
+    $slide_autoplay = $settings['_uw_gallery_slide_autoplay'] ?? false;
+    $slide_speed = $settings['_uw_gallery_slide_speed'] ?? 5000;
+    $slide_arrows = $settings['_uw_gallery_slide_arrows'] ?? true;
+    $slide_dots = $settings['_uw_gallery_slide_dots'] ?? true;
+    $slide_loop = $settings['_uw_gallery_slide_loop'] ?? true;
+
+    // 하위 호환
+    $columns = $grid_columns_pc;
+    $mobile_cols = $grid_columns_mobile;
 
     // 카테고리 수집 (필터용)
     $all_categories = array();
@@ -124,6 +160,16 @@ class UW_Gallery_Engine
       }
     }
 
+    // aspect-ratio 변환
+    $ratio_map = array(
+      '1:1' => '1 / 1',
+      '4:3' => '4 / 3',
+      '16:9' => '16 / 9',
+      'original' => 'auto'
+    );
+    $css_ratio = isset($ratio_map[$grid_ratio]) ? $ratio_map[$grid_ratio] : 'auto';
+    $main_ratio_val = isset($ratio_map[$thumbnail_main_ratio]) ? $ratio_map[$thumbnail_main_ratio] : '16 / 9';
+
     ob_start();
 
     // 커스텀 CSS
@@ -136,21 +182,53 @@ class UW_Gallery_Engine
     <?php endif; ?>
 
     <div
-      class="uw-gallery uw-gallery-<?php echo $gallery_id; ?> uw-gallery--<?php echo esc_attr($layout); ?> uw-gallery--text-<?php echo esc_attr($text_position); ?>"
+      class="uw-gallery uw-gallery-<?php echo $gallery_id; ?> uw-gallery--<?php echo esc_attr($layout); ?> uw-gallery--text-<?php echo esc_attr($text_position); ?> uw-gallery--hover-<?php echo esc_attr($hover_effect); ?> uw-gallery--lightbox-<?php echo esc_attr($lightbox_theme); ?>"
       data-layout="<?php echo esc_attr($layout); ?>" data-columns="<?php echo $columns; ?>"
       data-mobile-columns="<?php echo $mobile_cols; ?>" data-lightbox="<?php echo $use_lightbox ? 'true' : 'false'; ?>"
-      style="--uw-gallery-columns: <?php echo $columns; ?>; --uw-gallery-mobile-columns: <?php echo $mobile_cols; ?>;">
+      data-hover="<?php echo esc_attr($hover_effect); ?>" data-lightbox-theme="<?php echo esc_attr($lightbox_theme); ?>"
+      data-lazy="<?php echo $lazy_load ? 'true' : 'false'; ?>"
+      data-thumb-position="<?php echo esc_attr($thumbnail_position); ?>"
+      data-thumb-transition="<?php echo esc_attr($thumbnail_transition); ?>"
+      data-slide-autoplay="<?php echo $slide_autoplay ? 'true' : 'false'; ?>" data-slide-speed="<?php echo $slide_speed; ?>"
+      data-slide-arrows="<?php echo $slide_arrows ? 'true' : 'false'; ?>"
+      data-slide-dots="<?php echo $slide_dots ? 'true' : 'false'; ?>"
+      data-slide-loop="<?php echo $slide_loop ? 'true' : 'false'; ?>" style="
+        --uw-gallery-columns: <?php echo $columns; ?>;
+        --uw-gallery-columns-tablet: <?php echo $grid_columns_tablet; ?>;
+        --uw-gallery-mobile-columns: <?php echo $mobile_cols; ?>;
+        --uw-gallery-gap: <?php echo $gutter; ?>px;
+        --uw-gallery-border-width: <?php echo $border_width; ?>px;
+        --uw-gallery-border-radius: <?php echo $border_radius; ?>px;
+        --uw-gallery-overlay-opacity: <?php echo $overlay_opacity / 100; ?>;
+        --uw-gallery-text-align: <?php echo $text_align; ?>;
+        --uw-gallery-ratio: <?php echo $css_ratio; ?>;
+        --uw-gallery-main-ratio: <?php echo $main_ratio_val; ?>;
+        --uw-gallery-row-height-min: <?php echo $justified_row_height_min; ?>px;
+        --uw-gallery-row-height-max: <?php echo $justified_row_height_max; ?>px;
+        --uw-masonry-columns: <?php echo $masonry_columns; ?>;
+      ">>
 
       <?php
-      // 카테고리 필터 바
+      // 카테고리 필터 바 (탭 + 드롭다운 병행)
       if ($show_filter && !empty($all_categories)): ?>
         <div class="uw-gallery-filter">
-          <button type="button" class="uw-filter-btn is-active" data-filter="*">전체</button>
-          <?php foreach ($all_categories as $cat): ?>
-            <button type="button" class="uw-filter-btn" data-filter="<?php echo esc_attr($cat); ?>">
-              <?php echo esc_html($cat); ?>
-            </button>
-          <?php endforeach; ?>
+          <!-- 데스크톱: 탭 버튼 -->
+          <div class="uw-gallery-filter-tabs">
+            <button type="button" class="uw-filter-btn is-active" data-filter="*">전체</button>
+            <?php foreach ($all_categories as $cat): ?>
+              <button type="button" class="uw-filter-btn" data-filter="<?php echo esc_attr($cat); ?>">
+                <?php echo esc_html($cat); ?>
+              </button>
+            <?php endforeach; ?>
+          </div>
+
+          <!-- 모바일: 드롭다운 -->
+          <select class="uw-gallery-filter-select">
+            <option value="*">전체</option>
+            <?php foreach ($all_categories as $cat): ?>
+              <option value="<?php echo esc_attr($cat); ?>"><?php echo esc_html($cat); ?></option>
+            <?php endforeach; ?>
+          </select>
         </div>
       <?php endif; ?>
 
@@ -185,10 +263,18 @@ class UW_Gallery_Engine
       <?php foreach ($items as $item):
         $is_video = isset($item['type']) && $item['type'] === 'video';
         $thumb_id = isset($item['thumb_id']) && $item['thumb_id'] ? $item['thumb_id'] : $item['id'];
+        $custom_thumb_id = isset($item['custom_thumb_id']) ? $item['custom_thumb_id'] : 0;
 
-        $thumb_url = $is_video
-          ? $this->get_video_thumbnail($item['video_url'])
-          : wp_get_attachment_image_url($thumb_id, 'gallery-thumb');
+        // 썸네일 URL: 비디오의 경우 커스텀 썸네일 우선, 없으면 자동 썸네일
+        if ($is_video) {
+          if ($custom_thumb_id) {
+            $thumb_url = wp_get_attachment_image_url($custom_thumb_id, 'gallery-thumb');
+          } else {
+            $thumb_url = $this->get_video_thumbnail($item['video_url']);
+          }
+        } else {
+          $thumb_url = wp_get_attachment_image_url($thumb_id, 'gallery-thumb');
+        }
 
         $full_url = $is_video
           ? $this->get_video_embed_url($item['video_url'])
@@ -263,9 +349,17 @@ class UW_Gallery_Engine
 
     $first_item = $items[0];
     $is_video = isset($first_item['type']) && $first_item['type'] === 'video';
-    $main_url = $is_video
-      ? $this->get_video_thumbnail($first_item['video_url'])
-      : wp_get_attachment_image_url($first_item['id'], 'gallery-full');
+    $custom_thumb_id = isset($first_item['custom_thumb_id']) ? $first_item['custom_thumb_id'] : 0;
+
+    if ($is_video) {
+      if ($custom_thumb_id) {
+        $main_url = wp_get_attachment_image_url($custom_thumb_id, 'gallery-full');
+      } else {
+        $main_url = $this->get_video_thumbnail($first_item['video_url']);
+      }
+    } else {
+      $main_url = wp_get_attachment_image_url($first_item['id'], 'gallery-full');
+    }
     $main_title = isset($first_item['title']) ? $first_item['title'] : '';
     $main_desc = isset($first_item['description']) ? $first_item['description'] : '';
     ?>
@@ -294,12 +388,20 @@ class UW_Gallery_Engine
       <div class="uw-gallery-thumbnails">
         <?php foreach ($items as $index => $item):
           $is_video = isset($item['type']) && $item['type'] === 'video';
-          $thumb_url = $is_video
-            ? $this->get_video_thumbnail($item['video_url'])
-            : wp_get_attachment_image_url(isset($item['thumb_id']) ? $item['thumb_id'] : $item['id'], 'gallery-thumb');
-          $full_url = $is_video
-            ? $this->get_video_thumbnail($item['video_url'])
-            : wp_get_attachment_image_url($item['id'], 'gallery-full');
+          $custom_thumb_id = isset($item['custom_thumb_id']) ? $item['custom_thumb_id'] : 0;
+
+          if ($is_video) {
+            if ($custom_thumb_id) {
+              $thumb_url = wp_get_attachment_image_url($custom_thumb_id, 'gallery-thumb');
+              $full_url = wp_get_attachment_image_url($custom_thumb_id, 'gallery-full');
+            } else {
+              $thumb_url = $this->get_video_thumbnail($item['video_url']);
+              $full_url = $this->get_video_thumbnail($item['video_url']);
+            }
+          } else {
+            $thumb_url = wp_get_attachment_image_url(isset($item['thumb_id']) ? $item['thumb_id'] : $item['id'], 'gallery-thumb');
+            $full_url = wp_get_attachment_image_url($item['id'], 'gallery-full');
+          }
           $title = isset($item['title']) ? $item['title'] : '';
           $desc = isset($item['description']) ? $item['description'] : '';
           ?>
@@ -328,9 +430,17 @@ class UW_Gallery_Engine
       <div class="uw-gallery-slides">
         <?php foreach ($items as $index => $item):
           $is_video = isset($item['type']) && $item['type'] === 'video';
-          $img_url = $is_video
-            ? $this->get_video_thumbnail($item['video_url'])
-            : wp_get_attachment_image_url($item['id'], 'gallery-full');
+          $custom_thumb_id = isset($item['custom_thumb_id']) ? $item['custom_thumb_id'] : 0;
+
+          if ($is_video) {
+            if ($custom_thumb_id) {
+              $img_url = wp_get_attachment_image_url($custom_thumb_id, 'gallery-full');
+            } else {
+              $img_url = $this->get_video_thumbnail($item['video_url']);
+            }
+          } else {
+            $img_url = wp_get_attachment_image_url($item['id'], 'gallery-full');
+          }
           $title = isset($item['title']) ? $item['title'] : '';
           $description = isset($item['description']) ? $item['description'] : '';
           ?>
@@ -375,6 +485,7 @@ class UW_Gallery_Engine
 
   /**
    * 비디오 썸네일 URL
+   * Vimeo는 oEmbed API로 실제 썸네일 추출 (1시간 캐싱)
    */
   private function get_video_thumbnail($url)
   {
@@ -386,7 +497,36 @@ class UW_Gallery_Engine
       return 'https://img.youtube.com/vi/' . $matches[1] . '/mqdefault.jpg';
     }
 
-    // Vimeo - 기본 플레이스홀더
+    // Vimeo - oEmbed API로 실제 썸네일 추출
+    if (preg_match('/vimeo\.com\/(\d+)/', $url, $matches)) {
+      $vimeo_id = $matches[1];
+      $transient_key = 'uw_vimeo_thumb_' . $vimeo_id;
+
+      // 캐시된 썸네일 확인
+      $cached_thumb = get_transient($transient_key);
+      if ($cached_thumb !== false) {
+        return $cached_thumb;
+      }
+
+      // Vimeo oEmbed API 호출
+      $oembed_url = 'https://vimeo.com/api/oembed.json?url=https://vimeo.com/' . $vimeo_id;
+      $response = wp_remote_get($oembed_url, array('timeout' => 10));
+
+      if (!is_wp_error($response) && wp_remote_retrieve_response_code($response) === 200) {
+        $data = json_decode(wp_remote_retrieve_body($response), true);
+        if (isset($data['thumbnail_url'])) {
+          $thumbnail_url = $data['thumbnail_url'];
+          // 1시간 캐싱
+          set_transient($transient_key, $thumbnail_url, HOUR_IN_SECONDS);
+          return $thumbnail_url;
+        }
+      }
+
+      // API 실패 시 플레이스홀더
+      return get_theme_file_uri('assets/images/video-placeholder.png');
+    }
+
+    // 기타 - 플레이스홀더
     return get_theme_file_uri('assets/images/video-placeholder.png');
   }
 

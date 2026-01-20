@@ -355,8 +355,15 @@ class UW_Gallery_Admin
             <ul id="uw-gallery-items" class="uw-gallery-items">
               <?php foreach ($items as $index => $item):
                 $thumb_url = '';
+                $custom_thumb_id = isset($item['custom_thumb_id']) ? $item['custom_thumb_id'] : 0;
+
                 if ($item['type'] === 'video') {
-                  $thumb_url = $this->get_video_thumbnail($item['video_url']);
+                  // 커스텀 썸네일이 있으면 우선 사용
+                  if ($custom_thumb_id) {
+                    $thumb_url = wp_get_attachment_image_url($custom_thumb_id, 'thumbnail');
+                  } else {
+                    $thumb_url = $this->get_video_thumbnail($item['video_url']);
+                  }
                 } else {
                   $thumb_id = isset($item['thumb_id']) ? $item['thumb_id'] : $item['id'];
                   $thumb_url = wp_get_attachment_image_url($thumb_id, 'thumbnail');
@@ -369,6 +376,8 @@ class UW_Gallery_Admin
                   <input type="hidden" name="items[<?php echo $index; ?>][id]" value="<?php echo $item['id']; ?>">
                   <input type="hidden" name="items[<?php echo $index; ?>][thumb_id]"
                     value="<?php echo isset($item['thumb_id']) ? $item['thumb_id'] : $item['id']; ?>">
+                  <input type="hidden" name="items[<?php echo $index; ?>][custom_thumb_id]"
+                    value="<?php echo $custom_thumb_id; ?>" class="uw-item-custom-thumb-input">
                   <input type="hidden" name="items[<?php echo $index; ?>][type]" value="<?php echo $item['type']; ?>">
                   <input type="hidden" name="items[<?php echo $index; ?>][video_url]"
                     value="<?php echo esc_attr($item['video_url'] ?? ''); ?>">
@@ -756,6 +765,7 @@ class UW_Gallery_Admin
       <div class="uw-modal-content uw-modal-wide">
         <h3>이미지 정보 편집</h3>
         <input type="hidden" id="uw-edit-item-index">
+        <input type="hidden" id="uw-edit-item-type">
         <div class="uw-form-field">
           <label>이미지 제목</label>
           <input type="text" id="uw-edit-item-title" placeholder="이미지 제목을 입력하세요">
@@ -769,6 +779,20 @@ class UW_Gallery_Admin
           <input type="text" id="uw-edit-item-categories" placeholder="예: 풍경, 자연, 여행">
           <p class="description">여러 카테고리를 쉼표(,)로 구분하여 입력하세요.</p>
         </div>
+        <!-- 비디오 전용: 커스텀 썸네일 -->
+        <div class="uw-form-field uw-video-only" style="display:none;">
+          <label>커스텀 썸네일</label>
+          <input type="hidden" id="uw-edit-item-custom-thumb-id" value="0">
+          <div class="uw-custom-thumb-preview">
+            <img id="uw-custom-thumb-preview-img" src="" alt="" style="display:none; max-width: 200px; height: auto; border-radius: 4px;">
+            <p id="uw-custom-thumb-placeholder" class="description">자동 썸네일 사용 중</p>
+          </div>
+          <div style="margin-top: 10px;">
+            <button type="button" id="uw-upload-custom-thumb" class="button">커스텀 썸네일 업로드</button>
+            <button type="button" id="uw-remove-custom-thumb" class="button" style="display:none;">썸네일 제거</button>
+          </div>
+          <p class="description">비디오의 자동 썸네일 대신 사용할 이미지를 업로드할 수 있습니다.</p>
+        </div>
         <div class="uw-modal-actions">
           <button type="button" id="uw-edit-item-save" class="button button-primary">저장</button>
           <button type="button" id="uw-edit-item-cancel" class="button">취소</button>
@@ -780,6 +804,7 @@ class UW_Gallery_Admin
 
   /**
    * 비디오 URL에서 썸네일 추출
+   * Vimeo는 oEmbed API로 실제 썸네일 추출 (1시간 캐싱)
    */
   private function get_video_thumbnail($url)
   {
@@ -791,8 +816,32 @@ class UW_Gallery_Admin
       return 'https://img.youtube.com/vi/' . $matches[1] . '/mqdefault.jpg';
     }
 
-    // Vimeo (기본 플레이스홀더)
-    if (strpos($url, 'vimeo.com') !== false) {
+    // Vimeo - oEmbed API로 실제 썸네일 추출
+    if (preg_match('/vimeo\.com\/(\d+)/', $url, $matches)) {
+      $vimeo_id = $matches[1];
+      $transient_key = 'uw_vimeo_thumb_' . $vimeo_id;
+
+      // 캐시된 썸네일 확인
+      $cached_thumb = get_transient($transient_key);
+      if ($cached_thumb !== false) {
+        return $cached_thumb;
+      }
+
+      // Vimeo oEmbed API 호출
+      $oembed_url = 'https://vimeo.com/api/oembed.json?url=https://vimeo.com/' . $vimeo_id;
+      $response = wp_remote_get($oembed_url, array('timeout' => 10));
+
+      if (!is_wp_error($response) && wp_remote_retrieve_response_code($response) === 200) {
+        $data = json_decode(wp_remote_retrieve_body($response), true);
+        if (isset($data['thumbnail_url'])) {
+          $thumbnail_url = $data['thumbnail_url'];
+          // 1시간 캐싱
+          set_transient($transient_key, $thumbnail_url, HOUR_IN_SECONDS);
+          return $thumbnail_url;
+        }
+      }
+
+      // API 실패 시 플레이스홀더
       return get_theme_file_uri('assets/images/video-placeholder.png');
     }
 
@@ -848,6 +897,7 @@ class UW_Gallery_Admin
         $items[] = array(
           'id' => absint($item['id'] ?? 0),
           'thumb_id' => absint($item['thumb_id'] ?? 0),
+          'custom_thumb_id' => absint($item['custom_thumb_id'] ?? 0),
           'type' => sanitize_key($item['type'] ?? 'image'),
           'video_url' => esc_url_raw($item['video_url'] ?? ''),
           'title' => sanitize_text_field($item['title'] ?? ''),

@@ -156,7 +156,7 @@ class UW_Gallery_CPT
 
   /**
    * 갤러리 아이템 기본 구조
-   * 
+   *
    * 이미지별 메타데이터: 제목, 설명, 다중 카테고리
    * 미디어 라이브러리와 독립적으로 저장됨
    */
@@ -165,6 +165,7 @@ class UW_Gallery_CPT
     return array(
       'id' => 0,
       'thumb_id' => 0,
+      'custom_thumb_id' => 0,  // 비디오 커스텀 썸네일 (수동 업로드)
       'type' => 'image',       // image | video
       'video_url' => '',
       'title' => '',           // 이미지 제목 (갤러리 인스턴스 전용)
