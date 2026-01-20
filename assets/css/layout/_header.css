@@ -348,21 +348,26 @@
     margin: 0;
     padding: 0;
   }
+
+  .uw-header.is-scrolled,
+  .uw-header.is-hover {
+    height: 60px;
+  }
+
 }
 
 @media (max-width: 768px) {
   .uw-header .uw-container {
     padding: 0;
-  }
-
-  .uw-header,
-  .uw-header.is-scrolled,
-  .uw-header.is-hover {
-    height: 60px !important;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    height: 60px;
   }
 
   .uw-logo img {
-    height: 28px;
+    width: 160px;
+    height: auto;
   }
 
   .uw-gnb-dropdown {

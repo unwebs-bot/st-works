@@ -171,18 +171,36 @@
    * 파일 업로드 초기화
    */
   function initFileUploads() {
-    // 파일 선택 시 미리보기
+    // 커스텀 파일 버튼 클릭 시 실제 input 트리거
+    $(document).on('click', '.uw-inquiry-file-btn', function (e) {
+      e.preventDefault();
+      $(this).closest('.uw-file-wrapper').find('input[type="file"]').click();
+    });
+
+    // 파일 선택 시 미리보기 및 상태 텍스트 업데이트
     $(document).on('change', '.uw-inquiry-field-file-input, .uw-file-wrapper input[type="file"]', function () {
       var $input = $(this);
       var $wrapper = $input.closest('.uw-inquiry-field-file, .uw-file-wrapper');
       var $preview = $wrapper.find('.uw-inquiry-field-file-preview, .uw-file-preview');
       var $fileName = $preview.find('.uw-inquiry-field-file-name, .uw-file-name');
       var $group = $input.closest('.uw-inquiry-field');
+      var $fileStatus = $wrapper.find('.uw-inquiry-file-placeholder');
+      var $fileSizeInfo = $wrapper.find('.uw-inquiry-file-size');
 
       if (this.files && this.files.length > 0) {
-        $fileName.text(this.files[0].name);
-        $preview.addClass('active'); // CSS에서 display:flex 처리 필요
+        var file = this.files[0];
+        var name = file.name;
+        var size = formatBytes(file.size);
+
+        $fileName.text(name);
+        $fileStatus.text(name).css('color', '#333');
+        $fileSizeInfo.text(size + ' / 100 MB');
+
+        $preview.addClass('active');
         $preview.show();
+
+        // 커스텀 플레이스홀더 업데이트
+        $wrapper.find('.uw-inquiry-file-placeholder').val(name);
 
         // 에러 제거
         $group.removeClass('has-error');
@@ -191,8 +209,19 @@
         $fileName.text('');
         $preview.removeClass('active');
         $preview.hide();
+        $fileStatus.text('파일을 선택해 주세요.').css('color', '#888');
+        $fileSizeInfo.text('0 Byte / 100 MB');
       }
     });
+
+    function formatBytes(bytes, decimals = 2) {
+      if (bytes === 0) return '0 Byte';
+      const k = 1024;
+      const dm = decimals < 0 ? 0 : decimals;
+      const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+      const i = Math.floor(Math.log(bytes) / Math.log(k));
+      return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+    }
 
     // 파일 삭제 버튼
     $(document).on('click', '.uw-inquiry-field-file-remove, .uw-file-remove', function (e) {
@@ -208,6 +237,8 @@
       $preview.removeClass('active');
       $preview.hide();
       $fileName.text('');
+      $wrapper.find('.uw-inquiry-file-placeholder').text('파일을 선택해 주세요.').css('color', '#888');
+      $wrapper.find('.uw-inquiry-file-size').text('0 Byte / 100 MB');
     });
   }
 

@@ -39,9 +39,9 @@
         </div>
       </li>
       <li class="uw-full-item">
-        <a href="<?php echo home_url('/contact/request/'); ?>" class="uw-full-link">Contact</a>
+        <a href="<?php echo home_url('/contact/contact/'); ?>" class="uw-full-link">Contact</a>
         <div class="uw-full-sub">
-          <a href="<?php echo home_url('/contact/request/'); ?>">상담 문의</a>
+          <a href="<?php echo home_url('/contact/contact/'); ?>">상담 문의</a>
         </div>
       </li>
     </ul>

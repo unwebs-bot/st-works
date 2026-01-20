@@ -83,109 +83,114 @@ get_header(); ?>
      Specs Table Section
      ========================================================================== -->
 <section class="uw-table-section">
-  <div class="uw-container">
-    <div class="uw-mobile-hint">← 표를 좌우로 밀어서 확인하세요 →</div>
-
-    <div class="uw-table-wrapper">
-      <table class="uw-full-table">
-        <thead>
-          <tr>
-            <th rowspan="2" class="uw-main-th">항목</th>
-            <th rowspan="2" class="uw-main-th">단위</th>
-            <th colspan="2" class="uw-main-th">고효율 스마트 틴팅 필름</th>
-            <th colspan="2" class="uw-main-th">스마트 틴팅 필름 (일반)</th>
-          </tr>
-          <tr>
-            <th>PNLC 타입</th>
-            <th>PDLC 타입</th>
-            <th>PNLC 타입</th>
-            <th>PDLC 타입</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td rowspan="2" class="uw-col-item">가시광선 투과율</td>
-            <td class="uw-col-unit">Power OFF (투명, %)</td>
-            <td class="uw-val">1~60</td>
-            <td class="uw-val">-</td>
-            <td class="uw-val">40~82</td>
-            <td class="uw-val">-</td>
-          </tr>
-          <tr>
-            <td class="uw-col-unit">Power ON (투명, %)</td>
-            <td class="uw-val">-</td>
-            <td class="uw-val">1~60</td>
-            <td class="uw-val">-</td>
-            <td class="uw-val">40~82</td>
-          </tr>
-
-          <tr>
-            <td class="uw-col-item">자외선 차단율</td>
-            <td class="uw-col-unit">Power OFF/ON (%)</td>
-            <td class="uw-val">99 이상</td>
-            <td class="uw-val">99 이상</td>
-            <td class="uw-val">99 이상</td>
-            <td class="uw-val">99 이상</td>
-          </tr>
-
-          <tr>
-            <td class="uw-col-item">SHGC (태양열 취득률)</td>
-            <td class="uw-col-unit">-</td>
-            <td class="uw-val">0.1~0.5</td>
-            <td class="uw-val">0.1~0.5</td>
-            <td class="uw-val">0.5~0.95</td>
-            <td class="uw-val">0.5~0.95</td>
-          </tr>
-
-          <tr>
-            <td class="uw-col-item">구동 전압</td>
-            <td class="uw-col-unit">전압 (V)</td>
-            <td class="uw-val">48~110</td>
-            <td class="uw-val">48~110</td>
-            <td class="uw-val">48~110</td>
-            <td class="uw-val">48~110</td>
-          </tr>
-
-          <tr>
-            <td class="uw-col-item">구동 온도</td>
-            <td class="uw-col-unit">℃</td>
-            <td class="uw-val">-20~60</td>
-            <td class="uw-val">-20~60</td>
-            <td class="uw-val">-20~60</td>
-            <td class="uw-val">-20~60</td>
-          </tr>
-
-          <tr>
-            <td class="uw-col-item">구동 속도</td>
-            <td class="uw-col-unit">초</td>
-            <td class="uw-val">1초 이내</td>
-            <td class="uw-val">1초 이내</td>
-            <td class="uw-val">1초 이내</td>
-            <td class="uw-val">1초 이내</td>
-          </tr>
-
-          <tr>
-            <td class="uw-col-item">소비 전력</td>
-            <td class="uw-col-unit">W / ㎡</td>
-            <td class="uw-val">3</td>
-            <td class="uw-val">5</td>
-            <td class="uw-val">3</td>
-            <td class="uw-val">5</td>
-          </tr>
-
-          <tr>
-            <td class="uw-col-item">표면 경도</td>
-            <td class="uw-col-unit">연필 경도</td>
-            <td class="uw-val">2H</td>
-            <td class="uw-val">2H</td>
-            <td class="uw-val">2H</td>
-            <td class="uw-val">2H</td>
-          </tr>
-
-        </tbody>
-      </table>
+  <article class="sub-inner">
+    <div class="uw-section-header scroll-trigger">
+      <h2 class="uw-sub-page-title">고효율 / 일반 타입 비교 구성</h2>
     </div>
-  </div>
+    <div class="uw-container">
+      <div class="uw-mobile-hint">← 표를 좌우로 밀어서 확인하세요 →</div>
+
+      <div class="uw-table-wrapper">
+        <table class="uw-full-table">
+          <thead>
+            <tr>
+              <th rowspan="2" class="uw-main-th">항목</th>
+              <th rowspan="2" class="uw-main-th">단위</th>
+              <th colspan="2" class="uw-main-th">고효율 스마트 틴팅 필름</th>
+              <th colspan="2" class="uw-main-th">스마트 틴팅 필름 (일반)</th>
+            </tr>
+            <tr>
+              <th>PNLC 타입</th>
+              <th>PDLC 타입</th>
+              <th>PNLC 타입</th>
+              <th>PDLC 타입</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td rowspan="2" class="uw-col-item">가시광선 투과율</td>
+              <td class="uw-col-unit">Power OFF (투명, %)</td>
+              <td class="uw-val">1~60</td>
+              <td class="uw-val">-</td>
+              <td class="uw-val">40~82</td>
+              <td class="uw-val">-</td>
+            </tr>
+            <tr>
+              <td class="uw-col-unit">Power ON (투명, %)</td>
+              <td class="uw-val">-</td>
+              <td class="uw-val">1~60</td>
+              <td class="uw-val">-</td>
+              <td class="uw-val">40~82</td>
+            </tr>
+
+            <tr>
+              <td class="uw-col-item">자외선 차단율</td>
+              <td class="uw-col-unit">Power OFF/ON (%)</td>
+              <td class="uw-val">99 이상</td>
+              <td class="uw-val">99 이상</td>
+              <td class="uw-val">99 이상</td>
+              <td class="uw-val">99 이상</td>
+            </tr>
+
+            <tr>
+              <td class="uw-col-item">SHGC (태양열 취득률)</td>
+              <td class="uw-col-unit">-</td>
+              <td class="uw-val">0.1~0.5</td>
+              <td class="uw-val">0.1~0.5</td>
+              <td class="uw-val">0.5~0.95</td>
+              <td class="uw-val">0.5~0.95</td>
+            </tr>
+
+            <tr>
+              <td class="uw-col-item">구동 전압</td>
+              <td class="uw-col-unit">전압 (V)</td>
+              <td class="uw-val">48~110</td>
+              <td class="uw-val">48~110</td>
+              <td class="uw-val">48~110</td>
+              <td class="uw-val">48~110</td>
+            </tr>
+
+            <tr>
+              <td class="uw-col-item">구동 온도</td>
+              <td class="uw-col-unit">℃</td>
+              <td class="uw-val">-20~60</td>
+              <td class="uw-val">-20~60</td>
+              <td class="uw-val">-20~60</td>
+              <td class="uw-val">-20~60</td>
+            </tr>
+
+            <tr>
+              <td class="uw-col-item">구동 속도</td>
+              <td class="uw-col-unit">초</td>
+              <td class="uw-val">1초 이내</td>
+              <td class="uw-val">1초 이내</td>
+              <td class="uw-val">1초 이내</td>
+              <td class="uw-val">1초 이내</td>
+            </tr>
+
+            <tr>
+              <td class="uw-col-item">소비 전력</td>
+              <td class="uw-col-unit">W / ㎡</td>
+              <td class="uw-val">3</td>
+              <td class="uw-val">5</td>
+              <td class="uw-val">3</td>
+              <td class="uw-val">5</td>
+            </tr>
+
+            <tr>
+              <td class="uw-col-item">표면 경도</td>
+              <td class="uw-col-unit">연필 경도</td>
+              <td class="uw-val">2H</td>
+              <td class="uw-val">2H</td>
+              <td class="uw-val">2H</td>
+              <td class="uw-val">2H</td>
+            </tr>
+
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </article>
 </section>
 
 <?php get_footer(); ?>

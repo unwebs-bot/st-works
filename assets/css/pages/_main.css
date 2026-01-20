@@ -150,7 +150,7 @@
   text-align: center;
 }
 
-.uw-business-header {
+.uw-section-common-header {
   margin-bottom: 80px;
   text-align: center;
 }
@@ -374,7 +374,6 @@
   padding: 80px 60px;
   background: linear-gradient(135deg, var(--uw-primary) 0%, #0056b3 100%);
   color: #fff;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
   z-index: 3;
 }
 
@@ -416,10 +415,7 @@
   background-color: transparent;
 }
 
-.uw-product-header {
-  margin-bottom: 80px;
-  text-align: center;
-}
+
 
 .uw-main-product-list {
   display: flex;
@@ -452,7 +448,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-size: cover;
+  background-size: initial;
   background-position: center;
   transition: transform 0.6s ease;
 }
@@ -524,7 +520,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: url('../images/tech_bg_v2.png');
+  background-image: url('../../images/tech_bg_v2.png');
   background-size: cover;
   background-position: center;
   z-index: 1;
@@ -623,12 +619,9 @@
   background-color: #fff;
 }
 
-.uw-community-header {
-  text-align: center;
-  margin-bottom: 60px;
-}
 
-.uw-community-header .uw-title {
+
+.uw-section-common-header .uw-title {
   font-size: 48px;
   font-weight: 800;
   color: var(--uw-text);
@@ -755,7 +748,7 @@
   width: 100%;
   height: 100vh;
   min-height: 800px;
-  background: url('../images/contact_bg.png') no-repeat center/cover;
+  background: url('../../images/contact_bg.png') no-repeat center/cover;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -944,6 +937,10 @@
     height: 300px;
   }
 
+  .uw-section-common-header {
+    margin-bottom: 60px;
+  }
+
   /* About Section */
   .uw-about-container {
     flex-direction: column;
@@ -967,7 +964,7 @@
 
   .uw-product-item {
     width: 100%;
-    height: 400px;
+    height: 300px;
   }
 
   /* Tech Section */
@@ -1062,9 +1059,8 @@
     padding-right: 20px;
   }
 
-  .uw-business-header,
-  .uw-product-header,
-  .uw-community-header {
+  .uw-section-common-header {
+    margin-bottom: 40px;
     padding-left: 0;
     padding-right: 0;
   }
@@ -1118,19 +1114,35 @@
 
   .uw-business-name {
     font-size: 18px;
+    margin-bottom: 5px;
   }
 
   /* About Section */
+
+  .uw-about {
+    padding: 20px;
+  }
+
+  .uw-about-image-wrapper {
+    height: 300px;
+  }
+
+  .uw-about-label {
+    margin-bottom: 10px;
+  }
+
   .uw-about-main-title {
     font-size: 28px;
+    margin-bottom: 10px;
   }
 
   .uw-about-description {
-    font-size: 16px;
+    font-size: 14px;
+    margin-bottom: 20px;
   }
 
   .uw-about-content {
-    padding: 40px 30px;
+    padding: 30px 20px;
   }
 
   /* Product */
@@ -1143,12 +1155,16 @@
 
   .uw-product-item {
     flex: none;
-    height: 300px;
+    height: 250px;
     width: 100%;
   }
 
   .uw-product-name {
     font-size: 24px;
+  }
+
+  .uw-main-product-content {
+    padding: 20px;
   }
 
   /* Tech Section */
@@ -1174,7 +1190,7 @@
   }
 
   /* Community Section */
-  .uw-community-header .uw-title {
+  .uw-section-common-header .uw-title {
     font-size: 28px;
   }
 

@@ -87,14 +87,14 @@
   border-radius: 12px;
 }
 
-@media screen and (max-width: 991px) {
+@media screen and (max-width: 1024px) {
   .uw-news-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 20px;
   }
 }
 
-@media screen and (max-width: 640px) {
+@media screen and (max-width: 768px) {
   .uw-news-grid {
     grid-template-columns: 1fr;
   }

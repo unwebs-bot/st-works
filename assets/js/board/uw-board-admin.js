@@ -18,6 +18,7 @@
         initMediaUploader();
         initTabs();
         initCsvHandlers();
+        initCategoryRepeater();
     });
 
     // ==========================================================================
@@ -236,6 +237,7 @@
                 title: $form.find('[name="title"]').val(),
                 content: $('#uw-summernote').summernote('code'),
                 is_pinned: $form.find('[name="is_pinned"]').is(':checked') ? '1' : '',
+                category: $form.find('[name="category"]').val() || '',
                 thumbnail_id: $form.find('[name="thumbnail_id"]').val(),
                 attachments: []
             };
@@ -516,6 +518,46 @@
             var fileName = $(this).val().split('\\').pop();
             $('.uw-file-name').text(fileName || '선택된 파일 없음');
         });
+    }
+
+    // ==========================================================================
+    // 카테고리 리피터
+    // ==========================================================================
+    function initCategoryRepeater() {
+        var $list = $('#uw-category-list');
+        var $addBtn = $('#uw-add-category');
+
+        if (!$list.length) return;
+
+        // 카테고리 추가
+        $addBtn.on('click', function () {
+            var index = $list.find('.uw-category-item').length;
+            var $item = $(
+                '<div class="uw-category-item" data-index="' + index + '">' +
+                '<span class="uw-category-drag dashicons dashicons-menu"></span>' +
+                '<input type="text" name="categories[]" value="" placeholder="카테고리명" class="regular-text">' +
+                '<button type="button" class="button uw-remove-category" title="삭제">' +
+                '<span class="dashicons dashicons-trash"></span>' +
+                '</button>' +
+                '</div>'
+            );
+            $list.append($item);
+            $item.find('input').focus();
+        });
+
+        // 카테고리 삭제
+        $(document).on('click', '.uw-remove-category', function () {
+            $(this).closest('.uw-category-item').remove();
+        });
+
+        // 드래그 정렬 (jQuery UI Sortable이 로드된 경우)
+        if (typeof $.fn.sortable === 'function') {
+            $list.sortable({
+                handle: '.uw-category-drag',
+                placeholder: 'uw-category-placeholder',
+                axis: 'y'
+            });
+        }
     }
 
 })(jQuery);

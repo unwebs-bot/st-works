@@ -155,7 +155,7 @@ class UW_Inquiry_Handler
                             <abbr class="uw-inquiry-field-required" title="필수">*</abbr>
                         </label>
                     </div>
-                    <p class="uw-inquiry-field-help uw-field-help">자동등록방지 숫자를 순서대로 입력하세요.</p>
+
                     <div class="uw-inquiry-field-control">
                         <div class="uw-inquiry-captcha uw-captcha-wrapper">
                             <img src="<?php echo esc_url(get_theme_file_uri('inc/uw-inquiry/captcha.php')); ?>?t=<?php echo time(); ?>" 
@@ -333,15 +333,23 @@ class UW_Inquiry_Handler
                     case 'file':
                         ?>
                         <div class="uw-inquiry-field-file uw-file-wrapper">
+                            <div class="uw-inquiry-file-box">
+                                <button type="button" class="uw-inquiry-file-btn">파일 선택</button>
+                                <div class="uw-inquiry-file-status">
+                                    <span class="uw-inquiry-file-placeholder"><?php echo esc_html($field['placeholder'] ?: '회사소개서, 서비스 소개서, 상품 브로셔 등 홈페이지 제작에 참고할 만한 자료가 있다면 첨부해 주세요. 최대 100MB까지 첨부할 수 있습니다.'); ?></span>
+                                </div>
+                                <div class="uw-inquiry-file-size">0 Byte / 100 MB</div>
+                            </div>
                             <input 
                                 class="uw-inquiry-field-input uw-inquiry-field-file-input"
                                 type="file" 
                                 id="<?php echo esc_attr($field_id); ?>" 
                                 name="<?php echo esc_attr($field_name); ?>"
+                                style="display: none;"
                                 <?php echo $aria_describedby ? 'aria-describedby="' . esc_attr($aria_describedby) . '"' : ''; ?>
                                 <?php echo $is_required ? 'required' : ''; ?>
                             >
-                            <div class="uw-inquiry-field-file-preview uw-file-preview">
+                            <div class="uw-inquiry-field-file-preview uw-file-preview" style="display: none;">
                                 <span class="uw-inquiry-field-file-name uw-file-name"></span>
                                 <button type="button" class="uw-inquiry-field-file-remove uw-file-remove" title="삭제" aria-label="파일 삭제">&times;</button>
                             </div>

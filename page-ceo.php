@@ -17,8 +17,8 @@ get_header(); ?>
     <div class="uw-ceo-content-wrapper">
       <div class="uw-ceo-left">
         <div class="uw-ceo-image-wrapper">
-          <img src="<?php echo get_theme_file_uri('/assets/images/ceo_img.jpg'); ?>" alt="CEO Image" class="uw-ceo-img"
-            onerror="this.src='https://placehold.co/600x400?text=CEO+Image'">
+          <img src="<?php echo get_theme_file_uri('/assets/images/about_ceo.jpg'); ?>" alt="CEO Image"
+            class="uw-ceo-img" onerror="this.src='https://placehold.co/600x400?text=CEO+Image'">
         </div>
       </div>
 

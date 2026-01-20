@@ -377,6 +377,45 @@ class UW_Board_Admin
                                 </select>
                             </td>
                         </tr>
+                        <tr>
+                            <th><label>카테고리 설정</label></th>
+                            <td>
+                                <div class="uw-category-settings">
+                                    <div id="uw-category-list" class="uw-category-list">
+                                        <?php
+                                        $categories = $board['categories'] ?? array();
+                                        if (!empty($categories)):
+                                            foreach ($categories as $index => $cat):
+                                        ?>
+                                            <div class="uw-category-item" data-index="<?php echo $index; ?>">
+                                                <span class="uw-category-drag dashicons dashicons-menu"></span>
+                                                <input type="text" name="categories[]" value="<?php echo esc_attr($cat); ?>" placeholder="카테고리명" class="regular-text">
+                                                <button type="button" class="button uw-remove-category" title="삭제">
+                                                    <span class="dashicons dashicons-trash"></span>
+                                                </button>
+                                            </div>
+                                        <?php
+                                            endforeach;
+                                        endif;
+                                        ?>
+                                    </div>
+                                    <button type="button" id="uw-add-category" class="button">
+                                        <span class="dashicons dashicons-plus-alt2"></span> 카테고리 추가
+                                    </button>
+                                    <p class="description">글쓰기 시 선택할 수 있는 카테고리를 관리합니다. 드래그하여 순서를 변경할 수 있습니다.</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>카테고리 필수 여부</th>
+                            <td>
+                                <label>
+                                    <input type="checkbox" name="category_required" value="1" <?php checked($board['category_required'] ?? false); ?>>
+                                    글쓰기 시 카테고리 선택 필수
+                                </label>
+                                <p class="description">카테고리가 등록된 경우에만 적용됩니다.</p>
+                            </td>
+                        </tr>
                     </table>
 
                     <?php if (!$is_edit): ?>
@@ -951,6 +990,11 @@ class UW_Board_Admin
         $content = $post ? $post->post_content : '';
         $is_pinned = $post ? get_post_meta($post_id, '_uw_is_pinned', true) : false;
         $attachments = $post ? get_post_meta($post_id, '_uw_attachments', true) : array();
+        $current_category = $post ? get_post_meta($post_id, '_uw_category', true) : '';
+        
+        // 카테고리 설정 가져오기
+        $categories = $board['categories'] ?? array();
+        $category_required = $board['category_required'] ?? false;
 
         ?>
         <h1><?php echo $is_edit ? '글 수정' : '글쓰기'; ?> - <?php echo esc_html($board['name']); ?></h1>
@@ -968,6 +1012,20 @@ class UW_Board_Admin
                     상단 공지사항으로 지정
                 </label>
             </div>
+
+            <?php if (!empty($categories)): ?>
+            <div class="uw-editor-field">
+                <label for="post_category">카테고리<?php echo $category_required ? ' *' : ''; ?></label>
+                <select id="post_category" name="category" <?php echo $category_required ? 'required' : ''; ?>>
+                    <option value="">카테고리를 선택하세요</option>
+                    <?php foreach ($categories as $cat): ?>
+                        <option value="<?php echo esc_attr($cat); ?>" <?php selected($current_category, $cat); ?>>
+                            <?php echo esc_html($cat); ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+            <?php endif; ?>
 
             <div class="uw-editor-field">
                 <label>본문</label>
@@ -1059,6 +1117,18 @@ class UW_Board_Admin
         }
 
         $slug = sanitize_key($_POST['slug']);
+        
+        // 카테고리 처리
+        $categories = array();
+        if (!empty($_POST['categories']) && is_array($_POST['categories'])) {
+            foreach ($_POST['categories'] as $cat) {
+                $cat = sanitize_text_field(trim($cat));
+                if (!empty($cat)) {
+                    $categories[] = $cat;
+                }
+            }
+        }
+        
         $settings = array(
             'name' => sanitize_text_field($_POST['name']),
             'per_page' => absint($_POST['per_page']),
@@ -1068,6 +1138,8 @@ class UW_Board_Admin
             'skin' => sanitize_key($_POST['skin']),
             'latest_page' => esc_url_raw($_POST['latest_page'] ?? ''),
             'latest_limit' => absint($_POST['latest_limit'] ?? 5),
+            'categories' => $categories,
+            'category_required' => !empty($_POST['category_required']),
         );
 
         $this->save_board_settings($slug, $settings);
@@ -1136,6 +1208,11 @@ class UW_Board_Admin
 
         // Meta 저장
         update_post_meta($post_id, '_uw_is_pinned', !empty($_POST['is_pinned']) ? '1' : '');
+        
+        // 카테고리 저장
+        if (isset($_POST['category'])) {
+            update_post_meta($post_id, '_uw_category', sanitize_text_field($_POST['category']));
+        }
 
         // 썸네일
         if (!empty($_POST['thumbnail_id'])) {

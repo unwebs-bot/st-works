@@ -394,6 +394,7 @@ class UW_Board_Engine
     update_post_meta($post_id, '_uw_views', $views + 1);
 
     $attachments = get_post_meta($post_id, '_uw_attachments', true);
+    $category = get_post_meta($post_id, '_uw_category', true);
     global $wp;
     $base_url = home_url($wp->request);
 
@@ -405,7 +406,10 @@ class UW_Board_Engine
         <article class="uw-single-post">
           <header class="uw-post-header">
             <h2 class="uw-post-title">
-              <?php echo esc_html($post->post_title); ?>
+              <?php if ($category): ?>
+                      <span class="uw-category-badge">[<?php echo esc_html($category); ?>]</span>
+                  <?php endif; ?>
+                  <?php echo esc_html($post->post_title); ?>
             </h2>
             <div class="uw-post-meta">
               <span>작성자:
@@ -532,6 +536,11 @@ class UW_Board_Engine
     $content = $post ? $post->post_content : '';
     $attachments = $post ? get_post_meta($post_id, '_uw_attachments', true) : array();
 
+    // 카테고리 설정
+    $categories = $board['categories'] ?? array();
+    $category_required = $board['category_required'] ?? false;
+    $current_category = $post ? get_post_meta($post_id, '_uw_category', true) : '';
+
     $require_password = $board['write_permission'] === 'all' && !is_user_logged_in();
     global $wp;
     $base_url = home_url($wp->request);
@@ -548,6 +557,20 @@ class UW_Board_Engine
             <label for="post_title">제목 *</label>
             <input type="text" id="post_title" name="title" value="<?php echo esc_attr($title); ?>" required>
           </div>
+
+          <?php if (!empty($categories)): ?>
+            <div class="uw-form-field">
+              <label for="post_category">카테고리<?php echo $category_required ? ' *' : ''; ?></label>
+              <select id="post_category" name="category" <?php echo $category_required ? 'required' : ''; ?>>
+                <option value="">카테고리를 선택하세요</option>
+                            <?php foreach ($categories as $cat): ?>
+                  <option value="<?php echo esc_attr($cat); ?>" <?php selected($current_category, $cat); ?>>
+                    <?php echo esc_html($cat); ?>
+                  </option>
+                <?php endforeach; ?>
+              </select>
+            </div>
+          <?php endif; ?>
 
           <?php if ($require_password): ?>
             <div class="uw-form-field">
@@ -731,6 +754,12 @@ class UW_Board_Engine
     // 비회원 비밀번호 저장
     if (!empty($_POST['password'])) {
       update_post_meta($post_id, '_uw_password', wp_hash_password($_POST['password']));
+    }
+
+    // 카테고리 저장
+    if (isset($_POST['category'])) {
+      $category = sanitize_text_field($_POST['category']);
+      update_post_meta($post_id, '_uw_category', $category);
     }
 
     // 첨부파일 처리

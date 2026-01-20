@@ -8,6 +8,7 @@
   margin: 0 auto;
   padding: 0 20px;
   position: relative;
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -60,7 +61,7 @@
 }
 
 .sub-visual.contact .sub-visual-bg {
-  background-image: url('../../images/contact_bg.png');
+  background-image: url('../../images/page-contact_bg.jpg');
   filter: brightness(0.6);
 }
 
@@ -204,10 +205,25 @@
   }
 }
 
-/* Response: Common */
+/* Response: Tablet */
+@media (max-width: 1024px) {
+  .sub-visual {
+    height: 350px;
+  }
+
+  .sub-page-title {
+    font-size: 42px;
+  }
+
+  .sub-page {
+    padding: 100px 20px;
+  }
+}
+
+/* Response: Common (Mobile) */
 @media (max-width: 768px) {
   .sub-visual {
-    height: 300px;
+    height: 250px;
   }
 
   .sub-page-title {
@@ -243,7 +259,7 @@
   }
 
   .uw-sub-page-title {
-    font-size: 24px;
+    font-size: 22px;
     margin-bottom: 10px;
   }
 
@@ -253,8 +269,9 @@
 
   /* 모바일 컨테이너 레이아웃 수정 */
   .uw-container {
-    height: auto;
+    height: 100%;
     flex-direction: column;
     align-items: stretch;
+    padding: 0;
   }
 }

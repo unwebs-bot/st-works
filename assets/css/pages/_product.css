@@ -9,11 +9,16 @@
   padding-bottom: 120px;
 }
 
+.sub-inner {
+  max-width: var(--uw-max-width);
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
 .uw-product-container {
   width: 100%;
   max-width: var(--uw-max-width);
   margin: 0 auto;
-  padding: 0 20px;
 }
 
 /* 2. Product Grid */
@@ -31,16 +36,11 @@
   gap: 60px;
 }
 
-/* Reverse layout for even items if needed, though PHP template looks uniform */
-.uw-product-card:nth-child(even) {
-  flex-direction: row-reverse;
-}
-
 /* Image Area */
 .uw-product-image-wrap {
   flex: 0 0 50%;
   height: 480px;
-  border-radius: 20px;
+  border-radius: 10px;
   overflow: hidden;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
   position: relative;
@@ -99,7 +99,6 @@
 .uw-specs-list {
   background: #f8f9fa;
   padding: 30px;
-  border-radius: 12px;
 }
 
 .uw-specs-list li {
@@ -144,9 +143,8 @@
 
 .uw-table-wrapper {
   background: #fff;
-  border-radius: 20px;
   overflow: hidden;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+  width: 100%;
 }
 
 .uw-full-table {
@@ -212,7 +210,7 @@
 }
 
 /* Responsive */
-@media (max-width: 991px) {
+@media (max-width: 1024px) {
 
   .uw-product-card,
   .uw-product-card:nth-child(even) {
@@ -231,12 +229,68 @@
 }
 
 @media (max-width: 768px) {
+  .sub-page.product {
+    padding-bottom: 60px;
+  }
+
+  .uw-product-container {
+    padding: 0;
+  }
+
+  .uw-product-grid {
+    gap: 60px;
+    margin-top: 30px;
+  }
+
+  .uw-product-image-wrap {
+    height: 240px;
+  }
+
+  .uw-product-title {
+    font-size: 24px;
+    margin-bottom: 12px;
+  }
+
+  .uw-product-badge {
+    font-size: 12px;
+    padding: 3px 8px;
+    margin-left: 6px;
+    transform: translateY(-2px);
+  }
+
+  .uw-product-card-desc {
+    font-size: 15px;
+    margin-bottom: 24px;
+    word-break: keep-all;
+  }
+
+  .uw-specs-list {
+    padding: 20px;
+  }
+
+  .uw-specs-list li {
+    padding: 12px 0;
+    font-size: 14px;
+  }
+
+  .uw-table-section {
+    padding: 60px 0;
+    margin-top: 60px;
+  }
+
   .uw-table-wrapper {
     overflow-x: auto;
+    border-radius: 8px;
   }
 
   .uw-full-table {
-    min-width: 700px;
+    min-width: 600px;
+  }
+
+  .uw-full-table th,
+  .uw-full-table td {
+    padding: 12px 8px;
+    font-size: 13px;
   }
 
   .uw-mobile-hint {

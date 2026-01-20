@@ -16,9 +16,9 @@ while (have_posts()) {
   the_content();
 }
 
-// 만약 콘텐츠가 없다면 기본 공지사항 게시판 표시
+// 만약 콘텐츠가 없다면 기본 TEST 게시판 표시
 if (!has_shortcode(get_the_content(), 'uw_board')) {
-  echo do_shortcode('[uw_board name="notice"]');
+  echo do_shortcode('[uw_board name="test"]');
 }
 ?>
 

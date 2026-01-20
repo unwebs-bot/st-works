@@ -14,6 +14,7 @@ $views = get_post_meta($post_id, '_uw_views', true) ?: 0;
 $is_new = (time() - get_the_time('U')) < 86400;
 $attachments = get_post_meta($post_id, '_uw_attachments', true);
 $has_attachment = !empty($attachments);
+$category = get_post_meta($post_id, '_uw_category', true);
 
 global $wp;
 $single_url = add_query_arg(array('view' => 'single', 'id' => $post_id), home_url($wp->request));
@@ -24,6 +25,9 @@ $single_url = add_query_arg(array('view' => 'single', 'id' => $post_id), home_ur
   </td>
   <td class="col-title">
     <a href="<?php echo esc_url($single_url); ?>">
+      <?php if ($category): ?>
+        <span class="uw-category-badge">[<?php echo esc_html($category); ?>]</span>
+      <?php endif; ?>
       <?php the_title(); ?>
       <?php if ($is_new): ?>
         <span class="uw-new-badge">N</span>

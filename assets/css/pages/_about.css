@@ -21,9 +21,14 @@
   width: 55%;
 }
 
+.uw-ceo-image-wrapper {
+  height: 100%;
+}
+
 .uw-ceo-img {
   width: 100%;
-  height: auto;
+  height: 100%;
+  object-fit: cover;
   display: block;
 }
 
@@ -57,6 +62,18 @@
   margin-top: 40px;
 }
 
+@media (max-width: 1024px) {
+  .uw-ceo-content-wrapper {
+    gap: 40px;
+  }
+
+  .uw-ceo-desc,
+  .uw-sig-text,
+  .uw-sig-name-box {
+    font-size: 16px;
+  }
+}
+
 @media (max-width: 768px) {
   .uw-ceo-content-wrapper {
     flex-direction: column;
@@ -69,14 +86,22 @@
     width: 100%;
   }
 
+  .uw-ceo-image-wrapper {
+    height: auto;
+  }
+
+  .uw-ceo-img {
+    height: auto;
+    aspect-ratio: 4/3;
+  }
+
   /* CEO 페이지 텍스트 br 숨김 - 자연스러운 줄바꿈 */
-  .uw-ceo-desc br,
-  .sub-page.ceo .uw-sub-page-title br {
+  .uw-ceo-desc br {
     display: none;
   }
 
   .uw-ceo-desc {
-    font-size: 16px;
+    font-size: 14px;
     line-height: 1.7;
   }
 }
@@ -321,21 +346,9 @@
   background-color: #03C75A;
 }
 
-.uw-map-link.naver:hover {
-  background-color: #02b350;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(3, 199, 90, 0.3);
-}
-
 .uw-map-link.kakao {
   background-color: #FEE500;
   color: #000;
-}
-
-.uw-map-link.kakao:hover {
-  background-color: #fdd000;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(254, 229, 0, 0.3);
 }
 
 .uw-location-info {
@@ -424,14 +437,18 @@
   font-weight: 500;
 }
 
-.uw-location-info-text a {
-  color: #111;
-  text-decoration: none;
-  transition: color 0.3s ease;
-}
-
 .uw-location-info-text a:hover {
   color: var(--uw-primary);
+}
+
+@media (max-width: 1024px) {
+  .uw-location-info {
+    gap: 15px;
+  }
+
+  .uw-location-info-item {
+    padding: 20px;
+  }
 }
 
 @media (max-width: 768px) {
@@ -447,10 +464,21 @@
     gap: 15px;
   }
 
+  .uw-location-map-links {
+    width: 100%;
+    display: flex;
+    gap: 10px;
+  }
+
   .uw-map-link {
     flex: 1;
     justify-content: center;
-    width: 100%;
+    width: auto;
+    height: 48px;
+    padding: 0;
+    font-size: 15px;
+    white-space: nowrap;
+    border-radius: 6px;
   }
 
   .uw-location-info {
@@ -570,31 +598,15 @@
   text-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
 }
 
-@media (max-width: 1300px) {
-  .uw-vision-cards {
-    gap: 40px;
-  }
-
-  .uw-vision-card,
-  .uw-vision-card-image {
-    width: 350px;
-    height: 350px;
-  }
-
-  .uw-vision-card-title {
-    font-size: 21px;
-  }
-}
-
-@media (max-width: 1000px) {
+@media (max-width: 1024px) {
   .uw-vision-cards {
     gap: 30px;
   }
 
   .uw-vision-card,
   .uw-vision-card-image {
-    width: 200px;
-    height: 200px;
+    width: 280px;
+    height: 280px;
   }
 
   .uw-vision-card-overlay {
@@ -602,7 +614,7 @@
   }
 
   .uw-vision-card-title {
-    font-size: 18px;
+    font-size: 20px;
   }
 }
 

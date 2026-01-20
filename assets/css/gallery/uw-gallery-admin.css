@@ -1,0 +1,621 @@
+/**
+ * UW Gallery Admin Styles
+ * 
+ * 관리자 인터페이스 스타일
+ * 
+ * @package St-works
+ * @since 2.0.0
+ */
+
+/* ==========================================================================
+   1. 대시보드 리스트
+   ========================================================================== */
+.uw-gallery-wrap {
+  max-width: 1400px;
+}
+
+.uw-gallery-dashboard {
+  margin-top: 20px;
+}
+
+.uw-gallery-empty {
+  text-align: center;
+  padding: 60px 20px;
+  background: #fff;
+  border: 1px solid #ccd0d4;
+}
+
+.uw-gallery-empty p {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+/* 리스트 테이블 */
+.uw-gallery-list-table .column-cb {
+  width: 30px;
+}
+
+.uw-gallery-list-table .column-thumb {
+  width: 60px;
+}
+
+.uw-gallery-list-table .column-title {
+  width: 12%;
+}
+
+.uw-gallery-list-table .column-layout {
+  width: 12%;
+}
+
+.uw-gallery-list-table .column-count {
+  width: 10%;
+}
+
+.uw-gallery-list-table .column-date {
+  width: 12%;
+}
+
+.uw-gallery-list-table .column-shortcode {
+  width: 20%;
+}
+
+/* 썸네일 */
+.uw-list-thumb {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.uw-no-thumb {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  background: #f0f0f1;
+  border-radius: 4px;
+  color: #999;
+}
+
+/* 상태 표시 */
+.post-state {
+  color: #666;
+  font-style: italic;
+}
+
+/* 숏코드 */
+.uw-shortcode-code {
+  display: inline-block;
+  padding: 4px 8px;
+  background: #f0f0f1;
+  border-radius: 3px;
+  font-size: 12px;
+  margin-right: 8px;
+}
+
+.uw-copy-shortcode {
+  vertical-align: middle;
+}
+
+/* ==========================================================================
+   2. 에디터 - 풀와이드 레이아웃
+   ========================================================================== */
+.uw-gallery-editor-fullwidth {
+  display: block;
+  margin-top: 20px;
+}
+
+/* 상단 헤더 (제목) */
+.uw-editor-header {
+  margin-bottom: 20px;
+}
+
+.uw-editor-title-wrap {
+  width: 100%;
+}
+
+.uw-editor-title-wrap input[type="text"] {
+  width: 100%;
+  height: 50px;
+  font-size: 24px;
+  padding: 0 15px;
+  border: 1px solid #ccd0d4;
+  border-radius: 4px;
+}
+
+.uw-editor-title-wrap input:focus {
+  outline: none;
+  border-color: #2271b1;
+  box-shadow: 0 0 0 1px #2271b1;
+}
+
+/* 메타 행 (레이아웃 + 공개) */
+.uw-editor-meta-row {
+  display: flex;
+  gap: 25px;
+  margin-bottom: 25px;
+}
+
+/* 레이아웃 섹션 */
+.uw-layout-section {
+  flex: 1;
+  background: #fff;
+  border: 1px solid #ccd0d4;
+  border-radius: 4px;
+  padding: 15px;
+}
+
+.uw-layout-section h3 {
+  margin: 0 0 12px 0;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* 레이아웃 카드 (5종) */
+.uw-layout-cards {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+}
+
+.uw-layout-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 15px 10px;
+  background: #fff;
+  border: 2px solid #ccd0d4;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.uw-layout-card:hover {
+  border-color: #2271b1;
+  background: #f0f6fc;
+}
+
+.uw-layout-card.is-selected {
+  border-color: #2271b1;
+  background: #f0f6fc;
+  box-shadow: 0 0 0 1px #2271b1;
+}
+
+.uw-layout-card input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.uw-layout-card .dashicons {
+  font-size: 28px;
+  width: 28px;
+  height: 28px;
+  margin-bottom: 8px;
+  color: #1d2327;
+}
+
+.uw-layout-label {
+  font-size: 11px;
+  font-weight: 500;
+  color: #1d2327;
+  text-align: center;
+}
+
+/* 공개 상태 박스 */
+.uw-publish-box {
+  width: 260px;
+  flex-shrink: 0;
+  background: #fff;
+  border: 1px solid #ccd0d4;
+  border-radius: 4px;
+  padding: 15px;
+}
+
+.uw-publish-box h3 {
+  margin: 0 0 12px 0;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+  font-size: 14px;
+}
+
+.uw-publish-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 0;
+  font-size: 13px;
+}
+
+.uw-publish-row .dashicons {
+  color: #646970;
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+}
+
+.uw-publish-row label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.uw-date-input {
+  padding: 4px 8px;
+  border: 1px solid #ccd0d4;
+  border-radius: 3px;
+  font-size: 13px;
+}
+
+.uw-publish-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #eee;
+}
+
+.uw-btn-link {
+  color: #b32d2e;
+  font-size: 12px;
+  text-decoration: none;
+}
+
+.uw-btn-link:hover {
+  text-decoration: underline;
+}
+
+/* ==========================================================================
+   3. 에디터 섹션
+   ========================================================================== */
+.uw-editor-section {
+  background: #fff;
+  border: 1px solid #ccd0d4;
+  border-radius: 4px;
+  padding: 25px;
+  margin-bottom: 25px;
+}
+
+.uw-editor-section h2 {
+  margin: 0 0 20px 0;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #eee;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+/* ==========================================================================
+   4. 이미지 그리드
+   ========================================================================== */
+.uw-gallery-items {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 15px;
+  list-style: none;
+  margin: 0;
+  padding: 20px;
+  background: #f6f7f7;
+  border: 2px dashed #ccd0d4;
+  border-radius: 4px;
+  min-height: 250px;
+}
+
+.uw-gallery-item {
+  position: relative;
+  aspect-ratio: 1/1;
+  background: #fff;
+  border: 1px solid #ccd0d4;
+  border-radius: 4px;
+  overflow: hidden;
+  cursor: move;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.uw-gallery-item:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+}
+
+.uw-gallery-item.is-dragging {
+  opacity: 0.5;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.25);
+  transform: rotate(3deg);
+}
+
+.uw-item-thumb {
+  width: 100%;
+  height: 100%;
+}
+
+.uw-item-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.uw-video-badge,
+.uw-gallery-play-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 40px;
+  height: 40px;
+  background: rgba(0, 0, 0, 0.7);
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+}
+
+/* 아이템 액션 */
+.uw-item-actions {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  display: flex;
+  gap: 3px;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.uw-gallery-item:hover .uw-item-actions {
+  opacity: 1;
+}
+
+.uw-item-actions button {
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: none;
+  border-radius: 3px;
+  background: rgba(0, 0, 0, 0.7);
+  color: #fff;
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1;
+}
+
+.uw-item-actions button:hover {
+  background: #000;
+}
+
+/* 추가 버튼 */
+.uw-gallery-add-buttons {
+  display: flex;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.uw-gallery-add-buttons .button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 40px;
+  padding: 0 20px;
+}
+
+.uw-gallery-add-buttons .dashicons {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+}
+
+/* ==========================================================================
+   5. 설정 그리드
+   ========================================================================== */
+.uw-settings-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 25px;
+}
+
+.uw-setting-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.uw-setting-item>label {
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 8px;
+  color: #1d2327;
+}
+
+.uw-setting-item select {
+  width: 100%;
+  height: 40px;
+  padding: 0 12px;
+  border: 1px solid #ccd0d4;
+  border-radius: 4px;
+}
+
+.uw-setting-item input[type="checkbox"] {
+  margin-right: 8px;
+}
+
+/* Range 슬라이더 */
+.uw-range-wrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.uw-range-wrap input[type="range"] {
+  flex: 1;
+  height: 6px;
+  -webkit-appearance: none;
+  background: #ddd;
+  border-radius: 3px;
+  outline: none;
+}
+
+.uw-range-wrap input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  background: #2271b1;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.uw-range-value {
+  min-width: 50px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #1d2327;
+  text-align: right;
+}
+
+/* 레이아웃별 옵션 패널 */
+.uw-layout-options-section {
+  /* 동적 패널 컨테이너 */
+}
+
+.uw-layout-options {
+  margin-top: 15px;
+  padding: 20px;
+  background: #f6f7f7;
+  border-radius: 4px;
+}
+
+/* 커스텀 CSS 영역 */
+.uw-editor-section textarea {
+  width: 100%;
+  font-family: monospace;
+  font-size: 13px;
+  padding: 15px;
+  border: 1px solid #ccd0d4;
+  border-radius: 4px;
+  resize: vertical;
+}
+
+/* ==========================================================================
+   6. 숏코드 표시 (큰 버전)
+   ========================================================================== */
+.uw-shortcode-section {
+  background: #f0f6fc;
+}
+
+.uw-shortcode-display-large {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.uw-shortcode-display-large code {
+  flex: 1;
+  padding: 15px 20px;
+  background: #fff;
+  border: 1px solid #ccd0d4;
+  border-radius: 4px;
+  font-size: 15px;
+}
+
+.uw-shortcode-display-large .button {
+  height: 44px;
+  padding: 0 25px;
+}
+
+/* ==========================================================================
+   7. 모달
+   ========================================================================== */
+.uw-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 100000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.uw-modal-content {
+  background: #fff;
+  padding: 30px;
+  border-radius: 4px;
+  width: 100%;
+  max-width: 500px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+.uw-modal-content.uw-modal-wide {
+  max-width: 600px;
+}
+
+.uw-modal-content h3 {
+  margin: 0 0 20px 0;
+}
+
+.uw-form-field {
+  margin-bottom: 15px;
+}
+
+.uw-form-field label {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 5px;
+}
+
+.uw-form-field input[type="text"],
+.uw-form-field input[type="url"],
+.uw-form-field textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccd0d4;
+  border-radius: 4px;
+}
+
+.uw-form-field .description {
+  margin-top: 5px;
+  font-size: 12px;
+  color: #666;
+}
+
+.uw-modal-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+  justify-content: flex-end;
+}
+
+/* ==========================================================================
+   8. 반응형
+   ========================================================================== */
+@media (max-width: 1200px) {
+  .uw-layout-cards {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .uw-settings-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 782px) {
+  .uw-editor-meta-row {
+    flex-direction: column;
+  }
+
+  .uw-publish-box {
+    width: 100%;
+  }
+
+  .uw-layout-cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .uw-settings-grid {
+    grid-template-columns: 1fr;
+  }
+}

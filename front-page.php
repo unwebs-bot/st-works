@@ -62,7 +62,7 @@
 
   <!-- 사업 안내 섹션 시작 -->
   <section class="uw-business">
-    <div class="uw-business-header">
+    <div class="uw-section-common-header">
       <span class="uw-sub-title" data-animate="fade-up">Business</span>
       <h2 class="uw-title delay-200" data-animate="fade-up">주요 사업 안내</h2>
     </div>
@@ -149,7 +149,7 @@
 
   <!-- 제품 소개 섹션 시작 -->
   <section class="uw-product" id="product">
-    <div class="uw-product-header">
+    <div class="uw-section-common-header">
       <span class="uw-sub-title" data-animate="fade-up">Product</span>
       <h2 class="uw-title delay-200" data-animate="fade-up">제품소개</h2>
     </div>
@@ -232,7 +232,7 @@
 
   <!-- 커뮤니티 섹션 시작 -->
   <section class="uw-community">
-    <div class="uw-community-header">
+    <div class="uw-section-common-header">
       <span class="uw-sub-title" data-animate="fade-up">Community</span>
       <h2 class="uw-title delay-200" data-animate="fade-up">커뮤니티</h2>
     </div>

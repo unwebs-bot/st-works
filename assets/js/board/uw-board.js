@@ -205,20 +205,8 @@
 
           if (action === 'delete') {
             // 삭제 처리
-            // 삭제 처리
             if (confirm('정말 삭제하시겠습니까?')) {
-              var slug = $btn.data('board-slug') || $('input[name="board_slug"]').val() || uwBoard.slug; // Try to find slug
-              // Verify password btn might not have slug data if I didn't add it to PHP.
-              // Wait, I didn't add data-board-slug to uw-verify-password button in render_single for EDIT action?
-              // The button in render_single is shared for edit/delete?
-              // No, two buttons. Edit is <a> link. Delete is <button>.
-              // Edit link has uw-verify-password class.
-              // Delete button has uw-verify-password class.
-              // I added data-board-slug to DELETE button only in PHP just now.
-              // But for Edit, we redirect to write form. Write form handles slug.
-
-              // For Delete, we need slug.
-              // So I should ensure I get slug.
+              var slug = $btn.data('board-slug') || $('input[name="board_slug"]').val() || uwBoard.slug;
               slug = $btn.data('board-slug');
 
               uw_front_delete_post(postId, slug, token);

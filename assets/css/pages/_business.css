@@ -205,7 +205,7 @@
   transform: translateX(30px);
 }
 
-@media (max-width: 991px) {
+@media (max-width: 1024px) {
   .tech-row {
     flex-direction: column;
     gap: 30px;
@@ -245,19 +245,10 @@
 .patent-item {
   position: relative;
   background: #fff;
-  border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-  transition: transform 0.3s, box-shadow 0.3s;
   cursor: pointer;
-  border: 1px solid #10b4d82f;
 }
 
-.patent-item:hover {
-  transform: translateY(-10px);
-  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
-  border-color: var(--uw-primary);
-}
 
 .patent-img {
   width: 100%;
@@ -336,7 +327,7 @@
   }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 768px) {
   .patent-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 15px;

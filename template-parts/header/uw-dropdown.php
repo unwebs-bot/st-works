@@ -35,7 +35,7 @@
     </ul>
     <!-- Contact Sub -->
     <ul class="uw-sub-list" id="sub-contact">
-      <li class="uw-sub-item"><a href="<?php echo home_url('/contact/request/'); ?>">상담
+      <li class="uw-sub-item"><a href="<?php echo home_url('/contact/contact/'); ?>">상담
           문의</a></li>
     </ul>
   </div>
