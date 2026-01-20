@@ -619,3 +619,106 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* ==========================================================================
+   9. 상태 필터 탭 (subsubsub - WordPress 표준)
+   ========================================================================== */
+.uw-gallery-wrap .subsubsub {
+  margin: 10px 0 0;
+  float: none;
+  clear: both;
+}
+
+.uw-gallery-wrap .subsubsub li {
+  display: inline-block;
+}
+
+.uw-gallery-wrap .subsubsub a {
+  text-decoration: none;
+  color: #0073aa;
+}
+
+.uw-gallery-wrap .subsubsub a:hover {
+  color: #00a0d2;
+}
+
+.uw-gallery-wrap .subsubsub a.current {
+  font-weight: 600;
+  color: #000;
+}
+
+.uw-gallery-wrap .subsubsub .count {
+  color: #646970;
+  font-weight: 400;
+}
+
+/* ==========================================================================
+   10. Row Actions 개선
+   ========================================================================== */
+.uw-gallery-list-table .row-actions {
+  visibility: hidden;
+  padding-top: 5px;
+}
+
+.uw-gallery-list-table tr:hover .row-actions {
+  visibility: visible;
+}
+
+/* 모바일에서는 항상 표시 */
+@media (max-width: 782px) {
+  .uw-gallery-list-table .row-actions {
+    visibility: visible;
+  }
+}
+
+/* 복구/삭제 색상 구분 */
+.uw-gallery-list-table .row-actions .restore a {
+  color: #00a32a;
+}
+
+.uw-gallery-list-table .row-actions .restore a:hover {
+  color: #007a1b;
+}
+
+.uw-gallery-list-table .row-actions .delete a {
+  color: #b32d2e;
+}
+
+.uw-gallery-list-table .row-actions .delete a:hover {
+  color: #8a2424;
+}
+
+/* ==========================================================================
+   11. 휴지통 상태 행 스타일
+   ========================================================================== */
+.uw-gallery-list-table tr.is-trash {
+  background-color: #fcf0f1;
+}
+
+.uw-gallery-list-table tr.is-trash:hover {
+  background-color: #fce4e4;
+}
+
+.uw-gallery-list-table tr.is-trash .column-title strong {
+  color: #646970;
+}
+
+/* ==========================================================================
+   12. 빈 상태 메시지 개선
+   ========================================================================== */
+.uw-gallery-empty {
+  text-align: center;
+  padding: 60px 20px;
+  background: #fff;
+  border: 1px solid #ccd0d4;
+  border-radius: 4px;
+}
+
+.uw-gallery-empty.is-trash-empty {
+  background: #fcf0f1;
+  border-color: #d63638;
+}
+
+.uw-gallery-empty.is-trash-empty p {
+  color: #8a2424;
+}

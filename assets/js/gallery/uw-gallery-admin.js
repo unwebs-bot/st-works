@@ -94,6 +94,26 @@
         if (e.target.closest('.uw-layout-card')) {
           this.selectLayoutCard(e.target.closest('.uw-layout-card'));
         }
+        // 휴지통 이동
+        if (e.target.closest('.uw-gallery-trash')) {
+          e.preventDefault();
+          this.trashGallery(e.target.closest('.uw-gallery-trash'));
+        }
+        // 복구
+        if (e.target.closest('.uw-gallery-restore')) {
+          e.preventDefault();
+          this.restoreGallery(e.target.closest('.uw-gallery-restore'));
+        }
+        // 영구 삭제
+        if (e.target.closest('.uw-gallery-delete-permanent')) {
+          e.preventDefault();
+          this.deletePermanent(e.target.closest('.uw-gallery-delete-permanent'));
+        }
+        // 상태 변경
+        if (e.target.closest('.uw-change-status')) {
+          e.preventDefault();
+          this.changeStatus(e.target.closest('.uw-change-status'));
+        }
       });
 
       // 폼 저장
@@ -508,7 +528,27 @@
         return;
       }
 
-      if (!confirm(uwGalleryAdmin.i18n.confirmBulkDelete)) {
+      // 작업별 확인 메시지
+      let confirmMsg = '';
+      switch (action) {
+        case 'trash':
+          confirmMsg = uwGalleryAdmin.i18n.confirmTrash || '선택한 갤러리를 휴지통으로 이동하시겠습니까?';
+          break;
+        case 'restore':
+          confirmMsg = uwGalleryAdmin.i18n.confirmRestore || '선택한 갤러리를 복구하시겠습니까?';
+          break;
+        case 'delete':
+          confirmMsg = uwGalleryAdmin.i18n.confirmPermanentDelete || '선택한 갤러리를 영구 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.';
+          break;
+        case 'private':
+        case 'publish':
+          confirmMsg = uwGalleryAdmin.i18n.confirmStatusChange || '상태를 변경하시겠습니까?';
+          break;
+        default:
+          confirmMsg = '선택한 작업을 수행하시겠습니까?';
+      }
+
+      if (!confirm(confirmMsg)) {
         return;
       }
 
@@ -621,6 +661,150 @@
       e.preventDefault();
       document.getElementById('uw-edit-item-custom-thumb-id').value = '0';
       this.updateCustomThumbPreview();
+    },
+
+    // === 휴지통 이동 (복구 가능) ===
+    trashGallery: function (link) {
+      if (!confirm('이 갤러리를 휴지통으로 이동하시겠습니까?')) {
+        return;
+      }
+
+      const galleryId = link.dataset.id;
+      const formData = new FormData();
+      formData.append('action', 'uw_gallery_trash');
+      formData.append('nonce', uwGalleryAdmin.nonce);
+      formData.append('id', galleryId);
+
+      fetch(uwGalleryAdmin.ajaxUrl, {
+        method: 'POST',
+        body: formData
+      })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            this.removeRowWithAnimation(galleryId);
+          } else {
+            alert(data.data.message || '휴지통 이동에 실패했습니다.');
+          }
+        })
+        .catch(() => {
+          alert('서버 오류가 발생했습니다.');
+        });
+    },
+
+    // === 복구 ===
+    restoreGallery: function (link) {
+      if (!confirm('이 갤러리를 복구하시겠습니까?')) {
+        return;
+      }
+
+      const galleryId = link.dataset.id;
+      const formData = new FormData();
+      formData.append('action', 'uw_gallery_restore');
+      formData.append('nonce', uwGalleryAdmin.nonce);
+      formData.append('id', galleryId);
+
+      fetch(uwGalleryAdmin.ajaxUrl, {
+        method: 'POST',
+        body: formData
+      })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            this.removeRowWithAnimation(galleryId);
+          } else {
+            alert(data.data.message || '복구에 실패했습니다.');
+          }
+        })
+        .catch(() => {
+          alert('서버 오류가 발생했습니다.');
+        });
+    },
+
+    // === 영구 삭제 ===
+    deletePermanent: function (link) {
+      if (!confirm(uwGalleryAdmin.i18n.confirmPermanentDelete || '이 갤러리를 영구 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.')) {
+        return;
+      }
+
+      const galleryId = link.dataset.id;
+      const formData = new FormData();
+      formData.append('action', 'uw_gallery_delete');
+      formData.append('nonce', uwGalleryAdmin.nonce);
+      formData.append('id', galleryId);
+
+      fetch(uwGalleryAdmin.ajaxUrl, {
+        method: 'POST',
+        body: formData
+      })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            this.removeRowWithAnimation(galleryId);
+          } else {
+            alert(data.data.message || '삭제에 실패했습니다.');
+          }
+        })
+        .catch(() => {
+          alert('서버 오류가 발생했습니다.');
+        });
+    },
+
+    // === 상태 변경 ===
+    changeStatus: function (link) {
+      const galleryId = link.dataset.id;
+      const newStatus = link.dataset.status;
+      const statusLabel = newStatus === 'publish' ? '공개' : '비공개';
+
+      if (!confirm(`이 갤러리를 ${statusLabel} 상태로 변경하시겠습니까?`)) {
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append('action', 'uw_gallery_change_status');
+      formData.append('nonce', uwGalleryAdmin.nonce);
+      formData.append('id', galleryId);
+      formData.append('status', newStatus);
+
+      fetch(uwGalleryAdmin.ajaxUrl, {
+        method: 'POST',
+        body: formData
+      })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            // 현재 페이지 새로고침 (상태별 필터 적용 시)
+            window.location.reload();
+          } else {
+            alert(data.data.message || '상태 변경에 실패했습니다.');
+          }
+        })
+        .catch(() => {
+          alert('서버 오류가 발생했습니다.');
+        });
+    },
+
+    // === 헬퍼: 행 제거 애니메이션 ===
+    removeRowWithAnimation: function (galleryId) {
+      const row = document.querySelector(`tr[data-id="${galleryId}"]`);
+      if (row) {
+        row.style.transition = 'opacity 0.3s, background-color 0.3s';
+        row.style.opacity = '0';
+        row.style.backgroundColor = '#faafaa';
+        setTimeout(() => {
+          row.remove();
+          this.checkEmptyTable();
+        }, 300);
+      }
+    },
+
+    // === 헬퍼: 빈 테이블 체크 ===
+    checkEmptyTable: function () {
+      const tbody = document.querySelector('.uw-gallery-list-table tbody');
+      if (tbody && tbody.querySelectorAll('tr').length === 0) {
+        // 빈 상태 메시지 표시 위해 새로고침
+        window.location.reload();
+      }
     }
   };
 

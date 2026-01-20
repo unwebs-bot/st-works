@@ -34,6 +34,9 @@ class UW_Gallery_Admin
     add_action('wp_ajax_uw_gallery_save', array($this, 'ajax_save_gallery'));
     add_action('wp_ajax_uw_gallery_delete', array($this, 'ajax_delete_gallery'));
     add_action('wp_ajax_uw_gallery_bulk_action', array($this, 'ajax_bulk_action'));
+    add_action('wp_ajax_uw_gallery_trash', array($this, 'ajax_trash_gallery'));
+    add_action('wp_ajax_uw_gallery_restore', array($this, 'ajax_restore_gallery'));
+    add_action('wp_ajax_uw_gallery_change_status', array($this, 'ajax_change_status'));
   }
 
   /**
@@ -110,8 +113,27 @@ class UW_Gallery_Admin
         'addImages' => '갤러리에 추가',
         'confirmDelete' => '정말 삭제하시겠습니까?',
         'confirmBulkDelete' => '선택한 갤러리를 삭제하시겠습니까?',
+        'confirmTrash' => '선택한 갤러리를 휴지통으로 이동하시겠습니까?',
+        'confirmRestore' => '선택한 갤러리를 복구하시겠습니까?',
+        'confirmPermanentDelete' => '선택한 갤러리를 영구 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.',
+        'confirmStatusChange' => '상태를 변경하시겠습니까?',
       ),
     ));
+  }
+
+  /**
+   * 갤러리 상태별 개수 조회
+   */
+  private function get_gallery_count($status)
+  {
+    $args = array(
+      'post_type' => 'uw_gallery',
+      'posts_per_page' => -1,
+      'post_status' => $status,
+      'fields' => 'ids',
+    );
+    $query = new WP_Query($args);
+    return $query->found_posts;
   }
 
   /**
@@ -119,13 +141,29 @@ class UW_Gallery_Admin
    */
   public function render_dashboard_page()
   {
+    // 현재 필터 상태 확인
+    $current_status = isset($_GET['post_status']) ? sanitize_key($_GET['post_status']) : 'all';
+
+    // 상태별 개수 조회
+    $counts = array(
+      'all' => $this->get_gallery_count(array('publish', 'private')),
+      'publish' => $this->get_gallery_count('publish'),
+      'private' => $this->get_gallery_count('private'),
+      'trash' => $this->get_gallery_count('trash'),
+    );
+
+    // 쿼리 상태 결정
+    $query_status = $current_status === 'all'
+      ? array('publish', 'private')
+      : $current_status;
+
     // 갤러리 목록 조회
     $galleries = get_posts(array(
       'post_type' => 'uw_gallery',
       'posts_per_page' => -1,
       'orderby' => 'date',
       'order' => 'DESC',
-      'post_status' => array('publish', 'draft', 'private'),
+      'post_status' => $query_status,
     ));
 
     // 5종 레이아웃 라벨
@@ -142,11 +180,47 @@ class UW_Gallery_Admin
       <a href="<?php echo admin_url('admin.php?page=uw-gallery-new'); ?>" class="page-title-action">새 갤러리 추가</a>
       <hr class="wp-header-end">
 
+      <!-- 상태 필터 탭 -->
+      <ul class="subsubsub">
+        <li class="all">
+          <a href="<?php echo admin_url('admin.php?page=uw-gallery'); ?>"
+            class="<?php echo $current_status === 'all' ? 'current' : ''; ?>">
+            전체 <span class="count">(<?php echo $counts['all']; ?>)</span>
+          </a> |
+        </li>
+        <li class="publish">
+          <a href="<?php echo admin_url('admin.php?page=uw-gallery&post_status=publish'); ?>"
+            class="<?php echo $current_status === 'publish' ? 'current' : ''; ?>">
+            공개됨 <span class="count">(<?php echo $counts['publish']; ?>)</span>
+          </a> |
+        </li>
+        <li class="private">
+          <a href="<?php echo admin_url('admin.php?page=uw-gallery&post_status=private'); ?>"
+            class="<?php echo $current_status === 'private' ? 'current' : ''; ?>">
+            비공개 <span class="count">(<?php echo $counts['private']; ?>)</span>
+          </a> |
+        </li>
+        <li class="trash">
+          <a href="<?php echo admin_url('admin.php?page=uw-gallery&post_status=trash'); ?>"
+            class="<?php echo $current_status === 'trash' ? 'current' : ''; ?>">
+            휴지통 <span class="count">(<?php echo $counts['trash']; ?>)</span>
+          </a>
+        </li>
+      </ul>
+
       <div class="uw-gallery-dashboard">
         <?php if (empty($galleries)): ?>
-          <div class="uw-gallery-empty">
-            <p>등록된 갤러리가 없습니다.</p>
-            <a href="<?php echo admin_url('admin.php?page=uw-gallery-new'); ?>" class="button button-primary">첫 번째 갤러리 만들기</a>
+          <div class="uw-gallery-empty <?php echo $current_status === 'trash' ? 'is-trash-empty' : ''; ?>">
+            <?php if ($current_status === 'trash'): ?>
+              <p>휴지통이 비어 있습니다.</p>
+            <?php elseif ($current_status === 'private'): ?>
+              <p>비공개 갤러리가 없습니다.</p>
+            <?php elseif ($current_status === 'publish'): ?>
+              <p>공개된 갤러리가 없습니다.</p>
+            <?php else: ?>
+              <p>등록된 갤러리가 없습니다.</p>
+              <a href="<?php echo admin_url('admin.php?page=uw-gallery-new'); ?>" class="button button-primary">첫 번째 갤러리 만들기</a>
+            <?php endif; ?>
           </div>
         <?php else: ?>
           <!-- 일괄 작업 -->
@@ -154,8 +228,14 @@ class UW_Gallery_Admin
             <div class="alignleft actions bulkactions">
               <select name="bulk_action" id="uw-bulk-action">
                 <option value="">일괄 작업</option>
-                <option value="trash">휴지통으로 이동</option>
-                <option value="private">비공개로 전환</option>
+                <?php if ($current_status !== 'trash'): ?>
+                  <option value="trash">휴지통으로 이동</option>
+                  <option value="private">비공개로 전환</option>
+                  <option value="publish">공개로 전환</option>
+                <?php else: ?>
+                  <option value="restore">복구</option>
+                  <option value="delete">영구 삭제</option>
+                <?php endif; ?>
               </select>
               <button type="button" id="uw-bulk-apply" class="button">적용</button>
             </div>
@@ -182,6 +262,7 @@ class UW_Gallery_Admin
                 $items = get_post_meta($gallery->ID, '_uw_gallery_items', true) ?: array();
                 $layout = get_post_meta($gallery->ID, '_uw_gallery_layout', true) ?: 'grid';
                 $shortcode = '[uw_gallery id="' . $gallery->ID . '"]';
+                $is_trash = $gallery->post_status === 'trash';
 
                 // 첫 번째 이미지 썸네일
                 $thumb_url = '';
@@ -194,7 +275,7 @@ class UW_Gallery_Admin
                   }
                 }
                 ?>
-                <tr data-id="<?php echo $gallery->ID; ?>">
+                <tr data-id="<?php echo $gallery->ID; ?>" class="<?php echo $is_trash ? 'is-trash' : ''; ?>">
                   <th scope="row" class="check-column">
                     <input type="checkbox" class="uw-gallery-checkbox" value="<?php echo $gallery->ID; ?>">
                   </th>
@@ -207,9 +288,13 @@ class UW_Gallery_Admin
                   </td>
                   <td class="column-title">
                     <strong>
-                      <a href="<?php echo admin_url('admin.php?page=uw-gallery-new&id=' . $gallery->ID); ?>">
+                      <?php if (!$is_trash): ?>
+                        <a href="<?php echo admin_url('admin.php?page=uw-gallery-new&id=' . $gallery->ID); ?>">
+                          <?php echo esc_html($gallery->post_title ?: '(제목 없음)'); ?>
+                        </a>
+                      <?php else: ?>
                         <?php echo esc_html($gallery->post_title ?: '(제목 없음)'); ?>
-                      </a>
+                      <?php endif; ?>
                     </strong>
                     <?php if ($gallery->post_status === 'private'): ?>
                       <span class="post-state">— 비공개</span>
@@ -217,15 +302,32 @@ class UW_Gallery_Admin
                       <span class="post-state">— 임시글</span>
                     <?php endif; ?>
                     <div class="row-actions">
-                      <span class="edit">
-                        <a href="<?php echo admin_url('admin.php?page=uw-gallery-new&id=' . $gallery->ID); ?>">편집</a> |
-                      </span>
-                      <span class="view">
-                        <a href="#" class="uw-preview-gallery" data-id="<?php echo $gallery->ID; ?>">보기</a> |
-                      </span>
-                      <span class="trash">
-                        <a href="#" class="uw-gallery-delete" data-id="<?php echo $gallery->ID; ?>">휴지통</a>
-                      </span>
+                      <?php if (!$is_trash): ?>
+                        <!-- 공개/비공개 상태 -->
+                        <span class="edit">
+                          <a href="<?php echo admin_url('admin.php?page=uw-gallery-new&id=' . $gallery->ID); ?>">편집</a> |
+                        </span>
+                        <?php if ($gallery->post_status === 'publish'): ?>
+                          <span class="private">
+                            <a href="#" class="uw-change-status" data-id="<?php echo $gallery->ID; ?>" data-status="private">비공개로 전환</a> |
+                          </span>
+                        <?php else: ?>
+                          <span class="publish">
+                            <a href="#" class="uw-change-status" data-id="<?php echo $gallery->ID; ?>" data-status="publish">공개로 전환</a> |
+                          </span>
+                        <?php endif; ?>
+                        <span class="trash">
+                          <a href="#" class="uw-gallery-trash" data-id="<?php echo $gallery->ID; ?>">휴지통</a>
+                        </span>
+                      <?php else: ?>
+                        <!-- 휴지통 상태 -->
+                        <span class="restore">
+                          <a href="#" class="uw-gallery-restore" data-id="<?php echo $gallery->ID; ?>">복구</a> |
+                        </span>
+                        <span class="delete">
+                          <a href="#" class="uw-gallery-delete-permanent" data-id="<?php echo $gallery->ID; ?>">영구 삭제</a>
+                        </span>
+                      <?php endif; ?>
                     </div>
                   </td>
                   <td class="column-layout">
@@ -1018,16 +1120,49 @@ class UW_Gallery_Admin
     $success_count = 0;
 
     foreach ($ids as $gallery_id) {
-      if ($action === 'trash') {
-        if (wp_delete_post($gallery_id, true)) {
-          $success_count++;
-        }
-      } elseif ($action === 'private') {
-        wp_update_post(array(
-          'ID' => $gallery_id,
-          'post_status' => 'private',
-        ));
-        $success_count++;
+      switch ($action) {
+        case 'trash':
+          // 휴지통으로 이동 (복구 가능)
+          if (wp_trash_post($gallery_id)) {
+            $success_count++;
+          }
+          break;
+
+        case 'restore':
+          // 휴지통에서 복구
+          if (wp_untrash_post($gallery_id)) {
+            $success_count++;
+          }
+          break;
+
+        case 'delete':
+          // 영구 삭제
+          if (wp_delete_post($gallery_id, true)) {
+            $success_count++;
+          }
+          break;
+
+        case 'private':
+          // 비공개로 전환
+          $result = wp_update_post(array(
+            'ID' => $gallery_id,
+            'post_status' => 'private',
+          ));
+          if ($result && !is_wp_error($result)) {
+            $success_count++;
+          }
+          break;
+
+        case 'publish':
+          // 공개로 전환
+          $result = wp_update_post(array(
+            'ID' => $gallery_id,
+            'post_status' => 'publish',
+          ));
+          if ($result && !is_wp_error($result)) {
+            $success_count++;
+          }
+          break;
       }
     }
 
@@ -1035,6 +1170,89 @@ class UW_Gallery_Admin
       'message' => $success_count . '개 갤러리가 처리되었습니다.',
       'count' => $success_count,
     ));
+  }
+
+  /**
+   * AJAX: 갤러리 휴지통 이동 (복구 가능)
+   */
+  public function ajax_trash_gallery()
+  {
+    check_ajax_referer('uw_gallery_admin', 'nonce');
+
+    if (!current_user_can('manage_options')) {
+      wp_send_json_error(array('message' => '권한이 없습니다.'));
+    }
+
+    $gallery_id = absint($_POST['id'] ?? 0);
+
+    if (!$gallery_id) {
+      wp_send_json_error(array('message' => '잘못된 요청입니다.'));
+    }
+
+    $result = wp_trash_post($gallery_id);
+
+    if ($result) {
+      wp_send_json_success(array('message' => '갤러리가 휴지통으로 이동되었습니다.'));
+    } else {
+      wp_send_json_error(array('message' => '휴지통 이동에 실패했습니다.'));
+    }
+  }
+
+  /**
+   * AJAX: 갤러리 휴지통에서 복구
+   */
+  public function ajax_restore_gallery()
+  {
+    check_ajax_referer('uw_gallery_admin', 'nonce');
+
+    if (!current_user_can('manage_options')) {
+      wp_send_json_error(array('message' => '권한이 없습니다.'));
+    }
+
+    $gallery_id = absint($_POST['id'] ?? 0);
+
+    if (!$gallery_id) {
+      wp_send_json_error(array('message' => '잘못된 요청입니다.'));
+    }
+
+    $result = wp_untrash_post($gallery_id);
+
+    if ($result) {
+      wp_send_json_success(array('message' => '갤러리가 복구되었습니다.'));
+    } else {
+      wp_send_json_error(array('message' => '복구에 실패했습니다.'));
+    }
+  }
+
+  /**
+   * AJAX: 갤러리 상태 변경 (publish <-> private)
+   */
+  public function ajax_change_status()
+  {
+    check_ajax_referer('uw_gallery_admin', 'nonce');
+
+    if (!current_user_can('manage_options')) {
+      wp_send_json_error(array('message' => '권한이 없습니다.'));
+    }
+
+    $gallery_id = absint($_POST['id'] ?? 0);
+    $new_status = sanitize_key($_POST['status'] ?? '');
+
+    if (!$gallery_id || !in_array($new_status, array('publish', 'private'))) {
+      wp_send_json_error(array('message' => '잘못된 요청입니다.'));
+    }
+
+    $result = wp_update_post(array(
+      'ID' => $gallery_id,
+      'post_status' => $new_status,
+    ));
+
+    if ($result && !is_wp_error($result)) {
+      $status_label = $new_status === 'publish' ? '공개' : '비공개';
+      wp_send_json_success(array('message' => "갤러리가 {$status_label} 상태로 변경되었습니다."));
+    } else {
+      wp_send_json_error(array('message' => '상태 변경에 실패했습니다.'));
+    }
   }
 }
 
