@@ -722,3 +722,123 @@
 .uw-gallery-empty.is-trash-empty p {
   color: #8a2424;
 }
+
+/* ==========================================================================
+   13. 토스트 알림 시스템
+   ========================================================================== */
+.uw-toast-container {
+  position: fixed;
+  top: 50px;
+  right: 20px;
+  z-index: 999999;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  pointer-events: none;
+}
+
+.uw-toast {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 20px;
+  border-radius: 6px;
+  background: #1d2327;
+  color: #fff;
+  font-size: 14px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+  pointer-events: auto;
+  transform: translateX(100%);
+  opacity: 0;
+  animation: uw-toast-slide-in 0.3s ease forwards;
+  min-width: 280px;
+  max-width: 400px;
+}
+
+.uw-toast.is-hiding {
+  animation: uw-toast-slide-out 0.3s ease forwards;
+}
+
+@keyframes uw-toast-slide-in {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes uw-toast-slide-out {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+/* 토스트 타입별 스타일 */
+.uw-toast--success {
+  background: #00a32a;
+}
+
+.uw-toast--error {
+  background: #d63638;
+}
+
+.uw-toast--warning {
+  background: #dba617;
+  color: #1d2327;
+}
+
+.uw-toast--info {
+  background: #2271b1;
+}
+
+/* 토스트 아이콘 */
+.uw-toast-icon {
+  font-size: 18px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+/* 토스트 메시지 */
+.uw-toast-message {
+  flex: 1;
+  line-height: 1.4;
+}
+
+/* 토스트 닫기 버튼 */
+.uw-toast-close {
+  background: none;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  padding: 0;
+  font-size: 18px;
+  line-height: 1;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+  flex-shrink: 0;
+}
+
+.uw-toast-close:hover {
+  opacity: 1;
+}
+
+/* 반응형 */
+@media (max-width: 480px) {
+  .uw-toast-container {
+    left: 10px;
+    right: 10px;
+  }
+
+  .uw-toast {
+    min-width: auto;
+    max-width: none;
+  }
+}

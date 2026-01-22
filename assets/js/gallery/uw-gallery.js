@@ -30,14 +30,17 @@
         const lightbox = document.createElement('div');
         lightbox.id = 'uw-lightbox';
         lightbox.className = 'uw-lightbox';
+        lightbox.setAttribute('role', 'dialog');
+        lightbox.setAttribute('aria-modal', 'true');
+        lightbox.setAttribute('aria-label', '이미지 라이트박스');
         lightbox.innerHTML = `
-          <div class="uw-lightbox-overlay"></div>
-          <div class="uw-lightbox-content">
-            <button type="button" class="uw-lightbox-close" aria-label="닫기">×</button>
-            <button type="button" class="uw-lightbox-prev" aria-label="이전">‹</button>
-            <button type="button" class="uw-lightbox-next" aria-label="다음">›</button>
-            <div class="uw-lightbox-media"></div>
-            <div class="uw-lightbox-caption"></div>
+          <div class="uw-lightbox-overlay" aria-hidden="true"></div>
+          <div class="uw-lightbox-content" role="document">
+            <button type="button" class="uw-lightbox-close" aria-label="라이트박스 닫기">×</button>
+            <button type="button" class="uw-lightbox-prev" aria-label="이전 이미지">‹</button>
+            <button type="button" class="uw-lightbox-next" aria-label="다음 이미지">›</button>
+            <div class="uw-lightbox-media" role="img" aria-live="polite"></div>
+            <div class="uw-lightbox-caption" aria-live="polite"></div>
           </div>
         `;
         document.body.appendChild(lightbox);

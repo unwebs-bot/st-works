@@ -160,20 +160,6 @@
   object-fit: cover;
 }
 
-/* 기본 Grid 레이아웃: 이미지 1:1 비율 꽉 채우기 */
-.uw-gallery[data-layout="grid"] .uw-gallery-thumb {
-  aspect-ratio: 1 / 1;
-}
-
-.uw-gallery[data-layout="grid"] .uw-gallery-thumb img {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
 .uw-gallery-item:hover .uw-gallery-thumb img {
   transform: scale(1.05);
 }

@@ -10,6 +10,78 @@
 (function () {
   'use strict';
 
+  /**
+   * 토스트 알림 유틸리티
+   */
+  const UWToast = {
+    container: null,
+
+    init: function () {
+      if (!this.container) {
+        this.container = document.createElement('div');
+        this.container.className = 'uw-toast-container';
+        document.body.appendChild(this.container);
+      }
+    },
+
+    show: function (message, type = 'info', duration = 3000) {
+      this.init();
+
+      const toast = document.createElement('div');
+      toast.className = `uw-toast uw-toast--${type}`;
+
+      const icons = {
+        success: '✓',
+        error: '✕',
+        warning: '⚠',
+        info: 'ℹ'
+      };
+
+      toast.innerHTML = `
+        <span class="uw-toast-icon">${icons[type] || icons.info}</span>
+        <span class="uw-toast-message">${message}</span>
+        <button type="button" class="uw-toast-close" aria-label="닫기">×</button>
+      `;
+
+      const closeBtn = toast.querySelector('.uw-toast-close');
+      closeBtn.addEventListener('click', () => this.hide(toast));
+
+      this.container.appendChild(toast);
+
+      if (duration > 0) {
+        setTimeout(() => this.hide(toast), duration);
+      }
+
+      return toast;
+    },
+
+    hide: function (toast) {
+      if (!toast || !toast.parentNode) return;
+      toast.classList.add('is-hiding');
+      setTimeout(() => {
+        if (toast.parentNode) {
+          toast.parentNode.removeChild(toast);
+        }
+      }, 300);
+    },
+
+    success: function (message, duration) {
+      return this.show(message, 'success', duration);
+    },
+
+    error: function (message, duration) {
+      return this.show(message, 'error', duration);
+    },
+
+    warning: function (message, duration) {
+      return this.show(message, 'warning', duration);
+    },
+
+    info: function (message, duration) {
+      return this.show(message, 'info', duration);
+    }
+  };
+
   const UWGalleryAdmin = {
     itemIndex: 0,
     draggedItem: null,
@@ -314,7 +386,7 @@
       const url = document.getElementById('uw-video-url').value.trim();
 
       if (!url) {
-        alert('URL을 입력해주세요.');
+        UWToast.warning('URL을 입력해주세요.');
         return;
       }
 
@@ -322,7 +394,7 @@
       const vimeoMatch = url.match(/vimeo\.com\/(\d+)/);
 
       if (!youtubeMatch && !vimeoMatch) {
-        alert('YouTube 또는 Vimeo URL만 지원됩니다.');
+        UWToast.warning('YouTube 또는 Vimeo URL만 지원됩니다.');
         return;
       }
 
@@ -453,7 +525,7 @@
         .then(data => {
           if (data.success) {
             // 저장 성공 - 알림 한 번 표시 후 리다이렉트
-            alert(data.data.message || '저장되었습니다.');
+            UWToast.success(data.data.message || '저장되었습니다.');
             if (data.data.redirect) {
               window.location.href = data.data.redirect;
             } else {
@@ -465,13 +537,13 @@
               }, 2000);
             }
           } else {
-            alert(data.data.message || '저장에 실패했습니다.');
+            UWToast.error(data.data.message || '저장에 실패했습니다.');
             submitBtn.disabled = false;
             submitBtn.textContent = form.querySelector('input[name="gallery_id"]').value ? '업데이트' : '발행';
           }
         })
         .catch(() => {
-          alert('서버 오류가 발생했습니다.');
+          UWToast.error('서버 오류가 발생했습니다.');
           submitBtn.disabled = false;
           submitBtn.textContent = form.querySelector('input[name="gallery_id"]').value ? '업데이트' : '발행';
         });
@@ -506,11 +578,11 @@
               window.location.href = uwGalleryAdmin.ajaxUrl.replace('admin-ajax.php', 'admin.php?page=uw-gallery');
             }
           } else {
-            alert(data.data.message || '삭제에 실패했습니다.');
+            UWToast.error(data.data.message || '삭제에 실패했습니다.');
           }
         })
         .catch(() => {
-          alert('서버 오류가 발생했습니다.');
+          UWToast.error('서버 오류가 발생했습니다.');
         });
     },
 
@@ -518,13 +590,13 @@
     bulkAction: function () {
       const action = document.getElementById('uw-bulk-action').value;
       if (!action) {
-        alert('작업을 선택해주세요.');
+        UWToast.warning('작업을 선택해주세요.');
         return;
       }
 
       const checkboxes = document.querySelectorAll('.uw-gallery-checkbox:checked');
       if (checkboxes.length === 0) {
-        alert('갤러리를 선택해주세요.');
+        UWToast.warning('갤러리를 선택해주세요.');
         return;
       }
 
@@ -566,14 +638,14 @@
         .then(response => response.json())
         .then(data => {
           if (data.success) {
-            alert(data.data.message);
+            UWToast.success(data.data.message);
             window.location.reload();
           } else {
-            alert(data.data.message || '작업에 실패했습니다.');
+            UWToast.error(data.data.message || '작업에 실패했습니다.');
           }
         })
         .catch(() => {
-          alert('서버 오류가 발생했습니다.');
+          UWToast.error('서버 오류가 발생했습니다.');
         });
     },
 
@@ -684,11 +756,11 @@
           if (data.success) {
             this.removeRowWithAnimation(galleryId);
           } else {
-            alert(data.data.message || '휴지통 이동에 실패했습니다.');
+            UWToast.error(data.data.message || '휴지통 이동에 실패했습니다.');
           }
         })
         .catch(() => {
-          alert('서버 오류가 발생했습니다.');
+          UWToast.error('서버 오류가 발생했습니다.');
         });
     },
 
@@ -713,11 +785,11 @@
           if (data.success) {
             this.removeRowWithAnimation(galleryId);
           } else {
-            alert(data.data.message || '복구에 실패했습니다.');
+            UWToast.error(data.data.message || '복구에 실패했습니다.');
           }
         })
         .catch(() => {
-          alert('서버 오류가 발생했습니다.');
+          UWToast.error('서버 오류가 발생했습니다.');
         });
     },
 
@@ -742,11 +814,11 @@
           if (data.success) {
             this.removeRowWithAnimation(galleryId);
           } else {
-            alert(data.data.message || '삭제에 실패했습니다.');
+            UWToast.error(data.data.message || '삭제에 실패했습니다.');
           }
         })
         .catch(() => {
-          alert('서버 오류가 발생했습니다.');
+          UWToast.error('서버 오류가 발생했습니다.');
         });
     },
 
@@ -776,11 +848,11 @@
             // 현재 페이지 새로고침 (상태별 필터 적용 시)
             window.location.reload();
           } else {
-            alert(data.data.message || '상태 변경에 실패했습니다.');
+            UWToast.error(data.data.message || '상태 변경에 실패했습니다.');
           }
         })
         .catch(() => {
-          alert('서버 오류가 발생했습니다.');
+          UWToast.error('서버 오류가 발생했습니다.');
         });
     },
 

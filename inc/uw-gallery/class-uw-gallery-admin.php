@@ -12,8 +12,12 @@ if (!defined('ABSPATH')) {
   exit;
 }
 
+// 비디오 Trait 로드
+require_once get_theme_file_path('inc/uw-gallery/trait-uw-gallery-video.php');
+
 class UW_Gallery_Admin
 {
+  use UW_Gallery_Video_Trait;
 
   private static $instance = null;
 
@@ -392,7 +396,7 @@ class UW_Gallery_Admin
 
       <form id="uw-gallery-form" class="uw-gallery-editor uw-gallery-editor-fullwidth">
         <input type="hidden" name="gallery_id" value="<?php echo $gallery_id; ?>">
-        <?php wp_nonce_field('uw_gallery_save', 'uw_gallery_nonce'); ?>
+        <input type="hidden" name="nonce" value="<?php echo wp_create_nonce('uw_gallery_admin'); ?>">
 
         <!-- 상단: 제목 -->
         <div class="uw-editor-header">
@@ -507,11 +511,11 @@ class UW_Gallery_Admin
             </ul>
 
             <div class="uw-gallery-add-buttons">
-              <button type="button" id="uw-add-images" class="button button-primary button-large">
-                <span class="dashicons dashicons-images-alt2"></span> 미디어 라이브러리에서 추가
+              <button type="button" id="uw-add-images" class="button button-primary button-large" aria-label="미디어 라이브러리에서 이미지 추가">
+                <span class="dashicons dashicons-images-alt2" aria-hidden="true"></span> 미디어 라이브러리에서 추가
               </button>
-              <button type="button" id="uw-add-video" class="button button-large">
-                <span class="dashicons dashicons-video-alt3"></span> 동영상 추가
+              <button type="button" id="uw-add-video" class="button button-large" aria-label="YouTube 또는 Vimeo 동영상 추가">
+                <span class="dashicons dashicons-video-alt3" aria-hidden="true"></span> 동영상 추가
               </button>
             </div>
           </div>
@@ -905,57 +909,11 @@ class UW_Gallery_Admin
   }
 
   /**
-   * 비디오 URL에서 썸네일 추출
-   * Vimeo는 oEmbed API로 실제 썸네일 추출 (1시간 캐싱)
-   */
-  private function get_video_thumbnail($url)
-  {
-    // YouTube
-    if (
-      preg_match('/youtube\.com\/watch\?v=([^&]+)/', $url, $matches) ||
-      preg_match('/youtu\.be\/([^?]+)/', $url, $matches)
-    ) {
-      return 'https://img.youtube.com/vi/' . $matches[1] . '/mqdefault.jpg';
-    }
-
-    // Vimeo - oEmbed API로 실제 썸네일 추출
-    if (preg_match('/vimeo\.com\/(\d+)/', $url, $matches)) {
-      $vimeo_id = $matches[1];
-      $transient_key = 'uw_vimeo_thumb_' . $vimeo_id;
-
-      // 캐시된 썸네일 확인
-      $cached_thumb = get_transient($transient_key);
-      if ($cached_thumb !== false) {
-        return $cached_thumb;
-      }
-
-      // Vimeo oEmbed API 호출
-      $oembed_url = 'https://vimeo.com/api/oembed.json?url=https://vimeo.com/' . $vimeo_id;
-      $response = wp_remote_get($oembed_url, array('timeout' => 10));
-
-      if (!is_wp_error($response) && wp_remote_retrieve_response_code($response) === 200) {
-        $data = json_decode(wp_remote_retrieve_body($response), true);
-        if (isset($data['thumbnail_url'])) {
-          $thumbnail_url = $data['thumbnail_url'];
-          // 1시간 캐싱
-          set_transient($transient_key, $thumbnail_url, HOUR_IN_SECONDS);
-          return $thumbnail_url;
-        }
-      }
-
-      // API 실패 시 플레이스홀더
-      return get_theme_file_uri('assets/images/video-placeholder.png');
-    }
-
-    return '';
-  }
-
-  /**
    * AJAX: 갤러리 저장
    */
   public function ajax_save_gallery()
   {
-    check_ajax_referer('uw_gallery_save', 'uw_gallery_nonce');
+    check_ajax_referer('uw_gallery_admin', 'nonce');
 
     if (!current_user_can('manage_options')) {
       wp_send_json_error(array('message' => '권한이 없습니다.'));
@@ -968,12 +926,21 @@ class UW_Gallery_Admin
       wp_send_json_error(array('message' => '제목을 입력해주세요.'));
     }
 
+    // 발행일 처리
+    $publish_date = isset($_POST['publish_date']) ? sanitize_text_field($_POST['publish_date']) : '';
+
     // 갤러리 생성/업데이트
     $post_data = array(
       'post_title' => $title,
       'post_type' => 'uw_gallery',
       'post_status' => sanitize_key($_POST['post_status'] ?? 'publish'),
     );
+
+    // 발행일이 유효하면 추가
+    if (!empty($publish_date) && strtotime($publish_date)) {
+      $post_data['post_date'] = $publish_date . ' 00:00:00';
+      $post_data['post_date_gmt'] = get_gmt_from_date($publish_date . ' 00:00:00');
+    }
 
     if ($gallery_id) {
       $post_data['ID'] = $gallery_id;
