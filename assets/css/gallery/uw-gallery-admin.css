@@ -1,11 +1,88 @@
 /**
  * UW Gallery Admin Styles
- * 
+ *
  * 관리자 인터페이스 스타일
- * 
+ *
  * @package St-works
  * @since 2.0.0
  */
+
+/* ==========================================================================
+   0. CSS 변수 정의 (Design Tokens)
+   ========================================================================== */
+:root {
+  /* 색상 - 기본 */
+  --uw-admin-white: #fff;
+  --uw-admin-black: #000;
+  --uw-admin-text: #1d2327;
+  --uw-admin-text-muted: #646970;
+  --uw-admin-text-light: #666;
+  --uw-admin-text-lighter: #999;
+
+  /* 색상 - 브랜드 (WordPress) */
+  --uw-admin-primary: #2271b1;
+  --uw-admin-primary-hover: #135e96;
+  --uw-admin-primary-light: #f0f6fc;
+  --uw-admin-link: #0073aa;
+  --uw-admin-link-hover: #00a0d2;
+
+  /* 색상 - 상태 */
+  --uw-admin-success: #00a32a;
+  --uw-admin-success-dark: #007a1b;
+  --uw-admin-error: #d63638;
+  --uw-admin-error-dark: #8a2424;
+  --uw-admin-error-light: #fcf0f1;
+  --uw-admin-error-bg: #fce4e4;
+  --uw-admin-warning: #dba617;
+  --uw-admin-delete: #b32d2e;
+
+  /* 색상 - 배경/테두리 */
+  --uw-admin-bg: #f6f7f7;
+  --uw-admin-bg-alt: #f0f0f1;
+  --uw-admin-border: #ccd0d4;
+  --uw-admin-border-light: #eee;
+  --uw-admin-border-dashed: #ccd0d4;
+
+  /* 간격 */
+  --uw-admin-gap-xs: 3px;
+  --uw-admin-gap-sm: 8px;
+  --uw-admin-gap-md: 10px;
+  --uw-admin-gap-lg: 15px;
+  --uw-admin-gap-xl: 20px;
+  --uw-admin-gap-2xl: 25px;
+
+  /* 패딩 */
+  --uw-admin-padding-xs: 4px;
+  --uw-admin-padding-sm: 6px;
+  --uw-admin-padding-md: 10px;
+  --uw-admin-padding-lg: 15px;
+  --uw-admin-padding-xl: 20px;
+  --uw-admin-padding-2xl: 25px;
+  --uw-admin-padding-3xl: 30px;
+
+  /* 테두리 곡률 */
+  --uw-admin-radius-sm: 3px;
+  --uw-admin-radius-md: 4px;
+  --uw-admin-radius-lg: 6px;
+
+  /* 폰트 크기 */
+  --uw-admin-font-xs: 11px;
+  --uw-admin-font-sm: 12px;
+  --uw-admin-font-md: 13px;
+  --uw-admin-font-lg: 14px;
+  --uw-admin-font-xl: 16px;
+  --uw-admin-font-2xl: 24px;
+
+  /* 그림자 */
+  --uw-admin-shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+  --uw-admin-shadow-md: 0 2px 8px rgba(0, 0, 0, 0.15);
+  --uw-admin-shadow-lg: 0 4px 20px rgba(0, 0, 0, 0.25);
+  --uw-admin-shadow-xl: 0 10px 40px rgba(0, 0, 0, 0.3);
+
+  /* 트랜지션 */
+  --uw-admin-transition-fast: 0.2s;
+  --uw-admin-transition-normal: 0.3s;
+}
 
 /* ==========================================================================
    1. 대시보드 리스트
@@ -20,15 +97,15 @@
 
 .uw-gallery-empty {
   text-align: center;
-  padding: 60px 20px;
-  background: #fff;
-  border: 1px solid #ccd0d4;
+  padding: 60px var(--uw-admin-padding-xl);
+  background: var(--uw-admin-white);
+  border: 1px solid var(--uw-admin-border);
 }
 
 .uw-gallery-empty p {
-  font-size: 16px;
-  color: #666;
-  margin-bottom: 20px;
+  font-size: var(--uw-admin-font-xl);
+  color: var(--uw-admin-text-light);
+  margin-bottom: var(--uw-admin-gap-xl);
 }
 
 /* 리스트 테이블 */
@@ -74,25 +151,25 @@
   justify-content: center;
   width: 50px;
   height: 50px;
-  background: #f0f0f1;
-  border-radius: 4px;
-  color: #999;
+  background: var(--uw-admin-bg-alt);
+  border-radius: var(--uw-admin-radius-md);
+  color: var(--uw-admin-text-lighter);
 }
 
 /* 상태 표시 */
 .post-state {
-  color: #666;
+  color: var(--uw-admin-text-light);
   font-style: italic;
 }
 
 /* 숏코드 */
 .uw-shortcode-code {
   display: inline-block;
-  padding: 4px 8px;
-  background: #f0f0f1;
-  border-radius: 3px;
-  font-size: 12px;
-  margin-right: 8px;
+  padding: var(--uw-admin-padding-xs) var(--uw-admin-gap-sm);
+  background: var(--uw-admin-bg-alt);
+  border-radius: var(--uw-admin-radius-sm);
+  font-size: var(--uw-admin-font-sm);
+  margin-right: var(--uw-admin-gap-sm);
 }
 
 .uw-copy-shortcode {
@@ -119,16 +196,16 @@
 .uw-editor-title-wrap input[type="text"] {
   width: 100%;
   height: 50px;
-  font-size: 24px;
-  padding: 0 15px;
-  border: 1px solid #ccd0d4;
-  border-radius: 4px;
+  font-size: var(--uw-admin-font-2xl);
+  padding: 0 var(--uw-admin-padding-lg);
+  border: 1px solid var(--uw-admin-border);
+  border-radius: var(--uw-admin-radius-md);
 }
 
 .uw-editor-title-wrap input:focus {
   outline: none;
-  border-color: #2271b1;
-  box-shadow: 0 0 0 1px #2271b1;
+  border-color: var(--uw-admin-primary);
+  box-shadow: 0 0 0 1px var(--uw-admin-primary);
 }
 
 /* 메타 행 (레이아웃 + 공개) */
@@ -141,15 +218,15 @@
 /* 레이아웃 섹션 */
 .uw-layout-section {
   flex: 1;
-  background: #fff;
-  border: 1px solid #ccd0d4;
-  border-radius: 4px;
-  padding: 15px;
+  background: var(--uw-admin-white);
+  border: 1px solid var(--uw-admin-border);
+  border-radius: var(--uw-admin-radius-md);
+  padding: var(--uw-admin-padding-lg);
 }
 
 .uw-layout-section h3 {
   margin: 0 0 12px 0;
-  font-size: 14px;
+  font-size: var(--uw-admin-font-lg);
   font-weight: 600;
 }
 
@@ -165,23 +242,23 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 15px 10px;
-  background: #fff;
-  border: 2px solid #ccd0d4;
-  border-radius: 6px;
+  padding: var(--uw-admin-padding-lg) var(--uw-admin-padding-md);
+  background: var(--uw-admin-white);
+  border: 2px solid var(--uw-admin-border);
+  border-radius: var(--uw-admin-radius-lg);
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all var(--uw-admin-transition-fast);
 }
 
 .uw-layout-card:hover {
-  border-color: #2271b1;
-  background: #f0f6fc;
+  border-color: var(--uw-admin-primary);
+  background: var(--uw-admin-primary-light);
 }
 
 .uw-layout-card.is-selected {
-  border-color: #2271b1;
-  background: #f0f6fc;
-  box-shadow: 0 0 0 1px #2271b1;
+  border-color: var(--uw-admin-primary);
+  background: var(--uw-admin-primary-light);
+  box-shadow: 0 0 0 1px var(--uw-admin-primary);
 }
 
 .uw-layout-card input[type="radio"] {
@@ -194,14 +271,14 @@
   font-size: 28px;
   width: 28px;
   height: 28px;
-  margin-bottom: 8px;
-  color: #1d2327;
+  margin-bottom: var(--uw-admin-gap-sm);
+  color: var(--uw-admin-text);
 }
 
 .uw-layout-label {
-  font-size: 11px;
+  font-size: var(--uw-admin-font-xs);
   font-weight: 500;
-  color: #1d2327;
+  color: var(--uw-admin-text);
   text-align: center;
 }
 
@@ -209,29 +286,29 @@
 .uw-publish-box {
   width: 260px;
   flex-shrink: 0;
-  background: #fff;
-  border: 1px solid #ccd0d4;
-  border-radius: 4px;
-  padding: 15px;
+  background: var(--uw-admin-white);
+  border: 1px solid var(--uw-admin-border);
+  border-radius: var(--uw-admin-radius-md);
+  padding: var(--uw-admin-padding-lg);
 }
 
 .uw-publish-box h3 {
   margin: 0 0 12px 0;
-  padding-bottom: 10px;
-  border-bottom: 1px solid #eee;
-  font-size: 14px;
+  padding-bottom: var(--uw-admin-padding-md);
+  border-bottom: 1px solid var(--uw-admin-border-light);
+  font-size: var(--uw-admin-font-lg);
 }
 
 .uw-publish-row {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 6px 0;
-  font-size: 13px;
+  gap: var(--uw-admin-gap-sm);
+  padding: var(--uw-admin-padding-sm) 0;
+  font-size: var(--uw-admin-font-md);
 }
 
 .uw-publish-row .dashicons {
-  color: #646970;
+  color: var(--uw-admin-text-muted);
   font-size: 16px;
   width: 16px;
   height: 16px;
@@ -240,14 +317,14 @@
 .uw-publish-row label {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--uw-admin-gap-sm);
 }
 
 .uw-date-input {
-  padding: 4px 8px;
-  border: 1px solid #ccd0d4;
-  border-radius: 3px;
-  font-size: 13px;
+  padding: var(--uw-admin-padding-xs) var(--uw-admin-gap-sm);
+  border: 1px solid var(--uw-admin-border);
+  border-radius: var(--uw-admin-radius-sm);
+  font-size: var(--uw-admin-font-md);
 }
 
 .uw-publish-actions {
@@ -256,12 +333,12 @@
   align-items: center;
   margin-top: 12px;
   padding-top: 12px;
-  border-top: 1px solid #eee;
+  border-top: 1px solid var(--uw-admin-border-light);
 }
 
 .uw-btn-link {
-  color: #b32d2e;
-  font-size: 12px;
+  color: var(--uw-admin-delete);
+  font-size: var(--uw-admin-font-sm);
   text-decoration: none;
 }
 
@@ -273,18 +350,18 @@
    3. 에디터 섹션
    ========================================================================== */
 .uw-editor-section {
-  background: #fff;
-  border: 1px solid #ccd0d4;
-  border-radius: 4px;
-  padding: 25px;
-  margin-bottom: 25px;
+  background: var(--uw-admin-white);
+  border: 1px solid var(--uw-admin-border);
+  border-radius: var(--uw-admin-radius-md);
+  padding: var(--uw-admin-padding-2xl);
+  margin-bottom: var(--uw-admin-gap-2xl);
 }
 
 .uw-editor-section h2 {
-  margin: 0 0 20px 0;
-  padding-bottom: 15px;
-  border-bottom: 1px solid #eee;
-  font-size: 16px;
+  margin: 0 0 var(--uw-admin-gap-xl) 0;
+  padding-bottom: var(--uw-admin-padding-lg);
+  border-bottom: 1px solid var(--uw-admin-border-light);
+  font-size: var(--uw-admin-font-xl);
   font-weight: 600;
 }
 
@@ -294,35 +371,35 @@
 .uw-gallery-items {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-  gap: 15px;
+  gap: var(--uw-admin-gap-lg);
   list-style: none;
   margin: 0;
-  padding: 20px;
-  background: #f6f7f7;
-  border: 2px dashed #ccd0d4;
-  border-radius: 4px;
+  padding: var(--uw-admin-padding-xl);
+  background: var(--uw-admin-bg);
+  border: 2px dashed var(--uw-admin-border-dashed);
+  border-radius: var(--uw-admin-radius-md);
   min-height: 250px;
 }
 
 .uw-gallery-item {
   position: relative;
   aspect-ratio: 1/1;
-  background: #fff;
-  border: 1px solid #ccd0d4;
-  border-radius: 4px;
+  background: var(--uw-admin-white);
+  border: 1px solid var(--uw-admin-border);
+  border-radius: var(--uw-admin-radius-md);
   overflow: hidden;
   cursor: move;
-  transition: box-shadow 0.2s, transform 0.2s;
+  transition: box-shadow var(--uw-admin-transition-fast), transform var(--uw-admin-transition-fast);
 }
 
 .uw-gallery-item:hover {
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: var(--uw-admin-shadow-md);
   transform: translateY(-2px);
 }
 
 .uw-gallery-item.is-dragging {
   opacity: 0.5;
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.25);
+  box-shadow: var(--uw-admin-shadow-lg);
   transform: rotate(3deg);
 }
 
@@ -460,17 +537,17 @@
   -webkit-appearance: none;
   width: 18px;
   height: 18px;
-  background: #2271b1;
+  background: var(--uw-admin-primary);
   border-radius: 50%;
   cursor: pointer;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--uw-admin-shadow-sm);
 }
 
 .uw-range-value {
   min-width: 50px;
-  font-size: 13px;
+  font-size: var(--uw-admin-font-md);
   font-weight: 500;
-  color: #1d2327;
+  color: var(--uw-admin-text);
   text-align: right;
 }
 
@@ -541,12 +618,12 @@
 }
 
 .uw-modal-content {
-  background: #fff;
-  padding: 30px;
-  border-radius: 4px;
+  background: var(--uw-admin-white);
+  padding: var(--uw-admin-padding-3xl);
+  border-radius: var(--uw-admin-radius-md);
   width: 100%;
   max-width: 500px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  box-shadow: var(--uw-admin-shadow-xl);
 }
 
 .uw-modal-content.uw-modal-wide {
@@ -635,20 +712,20 @@
 
 .uw-gallery-wrap .subsubsub a {
   text-decoration: none;
-  color: #0073aa;
+  color: var(--uw-admin-link);
 }
 
 .uw-gallery-wrap .subsubsub a:hover {
-  color: #00a0d2;
+  color: var(--uw-admin-link-hover);
 }
 
 .uw-gallery-wrap .subsubsub a.current {
   font-weight: 600;
-  color: #000;
+  color: var(--uw-admin-black);
 }
 
 .uw-gallery-wrap .subsubsub .count {
-  color: #646970;
+  color: var(--uw-admin-text-muted);
   font-weight: 400;
 }
 
@@ -673,34 +750,34 @@
 
 /* 복구/삭제 색상 구분 */
 .uw-gallery-list-table .row-actions .restore a {
-  color: #00a32a;
+  color: var(--uw-admin-success);
 }
 
 .uw-gallery-list-table .row-actions .restore a:hover {
-  color: #007a1b;
+  color: var(--uw-admin-success-dark);
 }
 
 .uw-gallery-list-table .row-actions .delete a {
-  color: #b32d2e;
+  color: var(--uw-admin-delete);
 }
 
 .uw-gallery-list-table .row-actions .delete a:hover {
-  color: #8a2424;
+  color: var(--uw-admin-error-dark);
 }
 
 /* ==========================================================================
    11. 휴지통 상태 행 스타일
    ========================================================================== */
 .uw-gallery-list-table tr.is-trash {
-  background-color: #fcf0f1;
+  background-color: var(--uw-admin-error-light);
 }
 
 .uw-gallery-list-table tr.is-trash:hover {
-  background-color: #fce4e4;
+  background-color: var(--uw-admin-error-bg);
 }
 
 .uw-gallery-list-table tr.is-trash .column-title strong {
-  color: #646970;
+  color: var(--uw-admin-text-muted);
 }
 
 /* ==========================================================================
@@ -715,12 +792,12 @@
 }
 
 .uw-gallery-empty.is-trash-empty {
-  background: #fcf0f1;
-  border-color: #d63638;
+  background: var(--uw-admin-error-light);
+  border-color: var(--uw-admin-error);
 }
 
 .uw-gallery-empty.is-trash-empty p {
-  color: #8a2424;
+  color: var(--uw-admin-error-dark);
 }
 
 /* ==========================================================================
@@ -741,16 +818,16 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 14px 20px;
-  border-radius: 6px;
-  background: #1d2327;
-  color: #fff;
-  font-size: 14px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+  padding: 14px var(--uw-admin-padding-xl);
+  border-radius: var(--uw-admin-radius-lg);
+  background: var(--uw-admin-text);
+  color: var(--uw-admin-white);
+  font-size: var(--uw-admin-font-lg);
+  box-shadow: var(--uw-admin-shadow-lg);
   pointer-events: auto;
   transform: translateX(100%);
   opacity: 0;
-  animation: uw-toast-slide-in 0.3s ease forwards;
+  animation: uw-toast-slide-in var(--uw-admin-transition-normal) ease forwards;
   min-width: 280px;
   max-width: 400px;
 }
@@ -783,20 +860,20 @@
 
 /* 토스트 타입별 스타일 */
 .uw-toast--success {
-  background: #00a32a;
+  background: var(--uw-admin-success);
 }
 
 .uw-toast--error {
-  background: #d63638;
+  background: var(--uw-admin-error);
 }
 
 .uw-toast--warning {
-  background: #dba617;
-  color: #1d2327;
+  background: var(--uw-admin-warning);
+  color: var(--uw-admin-text);
 }
 
 .uw-toast--info {
-  background: #2271b1;
+  background: var(--uw-admin-primary);
 }
 
 /* 토스트 아이콘 */
