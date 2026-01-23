@@ -61,20 +61,39 @@ function initHeader() {
 
   // 전체 메뉴 토글
   if (btnMenu && overlayMenu) {
-    btnMenu.addEventListener('click', () => {
-      overlayMenu.classList.add('is-active');
-      fullItems.forEach((item) => {
-        item.classList.add('is-visible');
-      });
-      document.body.style.overflow = 'hidden';
-    });
-
-    btnClose.addEventListener('click', () => {
+    // 메뉴 닫기 함수
+    function closeOverlayMenu() {
       overlayMenu.classList.remove('is-active');
       fullItems.forEach((item) => {
         item.classList.remove('is-visible');
       });
       document.body.style.overflow = '';
+    }
+
+    // 메뉴 열기 함수
+    function openOverlayMenu() {
+      overlayMenu.classList.add('is-active');
+      fullItems.forEach((item) => {
+        item.classList.add('is-visible');
+      });
+      document.body.style.overflow = 'hidden';
+    }
+
+    btnMenu.addEventListener('click', openOverlayMenu);
+    btnClose.addEventListener('click', closeOverlayMenu);
+
+    // ESC 키로 메뉴 닫기 (접근성 개선)
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && overlayMenu.classList.contains('is-active')) {
+        closeOverlayMenu();
+      }
+    });
+
+    // 오버레이 배경 클릭으로 메뉴 닫기
+    overlayMenu.addEventListener('click', (e) => {
+      if (e.target === overlayMenu) {
+        closeOverlayMenu();
+      }
     });
   }
 }

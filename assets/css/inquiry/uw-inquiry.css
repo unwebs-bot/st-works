@@ -1,9 +1,6 @@
 /**
  * UW Inquiry Frontend Styles
  * 
- * 입력폼 프론트엔드 스타일
- * BEM 방법론 기반 리팩토링 (2026-01)
- * 
  * @package St-works
  */
 
@@ -463,6 +460,16 @@
   .uw-field-group select {
     padding: 10px 14px;
     font-size: 16px;
+  }
+
+  /* 파일 첨부 박스 모바일 스타일 */
+  .uw-inquiry-file-box {
+    padding: 10px 14px;
+  }
+
+  .uw-inquiry-file-btn {
+    padding: 8px 14px;
+    font-size: 13px;
   }
 
   .uw-submit-btn {

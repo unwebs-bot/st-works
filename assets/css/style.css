@@ -34,3 +34,7 @@ Author: Your Name
 @import 'pages/_business.css';
 @import 'pages/_board.css';
 @import 'pages/_news.css';
+@import 'pages/_contact.css';
+
+/* 5. Gallery */
+@import 'gallery/uw-gallery.css';

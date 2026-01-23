@@ -38,16 +38,7 @@ $single_url = add_query_arg(array('view' => 'single', 'id' => $post_id), home_ur
     </a>
   </td>
   <td class="col-author">
-    <?php
-    $guest_name = get_post_meta($post_id, '_uw_guest_name', true);
-    if ($guest_name) {
-      echo esc_html($guest_name);
-    } else {
-      $author_id = get_the_author_meta('ID');
-      $user = get_userdata($author_id);
-      echo ($user && in_array('administrator', $user->roles)) ? '관리자' : get_the_author();
-    }
-    ?>
+    <?php echo UW_Board_CPT::get_author_display_name($post_id); ?>
   </td>
   <td class="col-date">
     <?php echo get_the_date('Y.m.d'); ?>

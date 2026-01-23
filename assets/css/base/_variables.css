@@ -2,37 +2,34 @@
 
 /* ==========================================================================
    공통 변수 (Variables)
+   Note: 폰트는 functions.php에서 wp_enqueue_style로 로드됨
    ========================================================================== */
 :root {
-  /* Reset Variables */
-  --primary-color: #0F172A;
-  --secondary-color: #00B4D8;
-  --accent-color: #FF6B35;
-  --text-color: #333333;
-  --light-gray: #F8F9FA;
-  --white: #FFFFFF;
-  --transition-speed: 0.3s;
-
-  /* Global Variables */
+  /* 색상 */
   --uw-primary: #1d8795;
   --uw-secondary: #0085CA;
+  --uw-accent: #FF6B35;
   --uw-text: #111111;
+  --uw-text-light: #666666;
   --uw-bg-white: #FFFFFF;
-  --uw-font-main: 'Play', 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
-  --uw-max-width: 1500px;
-  --uw-transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-  --uw-header-height: 80px;
+  --uw-bg-gray: #F8F9FA;
+  --uw-border: #E5E5E5;
   --uw-hover-bg: #e8f4f8;
-}
 
-/* Font */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
-@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+  /* 타이포그래피 */
+  --uw-font-main: 'Play', 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+  --uw-font-heading: 'Poppins', var(--uw-font-main);
 
-body {
-  font-family: var(--uw-font-main);
-  line-height: 1.6;
-  color: #333;
-  overflow-x: hidden;
-  margin: 0;
+  /* 레이아웃 */
+  --uw-max-width: 1500px;
+  --uw-header-height: 80px;
+  --uw-gutter: 30px;
+  --uw-section-padding: 120px;
+
+  /* 트랜지션 */
+  --uw-transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+  --uw-transition-fast: all 0.3s ease;
+
+  /* 브레이크포인트 참조 (미디어 쿼리에서는 직접 값 사용) */
+  /* Desktop: 1024px, Tablet: 768px, Mobile: 480px */
 }

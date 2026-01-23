@@ -73,8 +73,25 @@
   font-weight: 500;
   color: rgba(255, 255, 255, 0.4);
   cursor: pointer;
+  -webkit-transition: color 0.3s;
   transition: color 0.3s;
   position: relative;
+  /* 터치 영역 개선 (Apple HIG 최소 44x44px) */
+  min-width: 44px;
+  min-height: 44px;
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .uw-visual-page.is-active {

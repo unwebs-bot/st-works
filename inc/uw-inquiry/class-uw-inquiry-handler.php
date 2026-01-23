@@ -52,7 +52,7 @@ class UW_Inquiry_Handler
     public function enqueue_frontend_assets()
     {
         wp_enqueue_style('uw-inquiry', get_theme_file_uri('/assets/css/inquiry/uw-inquiry.css'), array(), '1.0.0');
-        wp_enqueue_script('uw-inquiry', get_theme_file_uri('/assets/js/uw-inquiry.js'), array('jquery'), '1.0.0', true);
+        wp_enqueue_script('uw-inquiry', get_theme_file_uri('/assets/js/inquiry/uw-inquiry.js'), array('jquery'), '1.0.0', true);
 
         wp_localize_script('uw-inquiry', 'uwInquiry', array(
             'ajaxUrl' => admin_url('admin-ajax.php'),
@@ -483,10 +483,15 @@ class UW_Inquiry_Handler
                     );
                     
                     $file_type = wp_check_filetype($_FILES[$field_id]['name']);
-                    $finfo = finfo_open(FILEINFO_MIME_TYPE);
-                    $actual_type = finfo_file($finfo, $_FILES[$field_id]['tmp_name']);
-                    finfo_close($finfo);
-                    
+                    $actual_type = $file_type['type'];
+
+                    // PHP fileinfo 확장으로 실제 MIME 타입 검증
+                    if (function_exists('finfo_open')) {
+                        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+                        $actual_type = finfo_file($finfo, $_FILES[$field_id]['tmp_name']);
+                        finfo_close($finfo);
+                    }
+
                     if (!in_array($actual_type, $allowed_types)) {
                         wp_send_json_error('허용되지 않는 파일 형식입니다. (허용: 이미지, PDF, 문서, 엑셀, ZIP)');
                     }

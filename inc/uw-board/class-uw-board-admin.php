@@ -146,7 +146,7 @@ class UW_Board_Admin
 
         // Custom admin styles
         wp_enqueue_style('uw-board-admin', get_theme_file_uri('/assets/css/board/uw-board-admin.css'), array(), '1.0.2');
-        wp_enqueue_script('uw-board-admin', get_theme_file_uri('/assets/js/uw-board-admin.js'), array('jquery', 'summernote', 'media-upload'), '1.0.1', true);
+        wp_enqueue_script('uw-board-admin', get_theme_file_uri('/assets/js/board/uw-board-admin.js'), array('jquery', 'summernote', 'media-upload'), '1.0.1', true);
 
         wp_localize_script('uw-board-admin', 'uwBoardAdmin', array(
             'ajaxUrl' => admin_url('admin-ajax.php'),
@@ -736,16 +736,7 @@ class UW_Board_Admin
                                     <i class="xi-attachment uw-has-attachment" title="첨부파일"></i>
                                 <?php endif; ?>
                             </td>
-                            <td class="column-author"><?php
-                            $guest_name = get_post_meta($post_id, '_uw_guest_name', true);
-                            if ($guest_name) {
-                                echo esc_html($guest_name);
-                            } else {
-                                $author_id = get_the_author_meta('ID');
-                                $author_user = get_userdata($author_id);
-                                echo ($author_user && in_array('administrator', $author_user->roles)) ? '관리자' : get_the_author();
-                            }
-                            ?></td>
+                            <td class="column-author"><?php echo UW_Board_CPT::get_author_display_name($post_id); ?></td>
                             <td class="column-date"><?php echo get_the_date('Y.m.d'); ?></td>
                             <td class="column-views"><?php echo number_format($views); ?></td>
                         </tr>
@@ -836,11 +827,7 @@ class UW_Board_Admin
                 <h1 class="uw-single-title"><?php echo esc_html($post->post_title); ?></h1>
                 <div class="uw-single-meta">
                     <span class="meta-item">
-                        <strong>작성자</strong>
-                        <?php
-                        $author_user = get_userdata($post->post_author);
-                        echo ($author_user && in_array('administrator', $author_user->roles)) ? '관리자' : esc_html(get_the_author_meta('display_name', $post->post_author));
-                        ?>
+                        <strong>작성자</strong> <?php echo UW_Board_CPT::get_author_display_name($post); ?>
                     </span>
                     <span class="meta-item">
                         <strong>작성일</strong> <?php echo get_the_date('Y-m-d H:i', $post_id); ?>
@@ -998,6 +985,14 @@ class UW_Board_Admin
 
         ?>
         <h1><?php echo $is_edit ? '글 수정' : '글쓰기'; ?> - <?php echo esc_html($board['name']); ?></h1>
+
+        <?php if ($is_edit): ?>
+        <div class="uw-editor-meta-info" style="margin-bottom: 20px; padding: 15px; background: #f5f5f5; border-radius: 4px;">
+            <span style="margin-right: 20px;"><strong>작성자:</strong> <?php echo UW_Board_CPT::get_author_display_name($post); ?></span>
+            <span style="margin-right: 20px;"><strong>작성일:</strong> <?php echo get_the_date('Y-m-d H:i', $post); ?></span>
+            <span><strong>조회수:</strong> <?php echo number_format(get_post_meta($post_id, '_uw_views', true) ?: 0); ?></span>
+        </div>
+        <?php endif; ?>
 
         <form id="uw-board-editor-form" class="uw-board-editor">
             <input type="hidden" name="board_slug" value="<?php echo esc_attr($slug); ?>">
@@ -1500,24 +1495,14 @@ class UW_Board_Admin
                 $query->the_post();
                 $post_id = get_the_ID();
 
-                // 작성자 정보
-                $guest_author = get_post_meta($post_id, '_uw_board_guest_author', true);
-                $author_id = get_the_author_meta('ID');
-                if ($guest_author) {
-                    $author_name = $guest_author;
-                } else {
-                    $user = get_userdata($author_id);
-                    $author_name = $user ? $user->display_name : get_the_author();
-                }
-
                 $csv_data[] = array(
                     $post_id,
                     get_the_title(),
                     get_the_content(),
-                    $author_name,
+                    UW_Board_CPT::get_author_display_name($post_id),
                     get_the_date('Y-m-d H:i:s'),
-                    get_post_meta($post_id, '_uw_board_views', true) ?: 0,
-                    get_post_meta($post_id, '_uw_board_pinned', true) ? 1 : 0,
+                    get_post_meta($post_id, '_uw_views', true) ?: 0,
+                    get_post_meta($post_id, '_uw_is_pinned', true) ? 1 : 0,
                 );
             }
             wp_reset_postdata();

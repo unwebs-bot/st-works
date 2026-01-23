@@ -48,10 +48,10 @@ class UW_Gallery_Admin
    */
   public function add_admin_menu()
   {
-    // 메인 메뉴: 갤러리 관리
+    // 메인 메뉴: 갤러리
     add_menu_page(
-      '갤러리 관리',
-      '갤러리 관리',
+      '갤러리',
+      '갤러리',
       'manage_options',
       'uw-gallery',
       array($this, 'render_dashboard_page'),
@@ -62,8 +62,8 @@ class UW_Gallery_Admin
     // 서브메뉴: 모든 갤러리
     add_submenu_page(
       'uw-gallery',
-      '모든 갤러리',
-      '모든 갤러리',
+      '갤러리 관리',
+      '갤러리 관리',
       'manage_options',
       'uw-gallery',
       array($this, 'render_dashboard_page')
@@ -341,7 +341,15 @@ class UW_Gallery_Admin
                     <?php echo count($items); ?>개
                   </td>
                   <td class="column-date">
-                    <?php echo get_the_date('Y.m.d', $gallery); ?>
+                    <?php
+                    $created_at = get_post_meta($gallery->ID, '_uw_gallery_created_at', true);
+                    if ($created_at) {
+                      echo date('Y.m.d', strtotime($created_at));
+                    } else {
+                      // 기존 데이터는 post_date 사용 (하위 호환)
+                      echo get_the_date('Y.m.d', $gallery);
+                    }
+                    ?>
                   </td>
                   <td class="column-publish-date">
                     <?php echo get_the_date('Y.m.d H:i', $gallery); ?>
@@ -947,6 +955,10 @@ class UW_Gallery_Admin
       wp_update_post($post_data);
     } else {
       $gallery_id = wp_insert_post($post_data);
+      // 최초 생성일 저장 (한 번만)
+      if ($gallery_id && !is_wp_error($gallery_id)) {
+        update_post_meta($gallery_id, '_uw_gallery_created_at', current_time('mysql'));
+      }
     }
 
     if (is_wp_error($gallery_id)) {

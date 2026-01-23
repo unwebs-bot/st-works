@@ -1,4 +1,5 @@
 <?php get_header(); ?>
+<?php include get_theme_file_path('inc/variables.php'); ?>
 
 <!-- 메인 컨텐츠 시작 -->
 
@@ -14,10 +15,10 @@
           style="background-image: url('<?php echo get_theme_file_uri('/assets/images/main_visual_01.png'); ?>')"></div>
         <div class="uw-visual-content">
           <div class="uw-visual-text-wrap">
-            <div class="uw-visual-pagination">
-              <button class="uw-visual-page" data-index="0">01</button>
-              <button class="uw-visual-page" data-index="1">02</button>
-              <button class="uw-visual-page" data-index="2">03</button>
+            <div class="uw-visual-pagination" role="tablist" aria-label="슬라이드 탐색">
+              <button class="uw-visual-page" data-index="0" aria-label="슬라이드 1로 이동" role="tab">01</button>
+              <button class="uw-visual-page" data-index="1" aria-label="슬라이드 2로 이동" role="tab">02</button>
+              <button class="uw-visual-page" data-index="2" aria-label="슬라이드 3으로 이동" role="tab">03</button>
             </div>
             <h2 class="uw-visual-title">Switch on To delight people</h2>
             <p class="uw-visual-desc">에너지 절감과 새로운 공간을 창조하는 스마트 틴팅 기술의 글로벌 기업이 되겠습니다.</p>
@@ -30,10 +31,10 @@
           style="background-image: url('<?php echo get_theme_file_uri('/assets/images/hero_slide_02.jpg'); ?>')"></div>
         <div class="uw-visual-content">
           <div class="uw-visual-text-wrap">
-            <div class="uw-visual-pagination">
-              <button class="uw-visual-page" data-index="0">01</button>
-              <button class="uw-visual-page" data-index="1">02</button>
-              <button class="uw-visual-page" data-index="2">03</button>
+            <div class="uw-visual-pagination" role="tablist" aria-label="슬라이드 탐색">
+              <button class="uw-visual-page" data-index="0" aria-label="슬라이드 1로 이동" role="tab">01</button>
+              <button class="uw-visual-page" data-index="1" aria-label="슬라이드 2로 이동" role="tab">02</button>
+              <button class="uw-visual-page" data-index="2" aria-label="슬라이드 3으로 이동" role="tab">03</button>
             </div>
             <h2 class="uw-visual-title">Connect Space To Smart World</h2>
             <p class="uw-visual-desc">단순한 유리를 넘어 공간의 가치를 높이는 독보적인 기술력으로 최상의 경험을 선사합니다.</p>
@@ -46,10 +47,10 @@
           style="background-image: url('<?php echo get_theme_file_uri('/assets/images/hero_slide_03.jpg'); ?>')"></div>
         <div class="uw-visual-content">
           <div class="uw-visual-text-wrap">
-            <div class="uw-visual-pagination">
-              <button class="uw-visual-page" data-index="0">01</button>
-              <button class="uw-visual-page" data-index="1">02</button>
-              <button class="uw-visual-page is-active" data-index="2">03</button>
+            <div class="uw-visual-pagination" role="tablist" aria-label="슬라이드 탐색">
+              <button class="uw-visual-page" data-index="0" aria-label="슬라이드 1로 이동" role="tab">01</button>
+              <button class="uw-visual-page" data-index="1" aria-label="슬라이드 2로 이동" role="tab">02</button>
+              <button class="uw-visual-page is-active" data-index="2" aria-label="슬라이드 3으로 이동" role="tab" aria-selected="true">03</button>
             </div>
             <h2 class="uw-visual-title">Innovation For Better Future</h2>
             <p class="uw-visual-desc">지속 가능한 성장과 신뢰를 바탕으로 더 나은 내일을 만들어가는 글로벌 리더가 되겠습니다.</p>
@@ -133,7 +134,7 @@
       <!-- Left Image -->
       <div class="uw-about-image">
         <div class="uw-about-image-wrapper" data-animate="reveal">
-          <img src="<?php echo get_theme_file_uri('/assets/images/company_building.png'); ?>" alt="Company Building">
+          <img src="<?php echo get_theme_file_uri('/assets/images/company_building.png'); ?>" alt="STWORKS 본사 건물 전경" loading="lazy">
         </div>
       </div>
 
@@ -203,27 +204,27 @@
         <div class="uw-tech-track">
           <!-- Set 1 -->
           <div class="uw-tech-item"><img src="<?php echo get_theme_file_uri('/assets/images/patent_01.png'); ?>"
-              alt="Patent 1"></div>
+              alt="스마트 틴팅 필름 특허 인증서 1" loading="lazy"></div>
           <div class="uw-tech-item"><img src="<?php echo get_theme_file_uri('/assets/images/patent_02.png'); ?>"
-              alt="Patent 2"></div>
+              alt="스마트 틴팅 필름 특허 인증서 2" loading="lazy"></div>
           <div class="uw-tech-item"><img src="<?php echo get_theme_file_uri('/assets/images/patent_03.png'); ?>"
-              alt="Patent 3"></div>
+              alt="스마트 틴팅 필름 특허 인증서 3" loading="lazy"></div>
           <div class="uw-tech-item"><img src="<?php echo get_theme_file_uri('/assets/images/patent_04.png'); ?>"
-              alt="Patent 4"></div>
+              alt="고효율 에너지 기자재 인증서" loading="lazy"></div>
           <div class="uw-tech-item"><img src="<?php echo get_theme_file_uri('/assets/images/patent_05.png'); ?>"
-              alt="Patent 5"></div>
+              alt="품질 관리 시스템 인증서" loading="lazy"></div>
 
           <!-- Set 2 (Duplicate for loop) -->
           <div class="uw-tech-item"><img src="<?php echo get_theme_file_uri('/assets/images/patent_01.png'); ?>"
-              alt="Patent 1"></div>
+              alt="스마트 틴팅 필름 특허 인증서 1" loading="lazy"></div>
           <div class="uw-tech-item"><img src="<?php echo get_theme_file_uri('/assets/images/patent_02.png'); ?>"
-              alt="Patent 2"></div>
+              alt="스마트 틴팅 필름 특허 인증서 2" loading="lazy"></div>
           <div class="uw-tech-item"><img src="<?php echo get_theme_file_uri('/assets/images/patent_03.png'); ?>"
-              alt="Patent 3"></div>
+              alt="스마트 틴팅 필름 특허 인증서 3" loading="lazy"></div>
           <div class="uw-tech-item"><img src="<?php echo get_theme_file_uri('/assets/images/patent_04.png'); ?>"
-              alt="Patent 4"></div>
+              alt="고효율 에너지 기자재 인증서" loading="lazy"></div>
           <div class="uw-tech-item"><img src="<?php echo get_theme_file_uri('/assets/images/patent_05.png'); ?>"
-              alt="Patent 5"></div>
+              alt="품질 관리 시스템 인증서" loading="lazy"></div>
         </div>
       </div>
     </div>
@@ -264,14 +265,13 @@
           <span class="uw-contact-card-link">More view</span>
         </a>
         <!-- Inquiry Card -->
-        <a href="<?php echo site_url('/contact/'); ?>" class="uw-contact-card" data-animate="fade-up"
-          class="delay-1000">
+        <a href="<?php echo site_url('/contact/'); ?>" class="uw-contact-card delay-400" data-animate="fade-up">
           <span class="uw-contact-card-icon inquiry"></span>
           <span class="uw-contact-card-title">온라인 문의</span>
           <span class="uw-contact-card-desc">회사의 제품정보, 채용정보 등 궁금한 사항을 문의주시면<br>성실히 답변드리겠습니다.</span>
           <div class="uw-contact-info">
-            <span class="uw-contact-email">contact@st-works.co.kr</span>
-            <span class="uw-contact-tel">044-715-7050</span>
+            <span class="uw-contact-email"><?php echo esc_html($email); ?></span>
+            <span class="uw-contact-tel"><?php echo esc_html($telephone); ?></span>
           </div>
         </a>
       </div>

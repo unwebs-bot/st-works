@@ -104,7 +104,7 @@ class UW_Inquiry_Admin
 
     // Custom admin styles and scripts
     wp_enqueue_style('uw-inquiry-admin', get_theme_file_uri('/assets/css/inquiry/uw-inquiry-admin.css'), array(), '1.0.0');
-    wp_enqueue_script('uw-inquiry-admin', get_theme_file_uri('/assets/js/uw-inquiry-admin.js'), array('jquery', 'summernote', 'sortablejs'), '1.0.0', true);
+    wp_enqueue_script('uw-inquiry-admin', get_theme_file_uri('/assets/js/inquiry/uw-inquiry-admin.js'), array('jquery', 'summernote', 'sortablejs'), '1.0.0', true);
 
     wp_localize_script('uw-inquiry-admin', 'uwInquiryAdmin', array(
       'ajaxUrl' => admin_url('admin-ajax.php'),

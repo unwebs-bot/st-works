@@ -61,7 +61,7 @@ class UW_Board_Engine
     wp_enqueue_script('summernote', 'https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js', array('jquery'), '0.8.18', true);
 
     // Custom JS - 캐시 버스팅
-    wp_enqueue_script('uw-board', get_theme_file_uri('/assets/js/uw-board.js'), array('jquery'), '1.0.1', true);
+    wp_enqueue_script('uw-board', get_theme_file_uri('/assets/js/board/uw-board.js'), array('jquery'), '1.0.1', true);
 
     wp_localize_script('uw-board', 'uwBoard', array(
       'ajaxUrl' => admin_url('admin-ajax.php'),
@@ -412,17 +412,7 @@ class UW_Board_Engine
                   <?php echo esc_html($post->post_title); ?>
             </h2>
             <div class="uw-post-meta">
-              <span>작성자:
-                <?php
-                $guest_name = get_post_meta($post_id, '_uw_guest_name', true);
-                if ($guest_name) {
-                  echo esc_html($guest_name);
-                } else {
-                  $author_user = get_userdata($post->post_author);
-                  echo ($author_user && in_array('administrator', $author_user->roles)) ? '관리자' : get_the_author_meta('display_name', $post->post_author);
-                }
-                ?>
-              </span>
+              <span>작성자: <?php echo UW_Board_CPT::get_author_display_name($post); ?></span>
               <span>등록일:
                 <?php echo get_the_date('Y.m.d', $post); ?>
               </span>
@@ -544,7 +534,16 @@ class UW_Board_Engine
     $require_password = $board['write_permission'] === 'all' && !is_user_logged_in();
     global $wp;
     $base_url = home_url($wp->request);
+
     ?>
+
+        <?php if ($is_edit): ?>
+        <div class="uw-editor-meta-info">
+          <span><strong>작성자:</strong> <?php echo UW_Board_CPT::get_author_display_name($post); ?></span>
+          <span><strong>작성일:</strong> <?php echo get_the_date('Y-m-d H:i', $post); ?></span>
+          <span><strong>조회수:</strong> <?php echo number_format(get_post_meta($post_id, '_uw_views', true) ?: 0); ?></span>
+        </div>
+        <?php endif; ?>
 
         <form class="uw-write-form" id="uw-write-form">
           <input type="hidden" name="board_slug" value="<?php echo esc_attr($slug); ?>">

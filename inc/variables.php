@@ -6,6 +6,7 @@ $sns = get_field('sns', 'user_1');
 // Extract Infos
 $telephone = $infos['telephone'] ?? '';
 $fax = $infos['fax'] ?? '';
+$email = $infos['email'] ?? 'contact@st-works.co.kr';
 $address = $infos['address'] ?? '';
 $company_name = $infos['company_name'] ?? '';
 $ceo = $infos['ceo'] ?? '';

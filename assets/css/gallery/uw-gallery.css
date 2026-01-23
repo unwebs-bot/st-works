@@ -1,9 +1,6 @@
 /**
  * UW Gallery Frontend Styles
  * 
- * 프론트엔드 갤러리 스타일
- * 5종 레이아웃: grid, masonry, justified, thumbnail, slide
- * 
  * @package St-works
  * @since 2.0.0
  */
@@ -271,60 +268,80 @@
 }
 
 /* ==========================================================================
-   6. Masonry 레이아웃
+   6. Masonry 레이아웃 (CSS Columns 기반 - 원본 비율 유지)
    ========================================================================== */
 .uw-gallery--masonry .uw-gallery-grid {
-  grid-auto-rows: 10px;
+  /* CSS Grid 대신 CSS Columns 사용하여 원본 비율 유지 */
+  display: block;
+  column-count: var(--uw-masonry-columns);
+  column-gap: var(--uw-gallery-gap);
 }
 
 .uw-gallery--masonry .uw-gallery-item {
-  grid-row-end: span 20;
-}
-
-.uw-gallery--masonry .uw-gallery-item:nth-child(4n+1) {
-  grid-row-end: span 25;
-}
-
-.uw-gallery--masonry .uw-gallery-item:nth-child(4n+2) {
-  grid-row-end: span 18;
-}
-
-.uw-gallery--masonry .uw-gallery-item:nth-child(4n+3) {
-  grid-row-end: span 22;
+  /* 컬럼 내 아이템이 잘리지 않도록 */
+  break-inside: avoid;
+  margin-bottom: var(--uw-gallery-gap);
+  /* 배경/테두리 제거 */
+  background: transparent;
+  border: none;
 }
 
 .uw-gallery--masonry .uw-gallery-thumb {
-  height: 100%;
+  /* aspect-ratio 제거하여 원본 비율 유지 */
+  aspect-ratio: unset;
+  height: auto;
 }
 
 .uw-gallery--masonry .uw-gallery-thumb img {
-  height: 100%;
-  object-fit: cover;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  display: block;
+}
+
+/* Masonry 비디오 아이콘 숨김 */
+.uw-gallery--masonry .uw-gallery-play-icon {
+  display: none;
 }
 
 /* ==========================================================================
-   7. Justified 레이아웃
+   7. Justified 레이아웃 (Flexbox 기반 - 원본 비율 유지)
    ========================================================================== */
 .uw-gallery--justified .uw-gallery-grid {
   display: flex;
   flex-wrap: wrap;
   gap: var(--uw-gallery-gap);
+  align-items: flex-start;
 }
 
 .uw-gallery--justified .uw-gallery-item {
+  /* 이미지 원본 비율 기반으로 유동적으로 확장 */
   flex: 1 1 auto;
-  min-width: 200px;
-  max-width: 400px;
-  height: 250px;
+  min-width: 150px;
+  max-width: 350px;
+  /* 고정 높이 제거 - 원본 비율 유지 */
+  height: auto;
+  /* 배경/테두리 제거 */
+  background: transparent;
+  border: none;
 }
 
 .uw-gallery--justified .uw-gallery-thumb {
-  height: 100%;
+  /* aspect-ratio 제거하여 원본 비율 유지 */
+  aspect-ratio: unset;
+  height: auto;
 }
 
 .uw-gallery--justified .uw-gallery-thumb img {
-  height: 100%;
-  object-fit: cover;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  display: block;
+}
+
+/* Justified 비디오 아이콘 숨김 */
+.uw-gallery--justified .uw-gallery-play-icon {
+  display: none;
 }
 
 /* ==========================================================================
@@ -735,10 +752,16 @@
     right: 10px;
   }
 
-  /* Justified */
+  /* Justified - 모바일 */
   .uw-gallery--justified .uw-gallery-item {
     min-width: 45%;
-    height: 180px;
+    max-width: 55%;
+    height: auto;
+  }
+
+  /* Masonry 모바일 열 조정 */
+  .uw-gallery--masonry .uw-gallery-grid {
+    column-count: var(--uw-gallery-mobile-columns);
   }
 }
 
@@ -755,8 +778,15 @@
     aspect-ratio: 1/1;
   }
 
+  /* Justified - 480px 이하 */
   .uw-gallery--justified .uw-gallery-item {
     min-width: 100%;
-    height: 200px;
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* Masonry 480px 이하: 2열 */
+  .uw-gallery--masonry .uw-gallery-grid {
+    column-count: 2;
   }
 }

@@ -76,6 +76,45 @@ class UW_Board_CPT
   }
 
   /**
+   * 게시글 작성자 표시명 가져오기 (공통 헬퍼)
+   *
+   * @param int|WP_Post $post Post ID or WP_Post object
+   * @return string 작성자 표시명
+   */
+  public static function get_author_display_name($post)
+  {
+    if (is_numeric($post)) {
+      $post_id = $post;
+      $post_author = get_post_field('post_author', $post_id);
+    } else {
+      $post_id = $post->ID;
+      $post_author = $post->post_author;
+    }
+
+    // 1. 비회원 작성자명 확인
+    $guest_name = get_post_meta($post_id, '_uw_guest_name', true);
+    if ($guest_name) {
+      return esc_html($guest_name);
+    }
+
+    // 2. 관리자 확인
+    if ($post_author && user_can($post_author, 'manage_options')) {
+      return '관리자';
+    }
+
+    // 3. 일반 회원
+    if ($post_author) {
+      $display_name = get_the_author_meta('display_name', $post_author);
+      if ($display_name) {
+        return esc_html($display_name);
+      }
+    }
+
+    // 4. 기본값 (작성자 정보 없음)
+    return '관리자';
+  }
+
+  /**
    * Register Taxonomy: uw_board_type
    */
   public function register_taxonomy()
